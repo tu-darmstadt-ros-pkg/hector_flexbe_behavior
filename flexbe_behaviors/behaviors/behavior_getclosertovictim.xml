@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="GetCloserToVictim">
+
+	<executable package_path="behavior_getclosertovictim.getclosertovictim_sm" class="GetCloserToVictimSM" />
+	<tagstring></tagstring>
+	<author>Elisa, Gabriel</author>
+	<date>Thu Jan 07 2016</date>
+	<description>
+		statemachine GetCloserToVictim
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="DriveTo" />
+
+	<!-- Available Parameters -->
+
+</behavior>

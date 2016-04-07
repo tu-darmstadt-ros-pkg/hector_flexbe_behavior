@@ -1,0 +1,20 @@
+<package>
+  <name>behavior_hectorbehavior</name>
+  <version>1.0.0</version>
+  <description>
+     behavior demonstration for presentation
+  </description>
+  <maintainer email="schillinger@sim.tu-darmstadt.de">Philipp Schillinger</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_hectorbehavior</url>
+  <author>Elisa und Gabriel</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>flexbe_states</run_depend>
+  <run_depend>flexbe_argos_states</run_depend>
+
+</package>

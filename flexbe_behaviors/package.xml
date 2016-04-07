@@ -13,5 +13,15 @@
 
   <!-- Add here all ROS packages that contain behaviors -->
   <run_depend>behavior_example_behavior</run_depend>
+  <run_depend>behavior_hello_world_demo</run_depend>
+  <run_depend>behavior_exploration</run_depend>
+  <run_depend>behavior_behavior_exploration</run_depend>
+  <run_depend>behavior_driveto</run_depend>
+  <run_depend>behavior_hectorbehavior1</run_depend>
+  <run_depend>behavior_getclosertovictim</run_depend>
+  <run_depend>behavior_hector_behavior</run_depend>
+  <run_depend>behavior_hectorbehavior</run_depend>
+  <run_depend>behavior_exploration2</run_depend>
+  <run_depend>behavior_wait_test</run_depend>
 
 </package>
