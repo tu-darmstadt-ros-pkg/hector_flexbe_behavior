@@ -3,7 +3,7 @@
 <behavior name="hector behavior">
 
 	<executable package_path="behavior_hector_behavior.hector_behavior_sm" class="hectorbehaviorSM" />
-	<tagstring></tagstring>
+	<tagstring>demo</tagstring>
 	<author>Elisa und Gabriel</author>
 	<date>Tue Jan 12 2016</date>
 	<description>

@@ -7,11 +7,11 @@
 ###########################################################
 
 import roslib; roslib.load_manifest('behavior_hector_behavior')
-from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, Logger
+from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.behavior2 import behavior2
-from hector_flexbe_states.Wait_Exploration import Wait_Exploration
 from hector_flexbe_states.START_Exploration_Transform import START_Exploration_Transform
 from hector_flexbe_states.Error_Exploration import Error_Exploration
+from hector_flexbe_states.Wait_Exploration import Wait_Exploration
 from hector_flexbe_states.Wait_StartHack import Wait_StartHack
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -130,7 +130,8 @@ class hectorbehaviorSM(Behavior):
 			OperatableStateMachine.add('StartExploration',
 										START_Exploration_Transform(),
 										transitions={'succeeded': 'Wait'},
-										autonomy={'succeeded': Autonomy.Off})
+										autonomy={'succeeded': Autonomy.Off},
+										remapping={'goalId': 'goalId'})
 
 			# x:49 y:228
 			OperatableStateMachine.add('Error',
@@ -141,8 +142,9 @@ class hectorbehaviorSM(Behavior):
 			# x:400 y:228
 			OperatableStateMachine.add('Wait',
 										Wait_Exploration(),
-										transitions={'succeeded': 'Error', 'aborted': 'Error', 'waiting': 'Wait'},
-										autonomy={'succeeded': Autonomy.Off, 'aborted': Autonomy.Off, 'waiting': Autonomy.Off})
+										transitions={'restart': 'Error', 'waiting': 'Wait'},
+										autonomy={'restart': Autonomy.Off, 'waiting': Autonomy.Off},
+										remapping={'goalId': 'goalId'})
 
 
 

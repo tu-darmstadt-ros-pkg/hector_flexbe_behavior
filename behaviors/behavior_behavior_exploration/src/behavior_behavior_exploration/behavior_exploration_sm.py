@@ -7,10 +7,10 @@
 ###########################################################
 
 import roslib; roslib.load_manifest('behavior_behavior_exploration')
-from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, Logger
+from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from hector_flexbe_states.START_Exploration_Transform import START_Exploration_Transform
 from hector_flexbe_states.Error_Exploration import Error_Exploration
 from hector_flexbe_states.Wait_Exploration import Wait_Exploration
-from hector_flexbe_states.START_Exploration_Transform import START_Exploration_Transform
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -45,8 +45,8 @@ class behavior_explorationSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:322, x:130 y:322
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:30 y:322
+		_state_machine = OperatableStateMachine(outcomes=['finished'])
 		_state_machine.userdata.goalId = 'abcd'
 
 		# Additional creation code can be added inside the following tags
@@ -56,25 +56,25 @@ class behavior_explorationSM(Behavior):
 
 
 		with _state_machine:
-			# x:30 y:40
+			# x:50 y:39
 			OperatableStateMachine.add('StartExploration',
 										START_Exploration_Transform(),
-										transitions={'succeeded': 'wait'},
+										transitions={'succeeded': 'Wait'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'goalId': 'goalId'})
 
-			# x:298 y:59
-			OperatableStateMachine.add('wait',
-										Wait_Exploration(),
-										transitions={'succeeded': 'error', 'aborted': 'error', 'waiting': 'wait'},
-										autonomy={'succeeded': Autonomy.Off, 'aborted': Autonomy.Off, 'waiting': Autonomy.Off},
-										remapping={'goalId': 'goalId'})
-
-			# x:127 y:160
-			OperatableStateMachine.add('error',
+			# x:280 y:158
+			OperatableStateMachine.add('Error',
 										Error_Exploration(),
-										transitions={'restart': 'finished'},
+										transitions={'restart': 'StartExploration'},
 										autonomy={'restart': Autonomy.Off})
+
+			# x:491 y:39
+			OperatableStateMachine.add('Wait',
+										Wait_Exploration(),
+										transitions={'aborted': 'Error', 'succeeded': 'Error', 'waiting': 'Wait'},
+										autonomy={'aborted': Autonomy.Off, 'succeeded': Autonomy.Off, 'waiting': Autonomy.Off},
+										remapping={'goalId': 'goalId'})
 
 
 		return _state_machine

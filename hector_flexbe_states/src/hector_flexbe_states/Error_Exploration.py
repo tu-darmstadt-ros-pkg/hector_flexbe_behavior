@@ -19,12 +19,9 @@ class Error_Exploration(EventState):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
 		super(Error_Exploration, self).__init__(outcomes = ['restart'])
 
-		# Store state parameter for later use.
-		## self._target_time = rospy.Duration(target_time)
 
 		# The constructor is called when building the state machine, not when actually starting the behavior.
 		# Thus, we cannot save the starting time now and will do so later.
-		## self._start_time = None
 
 
 	def execute(self, userdata):
@@ -33,31 +30,21 @@ class Error_Exploration(EventState):
 		
 		# If no outcome is returned, the state will stay active.
 
-		## if rospy.Time.now() - self._start_time < self._target_time:
-
-
-		#Logger.loginfo('WARNING: current task is exploration, but exploration transform terminated!')
+		
 		return 'restart' # One of the outcomes declared above.
 
 	def on_enter(self, userdata):
 		# This method is called when the state becomes active, i.e. a transition from another state to this one is taken.
 		# It is primarily used to start actions which are associated with this state.
 
-		# The following code is just for illustrating how the behavior logger works.
-		# Text logged by the behavior logger is sent to the operator and displayed in the GUI.
-
-		## time_to_wait = rospy.Time.now() - self._start_time - self._target_time
-
-		## if time_to_wait > 0:#
 		Logger.loginfo('WARNING: current task is exploration, but exploration transform terminated!')
-		#Logger.loginfo('on_enter')
 
 
 	def on_exit(self, userdata):
 		# This method is called when an outcome is returned and another state gets active.
 		# It can be used to stop possibly running processes started by on_enter.
 
-		pass # Nothing to do in this example.
+		pass 
 
 
 	def on_start(self):
@@ -65,8 +52,6 @@ class Error_Exploration(EventState):
 		# If possible, it is generally better to initialize used resources in the constructor
 		# because if anything failed, the behavior would not even be started.
 
-		# In this example, we use this event to set the correct start time.
-		## self._start_time = rospy.Time.now()
 		pass
 
 
@@ -74,5 +59,4 @@ class Error_Exploration(EventState):
 		# This method is called whenever the behavior stops execution, also if it is cancelled.
 		# Use this event to clean up things like claimed resources.
 
-		pass # Nothing to do in this example.
-		
+		pass 
