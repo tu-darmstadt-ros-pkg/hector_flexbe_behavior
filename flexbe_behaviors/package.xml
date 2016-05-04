@@ -19,9 +19,6 @@
   <run_depend>behavior_driveto</run_depend>
   <run_depend>behavior_hectorbehavior1</run_depend>
   <run_depend>behavior_getclosertovictim</run_depend>
-  <run_depend>behavior_hector_behavior</run_depend>
   <run_depend>behavior_hectorbehavior</run_depend>
-  <run_depend>behavior_exploration2</run_depend>
-  <run_depend>behavior_wait_test</run_depend>
 
 </package>
