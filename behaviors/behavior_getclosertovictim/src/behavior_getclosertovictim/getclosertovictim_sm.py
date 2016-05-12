@@ -7,13 +7,13 @@
 ###########################################################
 
 import roslib; roslib.load_manifest('behavior_getclosertovictim')
-from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, Logger
+from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from behavior_driveto.driveto_sm import DriveToSM
 from hector_flexbe_states.Wait_getCloserVictim import Wait_getCloserVictim
 from hector_flexbe_states.confirm_victim import confirm_victim
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
-
+from geometry_msgs.msg import PoseStamped
 # [/MANUAL_IMPORT]
 
 
@@ -48,16 +48,10 @@ class GetCloserToVictimSM(Behavior):
 	def create(self):
 		# x:30 y:322
 		_state_machine = OperatableStateMachine(outcomes=['done'])
-		_state_machine.userdata.pose_position_y = 0
-		_state_machine.userdata.pose_position_x = 0
-		_state_machine.userdata.pose_orientation_y = 0
-		_state_machine.userdata.pose_orientation_z = 0
-		_state_machine.userdata.pose_orientation_w = 0
-		_state_machine.userdata.pose_orientation_x = 0
 		_state_machine.userdata.task_details_task_id = 0
 		_state_machine.userdata.params_distance = 0
-		_state_machine.userdata.pose_position_z = 0
 		_state_machine.userdata.goalId = ''
+		_state_machine.userdata.pose = PoseStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -78,7 +72,7 @@ class GetCloserToVictimSM(Behavior):
 										Wait_getCloserVictim(),
 										transitions={'waiting': 'wait', 'restart': 'DriveTo', 'preempted': 'done'},
 										autonomy={'waiting': Autonomy.Off, 'restart': Autonomy.Off, 'preempted': Autonomy.Off},
-										remapping={'task_details_task_id': 'task_details_task_id', 'params_distance': 'params_distance', 'pose_position_x': 'pose_position_x', 'pose_position_y': 'pose_position_y', 'pose_position_z': 'pose_position_z', 'pose_orientation_x': 'pose_orientation_x', 'pose_orientation_y': 'pose_orientation_y', 'pose_orientation_z': 'pose_orientation_z', 'pose_orientation_w': 'pose_orientation_w'})
+										remapping={'task_details_task_id': 'task_details_task_id', 'params_distance': 'params_distance', 'pose': 'pose'})
 
 			# x:54 y:157
 			OperatableStateMachine.add('confirm_victim',

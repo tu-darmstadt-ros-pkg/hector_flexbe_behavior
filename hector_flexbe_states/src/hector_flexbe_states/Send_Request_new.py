@@ -29,7 +29,7 @@ class Send_Request_new(EventState):
 
 	def __init__(self, useMoveBase=True):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Send_Request_new, self).__init__(outcomes = ['succeeded'], input_keys = ['goalId','params_distance','frameId','pose_position_x','pose_position_x','pose_position_y','pose_position_z','pose_orientation_x','pose_orientation_y','pose_orientation_z','pose_orientation_w'])
+		super(Send_Request_new, self).__init__(outcomes = ['succeeded'], input_keys = ['goalId','params_distance','pose'])
 
 		#self.userdata.goalId = 'none'
        	 	#self.userdata.frameId = frameId
@@ -44,7 +44,6 @@ class Send_Request_new(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
 
-		##if rospy.Time.now() - self._start_time < self._target_time:
 		return 'succeeded' # One of the outcomes declared above.
 		
 
@@ -55,27 +54,21 @@ class Send_Request_new(EventState):
 		# The following code is just for illustrating how the behavior logger works.
 		# Text logged by the behavior logger is sent to the operator and displayed in the GUI.
 
-		##time_to_wait = rospy.Time.now() - self._start_time - self._target_time
-
-		##if time_to_wait > 0:
-			##Logger.loginfo('Need to wait for %.1f seconds.' % time_to_wait)
-
 		goal = MoveBaseActionGoal()
        		goal.header.stamp = Time.now()
-        	goal.header.frame_id = userdata.frameId
+        	goal.header.frame_id = userdata.pose.header.frame_id
         
-        	goal.goal.target_pose.pose.position.x = userdata.pose_position_x
-        	goal.goal.target_pose.pose.position.y = userdata.pose_position_y
-        	goal.goal.target_pose.pose.position.z = userdata.pose_position_z
-        	goal.goal.distance = userdata.params_distance
-        
+		goal.goal.distance = userdata.params_distance
+
+ 		goal.goal.target_pose.pose.position = userdata.pose.pose.position
+    
         	# "straighten up" given orientation
-        	yaw = euler_from_quaternion([userdata.pose_orientation_x, userdata.pose_orientation_y, userdata.pose_orientation_z, 		userdata.pose_orientation_w])[2]
+        	yaw = euler_from_quaternion([userdata.pose.pose.orientation.x, userdata.pose.pose.orientation.y, 				userdata.pose.pose.orientation.z, userdata.pose.pose.orientation.w])[2]
         	goal.goal.target_pose.pose.orientation.x = 0
         	goal.goal.target_pose.pose.orientation.y = 0
         	goal.goal.target_pose.pose.orientation.z = math.sin(yaw/2)
         	goal.goal.target_pose.pose.orientation.w = math.cos(yaw/2)
-        	goal.goal.target_pose.header.frame_id = userdata.frameId
+        	goal.goal.target_pose.header.frame_id = userdata.pose.header.frame_id
         
         	goal.goal_id.id = 'driveTo' + str(goal.header.stamp.secs) + '.' + str(goal.header.stamp.nsecs)
         	goal.goal_id.stamp = goal.header.stamp
@@ -99,9 +92,6 @@ class Send_Request_new(EventState):
 		# This method is called when the behavior is started.
 		# If possible, it is generally better to initialize used resources in the constructor
 		# because if anything failed, the behavior would not even be started.
-
-		# In this example, we use this event to set the correct start time.
-		##self._start_time = rospy.Time.now()
 
 		pass
 

@@ -20,5 +20,7 @@
   <run_depend>behavior_hectorbehavior1</run_depend>
   <run_depend>behavior_getclosertovictim</run_depend>
   <run_depend>behavior_hectorbehavior</run_depend>
+  <run_depend>behavior_concurrency_test</run_depend>
+  <run_depend>behavior_victimapproach</run_depend>
 
 </package>

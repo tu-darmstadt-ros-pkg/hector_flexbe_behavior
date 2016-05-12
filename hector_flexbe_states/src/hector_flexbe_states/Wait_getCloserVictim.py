@@ -26,7 +26,7 @@ class Wait_getCloserVictim(EventState):
 
 	def __init__(self):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Wait_getCloserVictim, self).__init__(outcomes = ['waiting','restart','preempted'], input_keys = ['task_details_task_id', 'params_distance'], output_keys = ['pose_position_x','pose_position_y','pose_position_z','pose_orientation_x','pose_orientation_y','pose_orientation_z','pose_orientation_w', 'params_distance'])
+		super(Wait_getCloserVictim, self).__init__(outcomes = ['waiting','restart','preempted'], input_keys = ['task_details_task_id', 'params_distance'], output_keys = ['pose', 'params_distance'])
 		
 		self._allocated_task = '/taskallocation/allocatedTask'
 		self._sub = ProxySubscriberCached({self._allocated_task: Task})
@@ -54,13 +54,7 @@ class Wait_getCloserVictim(EventState):
             		return 'waiting'
         
         	if not response.details.floatParams[SarTaskTypes.INDEX_VICTIM_DISTANCE] == userdata.params_distance:
-            		userdata.pose_position_x = response.pose.position.x
-			userdata.pose_position_y = response.pose.position.y
-			userdata.pose_position_z = response.pose.position.z
-			userdata.pose_orientation_x = response.pose.orientation.x
-			userdata.pose_orientation_y = response.pose.orientation.y
-			userdata.pose_orientation_z = response.pose.orientation.z
-			userdata.pose_orientation_w = response.pose.orientation.w
+            		userdata.pose.pose = response.pose
             		userdata.params_distance = response.details.floatParams[SarTaskTypes.INDEX_VICTIM_DISTANCE]
             		return 'restart'
         	else:
@@ -76,13 +70,7 @@ class Wait_getCloserVictim(EventState):
 			pass
 		else:
 			userdata.task_details_task_id = task_local.details.task_id
-        		userdata.pose_position_x = task_local.pose.position.x
-			userdata.pose_position_y = task_local.pose.position.y
-			userdata.pose_position_z = task_local.pose.position.z
-			userdata.pose_orientation_x = task_local.pose.orientation.x
-			userdata.pose_orientation_y = task_local.pose.orientation.y
-			userdata.pose_orientation_z = task_local.pose.orientation.z
-			userdata.pose_orientation_w = task_local.pose.orientation.w
+        		userdata.pose.pose = task_local.pose
 			Logger.loginfo(str(task_local.details.floatParams[4]))
         		userdata.params_distance = task_local.details.floatParams[SarTaskTypes.INDEX_VICTIM_DISTANCE]
 		
