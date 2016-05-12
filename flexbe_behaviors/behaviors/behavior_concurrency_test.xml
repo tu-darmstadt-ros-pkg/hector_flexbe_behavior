@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Concurrency_test">
+
+	<executable package_path="behavior_concurrency_test.concurrency_test_sm" class="Concurrency_testSM" />
+	<tagstring></tagstring>
+	<author>Elisa und Gabriel</author>
+	<date>Wed May 04 2016</date>
+	<description>
+		Exploration und get_closer parallel
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="behavior_exploration" />
+	<contains name="GetCloserToVictim" />
+
+	<!-- Available Parameters -->
+
+</behavior>

@@ -45,7 +45,7 @@ class behavior_explorationSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:322
+		# x:916 y:133
 		_state_machine = OperatableStateMachine(outcomes=['finished'])
 		_state_machine.userdata.goalId = 'abcd'
 
@@ -72,8 +72,8 @@ class behavior_explorationSM(Behavior):
 			# x:491 y:39
 			OperatableStateMachine.add('Wait',
 										Wait_Exploration(),
-										transitions={'aborted': 'Error', 'succeeded': 'Error', 'waiting': 'Wait'},
-										autonomy={'aborted': Autonomy.Off, 'succeeded': Autonomy.Off, 'waiting': Autonomy.Off},
+										transitions={'aborted': 'Error', 'succeeded': 'Error', 'waiting': 'Wait', 'getVictim': 'finished'},
+										autonomy={'aborted': Autonomy.Off, 'succeeded': Autonomy.Off, 'waiting': Autonomy.Off, 'getVictim': Autonomy.Off},
 										remapping={'goalId': 'goalId'})
 
 

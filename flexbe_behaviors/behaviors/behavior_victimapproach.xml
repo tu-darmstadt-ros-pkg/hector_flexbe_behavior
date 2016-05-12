@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="VictimApproach">
+
+	<executable package_path="behavior_victimapproach.victimapproach_sm" class="VictimApproachSM" />
+	<tagstring></tagstring>
+	<author>Elisa und Gabriel</author>
+	<date>Wed May 04 2016</date>
+	<description>
+		Exploration und GetCloser verbinden
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="behavior_exploration" />
+	<contains name="GetCloserToVictim" />
+
+	<!-- Available Parameters -->
+
+</behavior>
