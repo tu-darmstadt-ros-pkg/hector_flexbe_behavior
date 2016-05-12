@@ -7,7 +7,7 @@
 ###########################################################
 
 import roslib; roslib.load_manifest('behavior_getclosertovictim')
-from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, Logger
+from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from behavior_driveto.driveto_sm import DriveToSM
 from hector_flexbe_states.Wait_getCloserVictim import Wait_getCloserVictim
 from hector_flexbe_states.confirm_victim import confirm_victim
@@ -47,7 +47,7 @@ class GetCloserToVictimSM(Behavior):
 
 	def create(self):
 		# x:30 y:322
-		_state_machine = OperatableStateMachine(outcomes=['done'])
+		_state_machine = OperatableStateMachine(outcomes=['done'], input_keys=['pose'])
 		_state_machine.userdata.pose_position_y = 0
 		_state_machine.userdata.pose_position_x = 0
 		_state_machine.userdata.pose_orientation_y = 0
@@ -58,6 +58,7 @@ class GetCloserToVictimSM(Behavior):
 		_state_machine.userdata.params_distance = 0
 		_state_machine.userdata.pose_position_z = 0
 		_state_machine.userdata.goalId = ''
+		_state_machine.userdata.pose = PoseStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]

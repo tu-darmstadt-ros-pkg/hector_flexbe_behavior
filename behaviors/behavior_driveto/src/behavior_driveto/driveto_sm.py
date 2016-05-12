@@ -7,7 +7,7 @@
 ###########################################################
 
 import roslib; roslib.load_manifest('behavior_driveto')
-from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, Logger
+from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.Send_Request_new import Send_Request_new
 from hector_flexbe_states.Wait_DriveTo_new import Wait_DriveTo_new
 # Additional imports can be added inside the following tags
@@ -56,6 +56,7 @@ class DriveToSM(Behavior):
 		_state_machine.userdata.pose_orientation_w = 0
 		_state_machine.userdata.pose_orientation_x = 0
 		_state_machine.userdata.params_distance = 0
+		_state_machine.userdata.pose = PoseStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
