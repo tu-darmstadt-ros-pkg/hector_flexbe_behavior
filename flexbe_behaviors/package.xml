@@ -21,5 +21,7 @@
   <run_depend>behavior_getclosertovictim</run_depend>
   <run_depend>behavior_hectorbehavior</run_depend>
   <run_depend>behavior_newexp</run_depend>
+  <run_depend>behavior_explorationconcurrency</run_depend>
+  <run_depend>behavior_abc</run_depend>
 
 </package>

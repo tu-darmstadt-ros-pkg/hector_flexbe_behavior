@@ -10,8 +10,8 @@ from flexbe_core.proxy import ProxySubscriberCached
 from actionlib_msgs.msg import GoalStatus
 from move_base_msgs.msg import MoveBaseActionResult
 from hector_move_base_msgs.msg import MoveBaseActionExplore
-from task_msgs.msg import TaskState, Task
-from sar_msgs.msg import SarTaskTypes
+#from task_msgs.msg import TaskState, Task
+#from sar_msgs.msg import SarTaskTypes
 
 
 class Wait_Exploration(EventState):
@@ -33,9 +33,9 @@ class Wait_Exploration(EventState):
 		self._resultTopic = '/move_base/result'
 		self._sub = ProxySubscriberCached({self._resultTopic: MoveBaseActionResult})
 		
-		self._currentTask = {'thread':None, 'task_id':'', 'sm':None}
-		self._allocated_task = '/taskallocation/allocatedTask'
-		self._sub = ProxySubscriberCached({self._allocated_task: Task})
+#		self._currentTask = {'thread':None, 'task_id':'', 'sm':None}
+#		self._allocated_task = '/taskallocation/allocatedTask'
+#		self._sub = ProxySubscriberCached({self._allocated_task: Task})
 
 		self._restart = False
 		self._waiting = False
@@ -73,8 +73,8 @@ class Wait_Exploration(EventState):
 			self._waiting = True
             		return 'waiting'
 		
-		if self._allocated_task.details.task_type == SarTaskTypes.APPROACH_VICTIM:
-			return 'getVictim'
+#		if self._allocated_task.details.task_type == SarTaskTypes.APPROACH_VICTIM:
+#			return 'getVictim'
 
 	def on_enter(self, userdata):
 		# This method is called when the state becomes active, i.e. a transition from another state to this one is taken.

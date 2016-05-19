@@ -12,7 +12,6 @@ from hector_flexbe_states.START_Exploration_Transform import START_Exploration_T
 from hector_flexbe_states.Error_Exploration import Error_Exploration
 from hector_flexbe_states.Pause_Exploration import PauseExploration
 from hector_flexbe_states.Wait_Exploration1 import Wait_Exploration1
-from hector_flexbe_states.Object_Found_Exploration import Object_Found_Exploration
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -48,7 +47,7 @@ class NewExpSM(Behavior):
 
 	def create(self):
 		# x:41 y:562, x:172 y:564
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['goalId'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.goalId = 1
 
 		# Additional creation code can be added inside the following tags
@@ -71,25 +70,18 @@ class NewExpSM(Behavior):
 										transitions={'restart': 'Start'},
 										autonomy={'restart': Autonomy.Off})
 
-			# x:402 y:396
+			# x:383 y:369
 			OperatableStateMachine.add('Pause',
 										PauseExploration(),
 										transitions={'continue': 'Start', 'pause': 'Pause'},
 										autonomy={'continue': Autonomy.Off, 'pause': Autonomy.Off})
 
-			# x:400 y:202
+			# x:477 y:64
 			OperatableStateMachine.add('Wait',
 										Wait_Exploration1(),
 										transitions={'error': 'Error', 'waiting': 'Wait', 'victim': 'Pause', 'pause': 'Pause'},
 										autonomy={'error': Autonomy.Off, 'waiting': Autonomy.Off, 'victim': Autonomy.Off, 'pause': Autonomy.Off},
 										remapping={'goalId': 'goalId', 'object': 'object'})
-
-			# x:652 y:298
-			OperatableStateMachine.add('Object_Found',
-										Object_Found_Exploration(),
-										transitions={'unknown': 'Object_Found', 'qr_code': 'Pause', 'victim': 'Pause'},
-										autonomy={'unknown': Autonomy.Off, 'qr_code': Autonomy.Off, 'victim': Autonomy.Off},
-										remapping={'object': 'object', 'pose': 'pose'})
 
 
 		return _state_machine
