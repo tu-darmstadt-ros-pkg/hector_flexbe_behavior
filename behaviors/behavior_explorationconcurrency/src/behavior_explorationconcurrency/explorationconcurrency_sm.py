@@ -10,10 +10,10 @@ import roslib; roslib.load_manifest('behavior_explorationconcurrency')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from behavior_newexp.newexp_sm import NewExpSM
 from hector_flexbe_states.object_detection import Object_Detection
-from behavior_getclosertovictim.getclosertovictim_sm import GetCloserToVictimSM
+from hector_flexbe_states.drive_to_new import Drive_to_new
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
-
+from geometry_msgs.msg import PoseStamped
 # [/MANUAL_IMPORT]
 
 
@@ -35,7 +35,6 @@ class ExplorationConcurrencySM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(NewExpSM, 'Container/NewExp')
-		self.add_behavior(GetCloserToVictimSM, 'GetCloserToVictim')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -49,6 +48,7 @@ class ExplorationConcurrencySM(Behavior):
 	def create(self):
 		# x:30 y:365, x:129 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine.userdata.pose = PoseStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -83,15 +83,15 @@ class ExplorationConcurrencySM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('Container',
 										_sm_container_0,
-										transitions={'finished': 'GetCloserToVictim', 'failed': 'failed'},
+										transitions={'finished': 'finished', 'failed': 'DriveTo'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'pose'})
 
-			# x:360 y:92
-			OperatableStateMachine.add('GetCloserToVictim',
-										self.use_behavior(GetCloserToVictimSM, 'GetCloserToVictim'),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Inherit},
+			# x:310 y:186
+			OperatableStateMachine.add('DriveTo',
+										Drive_to_new(),
+										transitions={'succeeded': 'failed'},
+										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'pose'})
 
 

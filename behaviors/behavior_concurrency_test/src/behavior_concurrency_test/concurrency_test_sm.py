@@ -70,7 +70,8 @@ class Concurrency_testSM(Behavior):
 			OperatableStateMachine.add('GetCloserToVictim',
 										self.use_behavior(GetCloserToVictimSM, 'Container/GetCloserToVictim'),
 										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Inherit})
+										autonomy={'done': Autonomy.Inherit},
+										remapping={'pose': 'pose'})
 
 
 

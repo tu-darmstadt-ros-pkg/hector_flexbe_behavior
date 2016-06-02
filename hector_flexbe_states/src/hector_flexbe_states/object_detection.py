@@ -33,8 +33,8 @@ class Object_Detection(EventState):
 		# If no outcome is returned, the state will stay active.
 
 		current_obj = self._sub.get_last_msg(self._objectTopic)
-		if current_obj :
-			if current_obj.info.class_id == 'victim' and current_obj.state.state == 2:
+		if current_obj:
+			if current_obj.info.class_id == 'victim' and current_obj.state.state == 2 and current_obj.info.object_id != 'victim_0':
 				userdata.pose = current_obj.pose.pose
 				Logger.loginfo(current_obj.info.object_id)
 				return 'found'

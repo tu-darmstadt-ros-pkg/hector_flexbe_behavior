@@ -23,5 +23,7 @@
   <run_depend>behavior_newexp</run_depend>
   <run_depend>behavior_explorationconcurrency</run_depend>
   <run_depend>behavior_abc</run_depend>
+  <run_depend>behavior_objectlistener</run_depend>
+  <run_depend>behavior_concurrency_test</run_depend>
 
 </package>
