@@ -56,11 +56,12 @@ class Drive_to_new(EventState):
 		##if time_to_wait > 0:
 			##Logger.loginfo('Need to wait for %.1f seconds.' % time_to_wait)
 
-		target_pose = PoseStamped()
-		target_pose.pose = userdata.pose
-		target_pose.header.stamp = Time.now()
-		target_pose.header.frame_id = 'map'
-		self._pub.publish(self._topic, target_pose)
+		#target_pose = PoseStamped()
+		#target_pose.pose = userdata.pose
+		#target_pose.header.stamp = Time.now()
+		#target_pose.header.frame_id = 'map'
+
+		self._pub.publish(self._topic, userdata.pose)
 
 		#goal = MoveBaseActionGoal()
        		#goal.header.stamp = Time.now()

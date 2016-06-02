@@ -5,6 +5,8 @@ from flexbe_core import EventState, Logger
 
 from flexbe_core.proxy import ProxySubscriberCached
 from hector_worldmodel_msgs.msg import Object
+from geometry_msgs.msg import PoseStamped
+from rospy import Time
 
 
 class Object_Detection(EventState):
@@ -21,7 +23,7 @@ class Object_Detection(EventState):
 
 	def __init__(self):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Object_Detection, self).__init__(outcomes = ['continue', 'found'], output_keys = ['pose'])
+		super(Object_Detection, self).__init__(outcomes = ['continue', 'found'], input_keys = ['pose'], output_keys = ['pose'])
 
 		self._objectTopic = '/worldmodel/object'
 		self._sub = ProxySubscriberCached({self._objectTopic: Object})
@@ -35,7 +37,10 @@ class Object_Detection(EventState):
 		current_obj = self._sub.get_last_msg(self._objectTopic)
 		if current_obj:
 			if current_obj.info.class_id == 'victim' and current_obj.state.state == 2 and current_obj.info.object_id != 'victim_0':
-				userdata.pose = current_obj.pose.pose
+				userdata.pose = PoseStamped()
+				userdata.pose.pose = current_obj.pose.pose
+				userdata.pose.header.stamp = Time.now()
+				userdata.pose.header.frame_id = 'map'
 				Logger.loginfo(current_obj.info.object_id)
 				return 'found'
 			
