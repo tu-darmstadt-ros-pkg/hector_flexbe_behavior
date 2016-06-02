@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="abc">
+
+	<executable package_path="behavior_abc.abc_sm" class="abcSM" />
+	<tagstring></tagstring>
+	<author>ghi</author>
+	<date>Thu May 19 2016</date>
+	<description>
+		def
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

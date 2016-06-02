@@ -1,0 +1,20 @@
+<package>
+  <name>behavior_abc</name>
+  <version>1.0.0</version>
+  <description>
+     def
+  </description>
+  <maintainer email="todo@todo.com">ghi</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_abc</url>
+  <author>ghi</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>hector_flexbe_states</run_depend>
+  <run_depend>flexbe_states</run_depend>
+
+</package>

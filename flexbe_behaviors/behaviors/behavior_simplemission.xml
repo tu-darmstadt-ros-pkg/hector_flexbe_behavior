@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMission">
+
+	<executable package_path="behavior_simplemission.simplemission_sm" class="SimpleMissionSM" />
+	<tagstring>demo</tagstring>
+	<author>Gabriel</author>
+	<date>Thu Jun 02 2016</date>
+	<description>
+		Simple mission structure
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="SimpleMissionInitialize" />
+	<contains name="SimpleMissionDoAction" />
+
+	<!-- Available Parameters -->
+
+</behavior>

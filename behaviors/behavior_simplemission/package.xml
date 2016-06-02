@@ -1,0 +1,20 @@
+<package>
+  <name>behavior_simplemission</name>
+  <version>1.0.0</version>
+  <description>
+     Simple mission structure
+  </description>
+  <maintainer email="todo@todo.com">Gabriel</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_simplemission</url>
+  <author>Gabriel</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>hector_flexbe_states</run_depend>
+  <run_depend>flexbe_states</run_depend>
+
+</package>
