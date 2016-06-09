@@ -1,0 +1,20 @@
+<package>
+  <name>behavior_simplemissionerror</name>
+  <version>1.0.0</version>
+  <description>
+     Error handling for Simple Mission
+  </description>
+  <maintainer email="todo@todo.com">Gabriel Elisa</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_simplemissionerror</url>
+  <author>Gabriel Elisa</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>hector_flexbe_states</run_depend>
+  <run_depend>flexbe_states</run_depend>
+
+</package>

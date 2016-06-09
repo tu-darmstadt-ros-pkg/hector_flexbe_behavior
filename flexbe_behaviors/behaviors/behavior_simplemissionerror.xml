@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMissionError">
+
+	<executable package_path="behavior_simplemissionerror.simplemissionerror_sm" class="SimpleMissionErrorSM" />
+	<tagstring>demo</tagstring>
+	<author>Gabriel Elisa</author>
+	<date>Thu Jun 09 2016</date>
+	<description>
+		Error handling for Simple Mission
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

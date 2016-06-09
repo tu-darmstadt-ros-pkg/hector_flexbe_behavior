@@ -6,6 +6,7 @@ from flexbe_core.proxy import ProxyPublisher
 from flexbe_core.proxy import ProxyServiceCaller
 from ethzasl_icp_mapper.srv import SetMode, GetMode
 
+
 from smach import CBState
 
 
@@ -24,13 +25,14 @@ class Mapping(EventState):
 
 	def __init__(self):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Mapping, self).__init__(outcomes = ['succeeded'])
+		super(Mapping, self).__init__(outcomes = ['succeeded'], input_keys = ['switch'])
 
-		self._mappingTopicSet = '/mapper/set_mode'
-		self._mappingTopicGet = '/mapper/get_mode'
-		self._srvSet = ProxyServiceCaller({self._mappingTopicSet: SetMode})
-		self._srvGet = ProxyServiceCaller({self._mappingTopicGet: GetMode})
-        	
+		#self._mappingTopicSet = '/mapper/set_mode'
+		#self._mappingTopicGet = '/mapper/get_mode'
+		#self._srvSet = ProxyServiceCaller({self._mappingTopicSet: SetMode})
+		#self._srvGet = ProxyServiceCaller({self._mappingTopicGet: GetMode})
+        	self.set_mapper_mode = rospy.ServiceProxy('/mapper/set_mode', SetMode)
+        	#self.get_mapper_mode = rospy.ServiceProxy('/mapper/get_mode', GetMode)
 
 	def execute(self, userdata):
 		# This method is called periodically while the state is active.
@@ -47,14 +49,29 @@ class Mapping(EventState):
 		# The following code is just for illustrating how the behavior logger works.
 		# Text logged by the behavior logger is sent to the operator and displayed in the GUI.
 		
-
-		map_state = False
-      		response = None
-		response = self._srvGet.call(self._mappingTopicGet, response)
-	  	map_state = response.map
-		map_state = not(map_State)
-		response.map = map_state	  
-	  	resp = self._srvSet.call(self._mappingTopicSet, response)
+	
+		map_state = userdata.switch
+     		#response = ''
+     		#try:
+		#response = self.get_mapper_mode()
+	  	#map_state = response.map	  
+	  #print(str(response))
+      		#except rospy.ServiceException as exc:
+	  		#print("get_mapper_mode Service did not process request: " + str(exc))
+	  
+      		#try:
+	  	resp = self.set_mapper_mode(True, map_state, True)
+      		#except rospy.ServiceException as exc:
+	  		#print("set_mapper_mode Service did not process request: " + str(exc))
+	  
+      		#try:
+	  	#response = self.get_mapper_mode()
+	  	#map_state = response.map
+	  	#self._widget.qc_mapping_status_lineEdit.setText('active' if response.map else 'inactive')
+	  #print(str(response))
+      		#except rospy.ServiceException as exc:
+	  		#print("get_mapper_mode Service did not process request: " + str(exc))
+	  
 
         			
 

@@ -14,6 +14,8 @@
 	<!-- Contained Behaviors -->
 	<contains name="SimpleMissionInitialize" />
 	<contains name="SimpleMissionDoAction" />
+	<contains name="SimpleMissionDriveTo" />
+	<contains name="SimpleMissionError" />
 
 	<!-- Available Parameters -->
 

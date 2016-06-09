@@ -26,10 +26,10 @@ class Wait_DriveTo_new(EventState):
 
 	'''
 
-	def __init__(self, useMoveBase=True):
+	def __init__(self):
 		
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Wait_DriveTo_new, self).__init__(outcomes=['succeeded', 'aborted', 'waiting'],input_keys=['goalId'])
+		super(Wait_DriveTo_new, self).__init__(outcomes=['succeeded', 'aborted', 'waiting'])
 
 		# ???
 		self._abortStatus = [GoalStatus.ABORTED, GoalStatus.REJECTED, GoalStatus.PREEMPTED]
@@ -73,8 +73,8 @@ class Wait_DriveTo_new(EventState):
 			rospy.sleep(0.5)
 			self_waiting = True
             		return 'waiting'
-        	if userdata.goalId == tmp.status.goal_id.id:
-			self._result = tmp.status.status
+        	#if userdata.goalId == tmp.status.goal_id.id:
+			#self._result = tmp.status.status
         	if self._result == GoalStatus.SUCCEEDED:
 			self_succeeded = True
             		return 'succeeded'

@@ -28,5 +28,7 @@
   <run_depend>behavior_simplemission</run_depend>
   <run_depend>behavior_simplemissioninitialize</run_depend>
   <run_depend>behavior_simplemissiondoaction</run_depend>
+  <run_depend>behavior_simplemissiondriveto</run_depend>
+  <run_depend>behavior_simplemissionerror</run_depend>
 
 </package>

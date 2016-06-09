@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMissionDriveTo">
+
+	<executable package_path="behavior_simplemissiondriveto.simplemissiondriveto_sm" class="SimpleMissionDriveToSM" />
+	<tagstring>demo</tagstring>
+	<author>Gabriel Elisa</author>
+	<date>Tue Jun 07 2016</date>
+	<description>
+		Drive to exact given point
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
