@@ -8,8 +8,7 @@
 
 import roslib; roslib.load_manifest('behavior_simplemissiondriveto')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.drive_to_new import Drive_to_new
-from hector_flexbe_states.Wait_DriveTo_new import Wait_DriveTo_new
+from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -55,18 +54,12 @@ class SimpleMissionDriveToSM(Behavior):
 
 
 		with _state_machine:
-			# x:30 y:40
-			OperatableStateMachine.add('Drive',
-										Drive_to_new(),
-										transitions={'succeeded': 'Wait'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'pose': 'pose'})
-
-			# x:191 y:77
-			OperatableStateMachine.add('Wait',
-										Wait_DriveTo_new(),
-										transitions={'succeeded': 'finished', 'aborted': 'failed', 'waiting': 'Wait'},
-										autonomy={'succeeded': Autonomy.Off, 'aborted': Autonomy.Off, 'waiting': Autonomy.Off})
+			# x:104 y:61
+			OperatableStateMachine.add('Move_To',
+										MoveToWaypointState(),
+										transitions={'reached': 'finished', 'failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'pose'})
 
 
 		return _state_machine
