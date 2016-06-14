@@ -3,13 +3,14 @@ import rospy
 
 from flexbe_core import EventState, Logger
 
-from flexbe_core.proxy import ProxySubscriberCached
+from flexbe_core.proxy import ProxyPublisher
 from hector_worldmodel_msgs.msg import Object
+from hector_worldmodel_msgs.srv import SetObjectState
 from geometry_msgs.msg import PoseStamped
 from rospy import Time
 
 
-class Object_Detection(EventState):
+class Victim_Confirmation(EventState):
 	'''
 	Example for a state to demonstrate which functionality is available for state implementation.
 	This example lets the behavior wait until the given target_time has passed since the behavior has been started.
@@ -23,10 +24,11 @@ class Object_Detection(EventState):
 
 	def __init__(self):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Object_Detection, self).__init__(outcomes = ['continue', 'found'], input_keys = ['pose'], output_keys = ['pose', 'victim'])
+		super(Victim_Confirmation, self).__init__(outcomes = ['discard', 'confirm'], input_keys = ['victim'])
 
-		self._objectTopic = '/worldmodel/object'
-		self._sub = ProxySubscriberCached({self._objectTopic: Object})
+		
+
+		self.set_victim_state = rospy.ServiceProxy('/worldmodel/set_object_state', SetObjectState)
 
 
 	def execute(self, userdata):
@@ -34,16 +36,7 @@ class Object_Detection(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
 
-		current_obj = self._sub.get_last_msg(self._objectTopic)
-		if current_obj:
-			if current_obj.info.class_id == 'victim' and current_obj.state.state == 2 and current_obj.info.object_id != 'victim_0':
-				userdata.pose = PoseStamped()
-				userdata.pose.pose = current_obj.pose.pose
-				userdata.pose.header.stamp = Time.now()
-				userdata.pose.header.frame_id = 'map'
-				userdata.victim = current_obj.info.object_id
-				Logger.loginfo(current_obj.info.object_id)
-				return 'found'
+		pass
 			
 		
 
@@ -53,8 +46,8 @@ class Object_Detection(EventState):
 
 		# The following code is just for illustrating how the behavior logger works.
 		# Text logged by the behavior logger is sent to the operator and displayed in the GUI.
-
-		pass
+		self.set_victim_state(userdata.victim, -1)
+		return 'confirmed'
 
 	def on_exit(self, userdata):
 		# This method is called when an outcome is returned and another state gets active.
