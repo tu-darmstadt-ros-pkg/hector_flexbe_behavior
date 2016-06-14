@@ -32,6 +32,7 @@ class MoveToWaypointState(EventState):
 											input_keys=['waypoint'])
 		
 		self._action_topic = '/move_base'
+		Logger.loginfo("OUTPUT TEST")
 		self._client = ProxyActionClient({self._action_topic: MoveBaseAction})
 
 		self._failed = False

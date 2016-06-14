@@ -8,7 +8,7 @@ from flexbe_core.proxy import ProxyPublisher
 from smach import CBState
 from rospy import Time
 from actionlib_msgs.msg import GoalStatus
-from move_base_msgs.msg import MoveBaseActionResult
+from hector_move_base_msgs.msg import MoveBaseActionResult
 from hector_move_base_msgs.msg import MoveBaseActionExplore
 
 

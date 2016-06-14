@@ -8,7 +8,7 @@ from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxySubscriberCached
 
 from actionlib_msgs.msg import GoalStatus
-from move_base_msgs.msg import MoveBaseActionResult
+from hector_move_base_msgs.msg import MoveBaseActionResult
 from hector_move_base_msgs.msg import MoveBaseActionExplore
 
 #from sar_msgs.msg import VictimAnswer
