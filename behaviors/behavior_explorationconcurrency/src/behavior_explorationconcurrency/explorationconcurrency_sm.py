@@ -10,9 +10,9 @@ import roslib; roslib.load_manifest('behavior_explorationconcurrency')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from behavior_newexp.newexp_sm import NewExpSM
 from hector_flexbe_states.object_detection import Object_Detection
-from behavior_simplemissiondriveto.simplemissiondriveto_sm import SimpleMissionDriveToSM
 from flexbe_states.wait_state import WaitState
 from hector_flexbe_states.victim_confirmation import Victim_Confirmation
+from behavior_explorationdriveto.explorationdriveto_sm import ExplorationDriveToSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -37,7 +37,7 @@ class ExplorationConcurrencySM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(NewExpSM, 'Container/NewExp')
-		self.add_behavior(SimpleMissionDriveToSM, 'SimpleMissionDriveTo')
+		self.add_behavior(ExplorationDriveToSM, 'ExplorationDriveTo')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -86,16 +86,9 @@ class ExplorationConcurrencySM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('Container',
 										_sm_container_0,
-										transitions={'finished': 'finished', 'failed': 'SimpleMissionDriveTo'},
+										transitions={'finished': 'finished', 'failed': 'ExplorationDriveTo'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'pose', 'victim': 'victim'})
-
-			# x:580 y:191
-			OperatableStateMachine.add('SimpleMissionDriveTo',
-										self.use_behavior(SimpleMissionDriveToSM, 'SimpleMissionDriveTo'),
-										transitions={'finished': 'Confirm', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pose': 'pose'})
 
 			# x:125 y:159
 			OperatableStateMachine.add('Wait',
@@ -103,12 +96,19 @@ class ExplorationConcurrencySM(Behavior):
 										transitions={'done': 'Container'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:261 y:214
+			# x:271 y:197
 			OperatableStateMachine.add('Confirm',
 										Victim_Confirmation(),
 										transitions={'discard': 'failed', 'confirm': 'Wait'},
 										autonomy={'discard': Autonomy.Off, 'confirm': Autonomy.Off},
 										remapping={'victim': 'victim'})
+
+			# x:644 y:179
+			OperatableStateMachine.add('ExplorationDriveTo',
+										self.use_behavior(ExplorationDriveToSM, 'ExplorationDriveTo'),
+										transitions={'finished': 'Confirm', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										remapping={'pose': 'pose'})
 
 
 		return _state_machine

@@ -5,7 +5,8 @@ from flexbe_core import EventState, Logger
 
 from flexbe_core.proxy import ProxyActionClient
 
-from hector_move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from hector_perception_msgs.msg import LookAtTarget
+from hector_perception_msgs.action import LookAt
 
 '''
 Created on 15.06.2015
@@ -13,7 +14,7 @@ Created on 15.06.2015
 @author: Philipp Schillinger
 '''
 
-class MoveToWaypointState(EventState):
+class LookAtWaypoint(EventState):
 	'''
 	Lets the robot move to a given waypoint.
 
@@ -28,12 +29,11 @@ class MoveToWaypointState(EventState):
 		'''
 		Constructor
 		'''
-		super(MoveToWaypointState, self).__init__(outcomes=['reached', 'failed'],
+		super(LookAtWaypoint, self).__init__(outcomes=['reached', 'failed'],
 											input_keys=['waypoint'])
 		
-		self._action_topic = '/move_base'
-		Logger.loginfo("OUTPUT TEST")
-		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
+		self._action_topic = '/pan_tilt_sensor_head_joint_control/look_at'
+		self._client = ProxyActionClient({self._action_topic: LookAt})
 
 		self._failed = False
 		self._reached = False
@@ -43,42 +43,43 @@ class MoveToWaypointState(EventState):
 		'''
 		Execute this state
 		'''
-		if self._failed:
-			return 'failed'
+		#if self._failed:
+			#return 'failed'
 		if self._reached:
 			return 'reached'
 
-		if self._move_client.has_result(self._action_topic):
-			result = self._move_client.get_result(self._action_topic)
-			if result.result == 1:
-				self._reached = True
-				return 'reached'
-			else:
-				self._failed = True
-				Logger.logwarn('Failed to reach waypoint!')
-				return 'failed'
+		#if self._move_client.has_result(self._action_topic):
+			#result = self._move_client.get_result(self._action_topic)
+			#if result.result == 1:
+				#self._reached = True
+				#return 'reached'
+			#else:
+				#self._failed = True
+				#Logger.logwarn('Failed to look at waypoint!')
+				#return 'failed'
 
 			
 	def on_enter(self, userdata):
 		self._failed = False
 		self._reached = False
 
-		action_goal = MoveBaseGoal()
-		action_goal.target_pose = userdata.waypoint
-		if action_goal.target_pose.header.frame_id == "":
-			action_goal.target_pose.header.frame_id = "world"
+		action_goal = LookAtTarget()
+		action_goal.target_point.point = userdata.waypoint.pose.position
+		if action_goal.target_point.header.frame_id == "":
+			action_goal.target_pose.header.frame_id = "map"
 
 		try:
 			self._move_client.send_goal(self._action_topic, action_goal)
 		except Exception as e:
-			Logger.logwarn('Failed to send motion request to waypoint (%(x).3f, %(y).3f):\n%(err)s' % {
+			Logger.logwarn('Failed to send LookAt request to waypoint (%(x).3f, %(y).3f):\n%(err)s' % {
 				'err': str(e),
 				'x': userdata.waypoint.pose.position.x,
 				'y': userdata.waypoint.pose.position.y
 			})
 			self._failed = True
 		
-		Logger.loginfo('Driving to next waypoint')
+		Logger.loginfo('Looking at next waypoint')
+		self._reached = True
 			
 
 	def on_stop(self):
