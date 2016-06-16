@@ -5,8 +5,10 @@ from flexbe_core import EventState, Logger
 
 from flexbe_core.proxy import ProxyActionClient
 
-from hector_perception_msgs.msg import LookAtTarget
-from hector_perception_msgs.action import LookAt
+#from hector_perception_msgs.msg import LookAtTarget
+#from hector_perception_msgs.action import LookAt
+
+import hector_perception_msgs.msg
 
 '''
 Created on 15.06.2015
@@ -33,7 +35,7 @@ class LookAtWaypoint(EventState):
 											input_keys=['waypoint'])
 		
 		self._action_topic = '/pan_tilt_sensor_head_joint_control/look_at'
-		self._client = ProxyActionClient({self._action_topic: LookAt})
+		self._client = ProxyActionClient({self._action_topic: hector_perception_msgs.msg.LookAtAction})
 
 		self._failed = False
 		self._reached = False
@@ -63,13 +65,13 @@ class LookAtWaypoint(EventState):
 		self._failed = False
 		self._reached = False
 
-		action_goal = LookAtTarget()
-		action_goal.target_point.point = userdata.waypoint.pose.position
-		if action_goal.target_point.header.frame_id == "":
-			action_goal.target_pose.header.frame_id = "map"
+		action_goal = hector_perception_msgs.msg.LookAtGoal()
+		action_goal.look_at_target.target_point.point = userdata.waypoint.pose.position
+		if action_goal.look_at_target.target_point.header.frame_id == "":
+			action_goal.look_at_target.target_point.header.frame_id = "map"
 
 		try:
-			self._move_client.send_goal(self._action_topic, action_goal)
+			self._client.send_goal(self._action_topic, action_goal)
 		except Exception as e:
 			Logger.logwarn('Failed to send LookAt request to waypoint (%(x).3f, %(y).3f):\n%(err)s' % {
 				'err': str(e),
@@ -84,15 +86,15 @@ class LookAtWaypoint(EventState):
 
 	def on_stop(self):
 		try:
-			if self._move_client.is_available(self._action_topic) \
-			and not self._move_client.has_result(self._action_topic):
-				self._move_client.cancel(self._action_topic)
+			if self._client.is_available(self._action_topic) \
+			and not self._client.has_result(self._action_topic):
+				self._client.cancel(self._action_topic)
 		except:
 			# client already closed
 			pass
 
 	def on_pause(self):
-		self._move_client.cancel(self._action_topic)
+		self._client.cancel(self._action_topic)
 
 	def on_resume(self, userdata):
 		self.on_enter(userdata)

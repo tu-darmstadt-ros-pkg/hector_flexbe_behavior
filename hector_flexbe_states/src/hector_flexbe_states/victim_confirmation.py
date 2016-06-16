@@ -5,6 +5,7 @@ from flexbe_core import EventState, Logger
 
 from flexbe_core.proxy import ProxyPublisher
 from hector_worldmodel_msgs.msg import Object
+from hector_worldmodel_msgs.msg import ObjectState
 from hector_worldmodel_msgs.srv import SetObjectState
 from geometry_msgs.msg import PoseStamped
 from rospy import Time
@@ -46,7 +47,9 @@ class Victim_Confirmation(EventState):
 
 		# The following code is just for illustrating how the behavior logger works.
 		# Text logged by the behavior logger is sent to the operator and displayed in the GUI.
-		self.set_victim_state(userdata.victim, -1)
+		state = ObjectState()
+		state.state = -1		
+		self.set_victim_state(userdata.victim, state)
 		return 'confirmed'
 
 	def on_exit(self, userdata):
