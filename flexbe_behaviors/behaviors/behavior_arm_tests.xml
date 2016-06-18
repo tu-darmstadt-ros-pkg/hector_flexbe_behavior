@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Arm Tests">
+
+	<executable package_path="behavior_arm_tests.arm_tests_sm" class="ArmTestsSM" />
+	<tagstring>test</tagstring>
+	<author>Philipp Schillinger</author>
+	<date>Sat Jun 18 2016</date>
+	<description>
+		Meant to be used for testing different ways to move the arm.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
