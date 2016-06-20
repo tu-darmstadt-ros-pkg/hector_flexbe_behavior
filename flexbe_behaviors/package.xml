@@ -13,18 +13,8 @@
 
   <!-- Add here all ROS packages that contain behaviors -->
   <run_depend>behavior_example_behavior</run_depend>
-  <run_depend>behavior_hello_world_demo</run_depend>
   <run_depend>behavior_exploration</run_depend>
-  <run_depend>behavior_behavior_exploration</run_depend>
-  <run_depend>behavior_driveto</run_depend>
-  <run_depend>behavior_hectorbehavior1</run_depend>
-  <run_depend>behavior_getclosertovictim</run_depend>
-  <run_depend>behavior_hectorbehavior</run_depend>
-  <run_depend>behavior_newexp</run_depend>
-  <run_depend>behavior_explorationconcurrency</run_depend>
-  <run_depend>behavior_abc</run_depend>
   <run_depend>behavior_objectlistener</run_depend>
-  <run_depend>behavior_concurrency_test</run_depend>
   <run_depend>behavior_simplemission</run_depend>
   <run_depend>behavior_simplemissioninitialize</run_depend>
   <run_depend>behavior_simplemissiondoaction</run_depend>
