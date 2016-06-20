@@ -17,7 +17,7 @@ class SwitchMapping(EventState):
 
 	<= succeeded 			Mapping has been switched
 
-	># switch			True to activate mapping
+	># switch	boolean		True to activate mapping
 
 	'''
 

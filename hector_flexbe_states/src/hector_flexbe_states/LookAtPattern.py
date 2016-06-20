@@ -18,12 +18,12 @@ Created on 15.06.2015
 
 class LookAtPattern(EventState):
 	'''
-	Lets the robot move to a given waypoint.
+	Specify a pattern for the robots camera to follow
 
-	># waypoint		PoseStamped		Specifies the waypoint to which the robot should move.
+	># pattern		string				The pattern to follow
 
-	<= succeeded 						Robot is now located at the specified waypoint.
-	<= failed 						Failed to send a motion request to the action server.
+	<= succeeded 						Camera follows the pattern
+	<= failed 						Failed to set pattern
 
 	'''
 
