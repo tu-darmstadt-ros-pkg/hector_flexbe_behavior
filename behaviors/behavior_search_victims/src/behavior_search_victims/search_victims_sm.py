@@ -6,10 +6,10 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_explorationconcurrency')
+import roslib; roslib.load_manifest('behavior_search_victims')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.object_detection import Object_Detection
 from behavior_exploration.exploration_sm import ExplorationSM
+from hector_flexbe_states.object_detection import Object_Detection
 from flexbe_states.wait_state import WaitState
 from hector_flexbe_states.victim_confirmation import Victim_Confirmation
 from behavior_explorationdriveto.explorationdriveto_sm import ExplorationDriveToSM
@@ -23,17 +23,17 @@ from geometry_msgs.msg import PoseStamped
 
 '''
 Created on Thu May 19 2016
-@author: Elisa Gabriel
+@author: Elisa und Gabriel
 '''
-class ExplorationConcurrencySM(Behavior):
+class SearchVictimsSM(Behavior):
 	'''
-	Concurrency Test for Exploration
+	Explore and search victims
 	'''
 
 
 	def __init__(self):
-		super(ExplorationConcurrencySM, self).__init__()
-		self.name = 'ExplorationConcurrency'
+		super(SearchVictimsSM, self).__init__()
+		self.name = 'Search Victims'
 
 		# parameters of this behavior
 

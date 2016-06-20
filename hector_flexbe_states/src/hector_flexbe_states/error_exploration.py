@@ -26,7 +26,7 @@ class ErrorExploration(EventState):
 	def on_enter(self, userdata):
 
 		self._restart = True
-		Logger.loginfo('Error occurred, res')
+		Logger.loginfo('Error occurred, restarting')
 
 	def on_exit(self, userdata):
 
