@@ -9,8 +9,8 @@
 import roslib; roslib.load_manifest('behavior_exploration')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtPattern import LookAtPattern
-from hector_flexbe_states.Error_Exploration import Error_Exploration
 from hector_flexbe_states.explore import Explore
+from hector_flexbe_states.error_exploration import ErrorExploration
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -63,17 +63,17 @@ class ExplorationSM(Behavior):
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pattern': 'lookAround'})
 
-			# x:295 y:353
-			OperatableStateMachine.add('Error',
-										Error_Exploration(),
-										transitions={'restart': 'Look_Around'},
-										autonomy={'restart': Autonomy.High})
-
 			# x:399 y:46
 			OperatableStateMachine.add('Explore',
 										Explore(),
 										transitions={'succeeded': 'finished', 'failed': 'Error'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:336 y:226
+			OperatableStateMachine.add('Error',
+										ErrorExploration(),
+										transitions={'restart': 'Look_Around'},
+										autonomy={'restart': Autonomy.High})
 
 
 		return _state_machine

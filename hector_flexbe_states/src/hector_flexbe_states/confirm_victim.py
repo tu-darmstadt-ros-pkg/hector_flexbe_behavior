@@ -31,7 +31,7 @@ class ConfirmVictim(EventState):
 
 	def execute(self, userdata):
 
-		return 'cofirmed'
+		return 'confirmed'
 			
 		
 

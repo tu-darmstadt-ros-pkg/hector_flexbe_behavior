@@ -13,7 +13,9 @@ class DetectObject(EventState):
 	'''
 	Observe the update of objects (victims) in the worldmodel. When its state is 'active', we return it.
 
-	<= found 			Victim was found.
+	># pose	   PoseStamped		Pose of object
+
+	<= found 			Victim was found
 
 	#> pose    PoseStamped		Pose of the object, which was detected
 	#> victim  string		object_id of detected victim
@@ -22,7 +24,7 @@ class DetectObject(EventState):
 
 	def __init__(self):
 		
-		super(DetectObject, self).__init__(outcomes = [ 'found'], output_keys = ['pose', 'victim'])
+		super(DetectObject, self).__init__(outcomes = [ 'found'], input_keys =['pose'], output_keys = ['pose', 'victim'])
 
 		self._objectTopic = '/worldmodel/object'
 		self._sub = ProxySubscriberCached({self._objectTopic: Object})

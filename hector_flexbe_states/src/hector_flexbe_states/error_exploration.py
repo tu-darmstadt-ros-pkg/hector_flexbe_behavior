@@ -20,8 +20,8 @@ class ErrorExploration(EventState):
 
 	def execute(self, userdata):
 		
-		if self._restart = True
-		return 'restart'
+		if self._restart == True:
+			return 'restart'
 
 	def on_enter(self, userdata):
 
