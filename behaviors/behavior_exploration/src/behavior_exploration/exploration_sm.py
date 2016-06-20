@@ -6,11 +6,11 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_newexp')
+import roslib; roslib.load_manifest('behavior_exploration')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtPattern import LookAtPattern
 from hector_flexbe_states.Error_Exploration import Error_Exploration
-from hector_flexbe_states.start_exploration import StartExploration
+from hector_flexbe_states.explore import Explore
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -19,17 +19,17 @@ from hector_flexbe_states.start_exploration import StartExploration
 
 '''
 Created on Sat May 07 2016
-@author: Gabriel
+@author: Gabriel und Elisa
 '''
-class NewExpSM(Behavior):
+class ExplorationSM(Behavior):
 	'''
-	version 0.1
+	Explores and creates a map of it's surroundings
 	'''
 
 
 	def __init__(self):
-		super(NewExpSM, self).__init__()
-		self.name = 'NewExp'
+		super(ExplorationSM, self).__init__()
+		self.name = 'Exploration'
 
 		# parameters of this behavior
 
@@ -59,19 +59,19 @@ class NewExpSM(Behavior):
 			# x:78 y:51
 			OperatableStateMachine.add('Look_Around',
 										LookAtPattern(),
-										transitions={'succeeded': 'Exploration', 'failed': 'Exploration'},
+										transitions={'succeeded': 'Explore', 'failed': 'Error'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pattern': 'lookAround'})
 
-			# x:226 y:353
+			# x:295 y:353
 			OperatableStateMachine.add('Error',
 										Error_Exploration(),
-										transitions={'restart': 'Exploration'},
+										transitions={'restart': 'Look_Around'},
 										autonomy={'restart': Autonomy.High})
 
-			# x:302 y:53
-			OperatableStateMachine.add('Exploration',
-										StartExploration(),
+			# x:399 y:46
+			OperatableStateMachine.add('Explore',
+										Explore(),
 										transitions={'succeeded': 'finished', 'failed': 'Error'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off})
 

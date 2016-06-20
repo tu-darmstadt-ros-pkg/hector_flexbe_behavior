@@ -30,10 +30,10 @@ class Wait_Exploration1(EventState):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
 		super(Wait_Exploration1, self).__init__(outcomes = ['error', 'waiting', 'victim', 'pause'], input_keys=['goalId'], output_keys=['goalId', 'object'])
 
-		self._resultTopic = '/move_base/result'
+		#self._resultTopic = '/move_base/result'
 #		self._victimFoundTopic = '/victimReached'
 
-		self._sub = ProxySubscriberCached({self._resultTopic: MoveBaseActionResult})
+		#self._sub = ProxySubscriberCached({self._resultTopic: MoveBaseActionResult})
 #		self._victimFoundSub = ProxySubscriberCached({self._victimFoundTopic: VictimAnswer})
 
 
@@ -42,7 +42,7 @@ class Wait_Exploration1(EventState):
 		self._victim = False
 		self._pause = False
 
-		self._result = GoalStatus.PENDING
+		#self._result = GoalStatus.PENDING
 		
 
 
@@ -52,29 +52,29 @@ class Wait_Exploration1(EventState):
 		# If no outcome is returned, the state will stay active.
 
 		
-		tmp = self._sub.get_last_msg(self._resultTopic)
+		#tmp = self._sub.get_last_msg(self._resultTopic)
 #		tmpVictim = self._victimFoundSub.get_last_msg(self._victimFoundTopic)
 #		if not tmpVictim:
-		if not tmp:
-			self._waiting = True
-			return 'waiting'
+		#if not tmp:
+		self._waiting = True
+		return 'waiting'
 
-		if tmp.status.goal_id.id == userdata.goalId:
-			self._result = tmp.status.status
-		else:
-			self._result = GoalStatus.PENDING
+		#if tmp.status.goal_id.id == userdata.goalId:
+			#self._result = tmp.status.status
+		#else:
+			#self._result = GoalStatus.PENDING
 			# Ensure that robots doesn't stop to explore
-		if self._result == GoalStatus.SUCCEEDED:         		
-			self._succeeded = True
-			return 'succeeded'
+		#if self._result == GoalStatus.SUCCEEDED:         		
+			#self._succeeded = True
+			#return 'succeeded'
 
-		elif self._result == GoalStatus.ABORTED:        		
-			self._aborted = True
-			return 'aborted'
+		#elif self._result == GoalStatus.ABORTED:        		
+			#self._aborted = True
+			#return 'aborted'
         	
-		else:
-			self._waiting = True
-            		return 'waiting'
+		#else:
+			#self._waiting = True
+            		#return 'waiting'
 #		else:
 #			self._victim = True
 #			self._sub.remove_last_msg(self._victimFoundTopic)

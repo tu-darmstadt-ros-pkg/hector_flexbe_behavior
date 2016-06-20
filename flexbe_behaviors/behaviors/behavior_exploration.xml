@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Exploration">
+
+	<executable package_path="behavior_exploration.exploration_sm" class="ExplorationSM" />
+	<tagstring></tagstring>
+	<author>Gabriel und Elisa</author>
+	<date>Sat May 07 2016</date>
+	<description>
+		Explores and creates a map of it's surroundings
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

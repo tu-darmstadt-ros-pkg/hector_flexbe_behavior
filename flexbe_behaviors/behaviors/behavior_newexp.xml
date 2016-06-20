@@ -3,7 +3,7 @@
 <behavior name="NewExp">
 
 	<executable package_path="behavior_newexp.newexp_sm" class="NewExpSM" />
-	<tagstring></tagstring>
+	<tagstring>demo</tagstring>
 	<author>Gabriel</author>
 	<date>Sat May 07 2016</date>
 	<description>

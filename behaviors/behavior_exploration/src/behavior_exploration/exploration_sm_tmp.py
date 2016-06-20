@@ -6,7 +6,7 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_newexp')
+import roslib; roslib.load_manifest('behavior_exploration')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtPattern import LookAtPattern
 from hector_flexbe_states.Error_Exploration import Error_Exploration
@@ -21,15 +21,15 @@ from hector_flexbe_states.start_exploration import StartExploration
 Created on Sat May 07 2016
 @author: Gabriel
 '''
-class NewExpSM(Behavior):
+class ExplorationSM(Behavior):
 	'''
 	version 0.1
 	'''
 
 
 	def __init__(self):
-		super(NewExpSM, self).__init__()
-		self.name = 'NewExp'
+		super(ExplorationSM, self).__init__()
+		self.name = 'Exploration'
 
 		# parameters of this behavior
 

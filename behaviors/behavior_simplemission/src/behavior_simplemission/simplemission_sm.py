@@ -76,14 +76,14 @@ class SimpleMissionSM(Behavior):
 										remapping={'startPoint': 'startPoint'})
 
 			# x:496 y:56
-			OperatableStateMachine.add('Endpoint',
+			OperatableStateMachine.add('Mark_Endpoint',
 										MarkPoint(),
-										transitions={'succeeded': 'DeactivateMapping'},
+										transitions={'succeeded': 'Deactivate_Mapping'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'endPoint'})
 
 			# x:672 y:55
-			OperatableStateMachine.add('DeactivateMapping',
+			OperatableStateMachine.add('Deactivate_Mapping',
 										Mapping(),
 										transitions={'succeeded': 'SimpleMissionDoAction'},
 										autonomy={'succeeded': Autonomy.Off},
@@ -98,7 +98,7 @@ class SimpleMissionSM(Behavior):
 			# x:291 y:56
 			OperatableStateMachine.add('Operator_Drive',
 										WaitState(wait_time=5),
-										transitions={'done': 'Endpoint'},
+										transitions={'done': 'Mark_Endpoint'},
 										autonomy={'done': Autonomy.High})
 
 			# x:432 y:122

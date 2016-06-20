@@ -11,7 +11,7 @@ from geometry_msgs.msg import PoseStamped
 from rospy import Time
 
 
-class Victim_Confirmation(EventState):
+class Victim_Discard(EventState):
 	'''
 	Example for a state to demonstrate which functionality is available for state implementation.
 	This example lets the behavior wait until the given target_time has passed since the behavior has been started.
@@ -25,7 +25,7 @@ class Victim_Confirmation(EventState):
 
 	def __init__(self):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Victim_Confirmation, self).__init__(outcomes = ['succeeded'], input_keys = ['victim'])
+		super(Victim_Discard, self).__init__(outcomes = ['succeeded'], input_keys = ['victim'])
 
 		
 
@@ -48,7 +48,7 @@ class Victim_Confirmation(EventState):
 		# The following code is just for illustrating how the behavior logger works.
 		# Text logged by the behavior logger is sent to the operator and displayed in the GUI.
 		state = ObjectState()
-		state.state = -1		
+		state.state = -2		
 		self.set_victim_state(userdata.victim, state)
 		return 'succeeded'
 
