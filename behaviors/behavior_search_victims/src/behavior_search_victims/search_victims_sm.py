@@ -38,7 +38,7 @@ class SearchVictimsSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(ExplorationSM, 'Container/Exploration')
+		self.add_behavior(ExplorationSM, 'ExplorationWithDetection/Exploration')
 		self.add_behavior(ExplorationDriveToSM, 'ExplorationDriveTo')
 
 		# Additional initialization code can be added inside the following tags
@@ -60,17 +60,17 @@ class SearchVictimsSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:30 y:365, x:130 y:365, x:230 y:365, x:330 y:365, x:430 y:365, x:534 y:370
-		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], output_keys=['pose', 'victim'], conditions=[
+		# x:30 y:365, x:130 y:365, x:230 y:365, x:330 y:365, x:430 y:365
+		_sm_explorationwithdetection_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], output_keys=['pose', 'victim'], conditions=[
 										('finished', [('Exploration', 'finished')]),
 										('failed', [('Exploration', 'failed')]),
 										('finished', [('Detect_Object', 'found')])
 										])
 
-		with _sm_container_0:
+		with _sm_explorationwithdetection_0:
 			# x:40 y:44
 			OperatableStateMachine.add('Exploration',
-										self.use_behavior(ExplorationSM, 'Container/Exploration'),
+										self.use_behavior(ExplorationSM, 'ExplorationWithDetection/Exploration'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
@@ -85,8 +85,8 @@ class SearchVictimsSM(Behavior):
 
 		with _state_machine:
 			# x:30 y:55
-			OperatableStateMachine.add('Container',
-										_sm_container_0,
+			OperatableStateMachine.add('ExplorationWithDetection',
+										_sm_explorationwithdetection_0,
 										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'pose', 'victim': 'victim'})
@@ -94,7 +94,7 @@ class SearchVictimsSM(Behavior):
 			# x:125 y:149
 			OperatableStateMachine.add('Wait',
 										WaitState(wait_time=5),
-										transitions={'done': 'Container'},
+										transitions={'done': 'ExplorationWithDetection'},
 										autonomy={'done': Autonomy.Off})
 
 			# x:798 y:180
