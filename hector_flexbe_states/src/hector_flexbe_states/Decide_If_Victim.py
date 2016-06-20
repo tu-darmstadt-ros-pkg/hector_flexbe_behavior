@@ -11,36 +11,30 @@ from geometry_msgs.msg import PoseStamped
 from rospy import Time
 
 
-class ConfirmVictim(EventState):
+class DecideIfVictim(EventState):
 	'''
-	Confirm current victim
+	State for manual confirmation or discard of current victim. Additionally we can retry to drive to it.
 
-	># victim 	string		object_id of detected victim
-
-	<= confirmed 			Current victim was confirmed
+	<= confirm			confirm victim
+	<= discard 			discard victim
+	<= retry			retry to drive to the victim
 	'''
 
 	def __init__(self):
 		
-		super(ConfirmVictim, self).__init__(outcomes = ['confirmed'], input_keys = ['victim'])
-
-		
+		super(DecideIfVictim, self).__init__(outcomes = ['confirm', 'discard', 'retry'])
 
 		self.set_victim_state = rospy.ServiceProxy('/worldmodel/set_object_state', SetObjectState)
 
 
 	def execute(self, userdata):
-
-		return 'cofirmed'
-			
 		
+		pass
+			
 
 	def on_enter(self, userdata):
-
-		state = ObjectState()
-		state.state = -1		
-		self.set_victim_state(userdata.victim, state)
-		return 'succeeded'
+		
+		pass
 
 	def on_exit(self, userdata):
 
@@ -48,10 +42,9 @@ class ConfirmVictim(EventState):
 
 
 	def on_start(self):
-		
 		pass
 
 	def on_stop(self):
-
+		
 		pass 
 		

@@ -11,36 +11,36 @@ from geometry_msgs.msg import PoseStamped
 from rospy import Time
 
 
-class ConfirmVictim(EventState):
+class DiscardVictim(EventState):
 	'''
-	Confirm current victim
+	Discard current victim
 
-	># victim 	string		object_id of detected victim
+	># victim	string			object_id of current victim
 
-	<= confirmed 			Current victim was confirmed
+	<= discarded 				Current victim was discarded.
+
 	'''
 
 	def __init__(self):
 		
-		super(ConfirmVictim, self).__init__(outcomes = ['confirmed'], input_keys = ['victim'])
+		super(DiscardVictim, self).__init__(outcomes = ['discarded'], input_keys = ['victim'])
 
-		
 
 		self.set_victim_state = rospy.ServiceProxy('/worldmodel/set_object_state', SetObjectState)
 
 
 	def execute(self, userdata):
 
-		return 'cofirmed'
+		return 'discarded'
 			
 		
 
 	def on_enter(self, userdata):
 
 		state = ObjectState()
-		state.state = -1		
+		state.state = -2		
 		self.set_victim_state(userdata.victim, state)
-		return 'succeeded'
+		return 'discarded'
 
 	def on_exit(self, userdata):
 
