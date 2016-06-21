@@ -36,7 +36,6 @@ class DetectObject(EventState):
 		current_obj = self._sub.get_last_msg(self._objectTopic)
 		if current_obj:
 			if current_obj.info.class_id == 'victim' and current_obj.state.state == 2: 
-		# and current_obj.info.object_id != 'victim_0':
 				userdata.pose = PoseStamped()
 				userdata.pose.pose = current_obj.pose.pose
 				userdata.pose.header.stamp = Time.now()
