@@ -21,18 +21,19 @@ class MoveToWaypointState(EventState):
 	Lets the robot move to a given waypoint.
 
 	># waypoint		PoseStamped		Specifies the waypoint to which the robot should move.
+	># victim		string			object_id of detected object
 
-	<= reached 						Robot is now located at the specified waypoint.
-	<= failed 						Failed to send a motion request to the action server.
-
+	<= reached 					Robot is now located at the specified waypoint.
+	<= failed 					Failed to send a motion request to the action server.
+	<= update					Update the pose of current waypoint
 	'''
 
 	def __init__(self):
 		'''
 		Constructor
 		'''
-		super(MoveToWaypointState, self).__init__(outcomes=['reached', 'failed'],
-											input_keys=['waypoint'])
+		super(MoveToWaypointState, self).__init__(outcomes=['reached', 'failed', 'update'],
+											input_keys=['waypoint','victim'])
 		
 		self._action_topic = '/move_base'
 		Logger.loginfo("OUTPUT TEST")
@@ -43,10 +44,12 @@ class MoveToWaypointState(EventState):
 		self._reached = False
 		
 		
+		
 	def execute(self, userdata):
 		'''
 		Execute this state
 		'''
+		
 		if self._failed:
 			return 'failed'
 		if self._reached:
@@ -62,8 +65,15 @@ class MoveToWaypointState(EventState):
 				Logger.logwarn('Failed to reach waypoint!')
 				return 'failed'
 
+		self._currentTime = Time.now()
+		if self._currentTime.secs - self._startTime.secs >= 10:
+			return 'update'
+
 			
 	def on_enter(self, userdata):
+
+		self._startTime = Time.now()
+
 		self._failed = False
 		self._reached = False
 		

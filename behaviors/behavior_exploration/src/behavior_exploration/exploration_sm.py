@@ -66,7 +66,7 @@ class ExplorationSM(Behavior):
 			# x:399 y:46
 			OperatableStateMachine.add('Explore',
 										Explore(),
-										transitions={'succeeded': 'finished', 'failed': 'Error'},
+										transitions={'succeeded': 'Error', 'failed': 'Error'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:336 y:226

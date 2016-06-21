@@ -10,6 +10,7 @@ import roslib; roslib.load_manifest('behavior_explorationdriveto')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtWaypoint import LookAtWaypoint
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState
+from hector_flexbe_states.get_object_pose_state import GetObjectPoseState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -45,8 +46,9 @@ class ExplorationDriveToSM(Behavior):
 
 	def create(self):
 		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose', 'victim'])
 		_state_machine.userdata.pose = PoseStamped()
+		_state_machine.userdata.victim = ''
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -65,9 +67,16 @@ class ExplorationDriveToSM(Behavior):
 			# x:445 y:91
 			OperatableStateMachine.add('Move_To',
 										MoveToWaypointState(),
-										transitions={'reached': 'finished', 'failed': 'failed'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'waypoint': 'pose'})
+										transitions={'reached': 'finished', 'failed': 'failed', 'update': 'GetVictimPose'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'update': Autonomy.Off},
+										remapping={'waypoint': 'pose', 'victim': 'victim'})
+
+			# x:514 y:252
+			OperatableStateMachine.add('GetVictimPose',
+										GetObjectPoseState(),
+										transitions={'done': 'Move_To', 'unknown': 'failed', 'not_available': 'failed'},
+										autonomy={'done': Autonomy.Off, 'unknown': Autonomy.Off, 'not_available': Autonomy.Off},
+										remapping={'object_id': 'victim', 'object_pose': 'pose'})
 
 
 		return _state_machine

@@ -41,7 +41,9 @@ class DetectObject(EventState):
 				userdata.pose.header.stamp = Time.now()
 				userdata.pose.header.frame_id = 'map'
 				userdata.victim = current_obj.info.object_id
-				Logger.loginfo(current_obj.info.object_id)
+				Logger.loginfo('detected %(x)s' % {
+					'x': current_obj.info.object_id
+				})
 				return 'found'
 			
 		
