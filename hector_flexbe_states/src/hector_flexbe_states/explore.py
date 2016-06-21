@@ -55,6 +55,8 @@ class Explore(EventState):
 			action_goal.target_pose.header.frame_id = "world"
 
 		try:
+			if self._move_client.is_active(self._action_topic):
+				self._move_client.cancel(self._action_topic)
 			self._move_client.send_goal(self._action_topic, action_goal)
 		except Exception as e:
 			Logger.logwarn('Failed to start Exploration' % {
