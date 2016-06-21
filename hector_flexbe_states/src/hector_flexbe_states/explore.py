@@ -5,6 +5,7 @@ from flexbe_core.proxy import ProxyActionClient
 
 from flexbe_core import EventState, Logger
 from rospy import Time
+import time
 from hector_move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
 
@@ -30,6 +31,7 @@ class Explore(EventState):
 		self._failed = False
 
 	def execute(self, userdata):
+		#time.sleep(10)
 		if self._move_client.has_result(self._action_topic):
 			result = self._move_client.get_result(self._action_topic)
 			if result.result == 1:

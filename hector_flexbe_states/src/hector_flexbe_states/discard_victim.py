@@ -40,6 +40,9 @@ class DiscardVictim(EventState):
 		state = ObjectState()
 		state.state = -2		
 		self.set_victim_state(userdata.victim, state)
+		Logger.loginfo('%(x)s discarded' % {
+				'x': userdata.victim 
+		})
 		return 'discarded'
 
 	def on_exit(self, userdata):
