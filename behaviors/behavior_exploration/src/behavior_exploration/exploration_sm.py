@@ -8,9 +8,10 @@
 
 import roslib; roslib.load_manifest('behavior_exploration')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.LookAtPattern import LookAtPattern
+from hector_flexbe_states.move_arm_state import MoveArmState
 from hector_flexbe_states.explore import Explore
 from hector_flexbe_states.error_exploration import ErrorExploration
+from hector_flexbe_states.LookAtPattern import LookAtPattern
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -48,6 +49,8 @@ class ExplorationSM(Behavior):
 		# x:41 y:562, x:172 y:564
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.lookAround = 'look_around'
+		_state_machine.userdata.joint_config = [0, 0.8295, 1.2354, -0.4589]
+		_state_machine.userdata.group_name = 'arm_group'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -56,12 +59,12 @@ class ExplorationSM(Behavior):
 
 
 		with _state_machine:
-			# x:78 y:51
-			OperatableStateMachine.add('Look_Around',
-										LookAtPattern(),
-										transitions={'succeeded': 'Explore', 'failed': 'Error'},
-										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pattern': 'lookAround'})
+			# x:70 y:189
+			OperatableStateMachine.add('MoveArm',
+										MoveArmState(),
+										transitions={'reached': 'Look_Around', 'planning_failed': 'failed', 'control_failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
+										remapping={'joint_config': 'joint_config', 'group_name': 'group_name'})
 
 			# x:399 y:46
 			OperatableStateMachine.add('Explore',
@@ -74,6 +77,13 @@ class ExplorationSM(Behavior):
 										ErrorExploration(),
 										transitions={'restart': 'Look_Around'},
 										autonomy={'restart': Autonomy.High})
+
+			# x:78 y:51
+			OperatableStateMachine.add('Look_Around',
+										LookAtPattern(),
+										transitions={'succeeded': 'Explore', 'failed': 'Error'},
+										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pattern': 'lookAround'})
 
 
 		return _state_machine

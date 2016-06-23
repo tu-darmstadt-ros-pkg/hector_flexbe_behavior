@@ -102,7 +102,7 @@ class SearchVictimsSM(Behavior):
 										self.use_behavior(ExplorationDriveToSM, 'ExplorationDriveTo'),
 										transitions={'finished': 'Decide_If_Victim', 'failed': 'Decide_If_Victim'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pose': 'pose'})
+										remapping={'pose': 'pose', 'victim': 'victim'})
 
 			# x:365 y:197
 			OperatableStateMachine.add('Confirm_Victim',
