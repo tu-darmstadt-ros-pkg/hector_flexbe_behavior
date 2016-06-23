@@ -29,6 +29,7 @@ class Explore(EventState):
 
 		self._succeeded = False
 		self._failed = False
+		self._robot_speed = 0.2
 
 	def execute(self, userdata):
 		#time.sleep(10)
@@ -51,6 +52,7 @@ class Explore(EventState):
 		
 		action_goal = MoveBaseGoal()
 		action_goal.exploration = True
+		action_goal.speed = self._robot_speed
 		if action_goal.target_pose.header.frame_id == "":
 			action_goal.target_pose.header.frame_id = "world"
 
