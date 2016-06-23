@@ -16,6 +16,7 @@ from hector_flexbe_states.discard_victim import DiscardVictim
 from hector_flexbe_states.Decide_If_Victim import DecideIfVictim
 from behavior_exploration.exploration_sm import ExplorationSM
 from hector_flexbe_states.detect_object import DetectObject
+from hector_flexbe_states.move_arm_dyn_state import MoveArmDynState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -59,6 +60,7 @@ class SearchVictimsSM(Behavior):
 		_state_machine.userdata.group_name = 'arm_group'
 		_state_machine.userdata.explore_speed = 0.2
 		_state_machine.userdata.drive_to_speed = 0.4
+		_state_machine.userdata.type = 'hotspot'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -133,9 +135,16 @@ class SearchVictimsSM(Behavior):
 			# x:400 y:34
 			OperatableStateMachine.add('ExplorationWithDetection',
 										_sm_explorationwithdetection_0,
-										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
+										transitions={'finished': 'MoveArmVictim', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'speed': 'explore_speed', 'pose': 'pose', 'victim': 'victim'})
+
+			# x:609 y:151
+			OperatableStateMachine.add('MoveArmVictim',
+										MoveArmDynState(),
+										transitions={'reached': 'ExplorationDriveTo', 'sampling_failed': 'finished', 'planning_failed': 'finished', 'control_failed': 'finished'},
+										autonomy={'reached': Autonomy.Off, 'sampling_failed': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
+										remapping={'object_pose': 'pose', 'object_type': 'type'})
 
 
 		return _state_machine
