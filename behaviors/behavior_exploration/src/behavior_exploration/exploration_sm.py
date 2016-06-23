@@ -46,8 +46,9 @@ class ExplorationSM(Behavior):
 
 	def create(self):
 		# x:41 y:562, x:172 y:564
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed'])
 		_state_machine.userdata.lookAround = 'look_around'
+		_state_machine.userdata.speed = 2
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -73,7 +74,8 @@ class ExplorationSM(Behavior):
 			OperatableStateMachine.add('Explore',
 										Explore(),
 										transitions={'succeeded': 'Error', 'failed': 'Error'},
-										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off})
+										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'speed': 'speed'})
 
 
 		return _state_machine

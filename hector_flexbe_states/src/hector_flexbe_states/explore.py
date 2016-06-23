@@ -22,17 +22,16 @@ class Explore(EventState):
 	'''
 
 	def __init__(self):
-		super(Explore, self).__init__(outcomes = ['succeeded', 'failed'])
+		super(Explore, self).__init__(outcomes = ['succeeded', 'failed'], input_keys =['speed'])
 		
 		self._action_topic = '/move_base'
 		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
 
 		self._succeeded = False
 		self._failed = False
-		self._robot_speed = 0.2
 
 	def execute(self, userdata):
-		#time.sleep(10)
+
 		if self._move_client.has_result(self._action_topic):
 			result = self._move_client.get_result(self._action_topic)
 			if result.result == 1:
@@ -52,7 +51,8 @@ class Explore(EventState):
 		
 		action_goal = MoveBaseGoal()
 		action_goal.exploration = True
-		action_goal.speed = self._robot_speed
+		action_goal.speed = userdata.speed
+
 		if action_goal.target_pose.header.frame_id == "":
 			action_goal.target_pose.header.frame_id = "world"
 
