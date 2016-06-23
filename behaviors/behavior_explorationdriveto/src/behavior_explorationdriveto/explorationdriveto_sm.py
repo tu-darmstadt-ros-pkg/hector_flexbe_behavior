@@ -46,9 +46,10 @@ class ExplorationDriveToSM(Behavior):
 
 	def create(self):
 		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose', 'victim'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose', 'victim', 'speed'])
 		_state_machine.userdata.pose = PoseStamped()
 		_state_machine.userdata.victim = ''
+		_state_machine.userdata.speed = 0.2
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -69,7 +70,7 @@ class ExplorationDriveToSM(Behavior):
 										MoveToWaypointState(),
 										transitions={'reached': 'finished', 'failed': 'failed', 'update': 'GetVictimPose'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'update': Autonomy.Off},
-										remapping={'waypoint': 'pose', 'victim': 'victim'})
+										remapping={'waypoint': 'pose', 'victim': 'victim', 'speed': 'speed'})
 
 			# x:514 y:252
 			OperatableStateMachine.add('GetVictimPose',

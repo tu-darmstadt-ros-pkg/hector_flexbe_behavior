@@ -33,7 +33,7 @@ class MoveToWaypointState(EventState):
 		Constructor
 		'''
 		super(MoveToWaypointState, self).__init__(outcomes=['reached', 'failed', 'update'],
-											input_keys=['waypoint','victim'])
+											input_keys=['waypoint','victim','speed'])
 		
 		self._action_topic = '/move_base'
 		Logger.loginfo("OUTPUT TEST")
@@ -42,7 +42,6 @@ class MoveToWaypointState(EventState):
 		
 		self._failed = False
 		self._reached = False
-		
 		
 		
 	def execute(self, userdata):
@@ -83,6 +82,8 @@ class MoveToWaypointState(EventState):
 
 		action_goal = MoveBaseGoal()
 		action_goal.target_pose = userdata.waypoint
+		action_goal.speed = userdata.speed
+
 		if action_goal.target_pose.header.frame_id == "":
 			action_goal.target_pose.header.frame_id = "world"
 
