@@ -99,16 +99,16 @@ class SearchVictimsSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.High, 'control_failed': Autonomy.High},
 										remapping={'joint_config': 'joint_config', 'group_name': 'group_name'})
 
-			# x:125 y:149
+			# x:84 y:141
 			OperatableStateMachine.add('Wait',
 										WaitState(wait_time=5),
-										transitions={'done': 'ExplorationWithDetection'},
+										transitions={'done': 'SetInitialArmState'},
 										autonomy={'done': Autonomy.Off})
 
 			# x:798 y:180
 			OperatableStateMachine.add('ExplorationDriveTo',
 										self.use_behavior(ExplorationDriveToSM, 'ExplorationDriveTo'),
-										transitions={'finished': 'Decide_If_Victim', 'failed': 'Decide_If_Victim'},
+										transitions={'finished': 'MoveArmVictim', 'failed': 'Decide_If_Victim'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'pose', 'victim': 'victim', 'speed': 'drive_to_speed'})
 
@@ -135,16 +135,16 @@ class SearchVictimsSM(Behavior):
 			# x:400 y:34
 			OperatableStateMachine.add('ExplorationWithDetection',
 										_sm_explorationwithdetection_0,
-										transitions={'finished': 'MoveArmVictim', 'failed': 'failed'},
+										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'speed': 'explore_speed', 'pose': 'pose', 'victim': 'victim'})
 
-			# x:609 y:151
+			# x:759 y:333
 			OperatableStateMachine.add('MoveArmVictim',
 										MoveArmDynState(),
-										transitions={'reached': 'ExplorationDriveTo', 'sampling_failed': 'finished', 'planning_failed': 'finished', 'control_failed': 'finished'},
+										transitions={'reached': 'Decide_If_Victim', 'sampling_failed': 'finished', 'planning_failed': 'finished', 'control_failed': 'finished'},
 										autonomy={'reached': Autonomy.Off, 'sampling_failed': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
-										remapping={'object_pose': 'pose', 'object_type': 'type'})
+										remapping={'object_pose': 'pose', 'object_type': 'type', 'object_id': 'victim'})
 
 
 		return _state_machine

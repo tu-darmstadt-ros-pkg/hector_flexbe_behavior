@@ -5,7 +5,7 @@ from copy import deepcopy
 from geometry_msgs.msg import Quaternion
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyActionClient
-from argo_move_group_msgs.msg import ArgoArmPlanMoveAction, ArgoArmPlanMoveGoal, ArgoArmPlanMoveResult
+from argo_move_group_msgs.msg import ArgoCombinedPlanAction, ArgoCombinedPlanGoal, ActionCodes, ErrorCodes, ObjectTypes
 
 '''
 Created on 26.10.2015
@@ -19,6 +19,7 @@ class MoveArmDynState(EventState):
 
 	># object_pose		PoseStamped		Pose of the object to observe.
 	># object_type		string			Object type.
+	># object_id		string			ID of the object.
 
 	<= reached 						Target joint configuration has been reached.
 	<= sampling_failed				Failed to find any valid and promising camera pose.
@@ -33,10 +34,10 @@ class MoveArmDynState(EventState):
 		Constructor
 		'''
 		super(MoveArmDynState, self).__init__(outcomes=['reached', 'sampling_failed', 'planning_failed', 'control_failed'],
-											input_keys=['object_pose', 'object_type'])
+											input_keys=['object_pose', 'object_type', 'object_id'])
 
-		self._action_topic = '/arm_plan_move_action'
-		self._client = ProxyActionClient({self._action_topic: ArgoArmPlanMoveAction})
+		self._action_topic = '/combined_planner'
+		self._client = ProxyActionClient({self._action_topic: ArgoCombinedPlanAction})
 		
 		# rotations for different object types to get z-axis aligned with optical axis
 		self._rot = tf.transformations.quaternion_about_axis(-0.5*math.pi, (0,1,0))
@@ -63,17 +64,20 @@ class MoveArmDynState(EventState):
 		if self._client.has_result(self._action_topic):
 			result = self._client.get_result(self._action_topic)
 
-			if result.success == ArgoArmPlanMoveResult.SUCCESS:
+			if result.success.val == ErrorCodes.SUCCESS:
 				self._success = True
 				return 'reached'
-			elif result.success == ArgoArmPlanMoveResult.SAMPLING_FAILED:
+			elif result.success.val == ErrorCodes.SAMPLING_FAILED:
+				Logger.logwarn('Sampling failed when attempting to move the arm')
 				self._sampling_failed = True
 				return 'sampling_failed'	
-			elif result.success == ArgoArmPlanMoveResult.PLANNING_FAILED:
+			elif result.success.val == ErrorCodes.PLANNING_FAILED:
+				Logger.logwarn('Planning failed when attempting to move the arm')
 				self._planning_failed = True
 				return 'planning_failed'
 			else:
 				Logger.logwarn('Control failed when attempting to move the arm')
+				self._control_failed = True
 				return 'control_failed'
 
 
@@ -84,23 +88,25 @@ class MoveArmDynState(EventState):
 		self._control_failed = False
 		self._success = False
 
-		action_goal = ArgoArmPlanMoveGoal()
+		action_goal = ArgoCombinedPlanGoal()
 		action_goal.target = deepcopy(userdata.object_pose)
 		
 		type_map = {
-			'dial_gauge': ArgoArmPlanMoveGoal.DIAL_GAUGE,
-			'level_gauge': ArgoArmPlanMoveGoal.LEVEL_GAUGE,
-			'valve': ArgoArmPlanMoveGoal.VALVE,
-			'hotspot': ArgoArmPlanMoveGoal.HOTSPOT
+			'dial_gauge': ObjectTypes.DIAL_GAUGE,
+			'level_gauge': ObjectTypes.LEVEL_GAUGE,
+			'valve': ObjectTypes.VALVE,
+			'hotspot': ObjectTypes.HOTSPOT
 		}
-		object_type = type_map.get(userdata.object_type, 0)
+		object_type = type_map.get(userdata.object_type, ObjectTypes.UNKNOWN)
 		
 		q = [ action_goal.target.pose.orientation.x, action_goal.target.pose.orientation.y,
 			  action_goal.target.pose.orientation.z, action_goal.target.pose.orientation.w ]
 		q = tf.transformations.quaternion_multiply(q, self._rot)
 		action_goal.target.pose.orientation = Quaternion(*q)
 		
-		action_goal.object_type = object_type
+		action_goal.object_id.data = userdata.object_id
+		action_goal.object_type.val = object_type
+		action_goal.action_type.val = ActionCodes.SAMPLE_MOVE_ARM
 
 		Logger.loginfo('Position arm to look at %s object' % str(userdata.object_type))
 		

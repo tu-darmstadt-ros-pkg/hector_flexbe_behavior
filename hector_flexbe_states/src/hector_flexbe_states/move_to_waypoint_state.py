@@ -110,6 +110,15 @@ class MoveToWaypointState(EventState):
 			# client already closed
 			pass
 
+	def on_exit(self, userdata):
+		try:
+			if self._move_client.is_available(self._action_topic) \
+			and not self._move_client.has_result(self._action_topic):
+				self._move_client.cancel(self._action_topic)
+		except:
+			# client already closed
+			pass
+
 	def on_pause(self):
 		self._move_client.cancel(self._action_topic)
 
