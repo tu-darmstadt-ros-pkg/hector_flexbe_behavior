@@ -8,13 +8,14 @@
 
 import roslib; roslib.load_manifest('behavior_search_victims')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from behavior_exploration.exploration_sm import ExplorationSM
-from hector_flexbe_states.detect_object import DetectObject
+from hector_flexbe_states.move_arm_state import MoveArmState
 from flexbe_states.wait_state import WaitState
 from behavior_explorationdriveto.explorationdriveto_sm import ExplorationDriveToSM
 from hector_flexbe_states.confirm_victim import ConfirmVictim
 from hector_flexbe_states.discard_victim import DiscardVictim
 from hector_flexbe_states.Decide_If_Victim import DecideIfVictim
+from behavior_exploration.exploration_sm import ExplorationSM
+from hector_flexbe_states.detect_object import DetectObject
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -38,8 +39,8 @@ class SearchVictimsSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(ExplorationSM, 'ExplorationWithDetection/Exploration')
 		self.add_behavior(ExplorationDriveToSM, 'ExplorationDriveTo')
+		self.add_behavior(ExplorationSM, 'ExplorationWithDetection/Exploration')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -54,6 +55,8 @@ class SearchVictimsSM(Behavior):
 		# x:30 y:365, x:43 y:428
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.pose = PoseStamped()
+		_state_machine.userdata.joint_config = [0, 0, 0, 0]
+		_state_machine.userdata.group_name = 'arm_group'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -84,12 +87,12 @@ class SearchVictimsSM(Behavior):
 
 
 		with _state_machine:
-			# x:30 y:55
-			OperatableStateMachine.add('ExplorationWithDetection',
-										_sm_explorationwithdetection_0,
-										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pose': 'pose', 'victim': 'victim'})
+			# x:84 y:49
+			OperatableStateMachine.add('SetInitialArmState',
+										MoveArmState(),
+										transitions={'reached': 'ExplorationWithDetection', 'planning_failed': 'SetInitialArmState', 'control_failed': 'SetInitialArmState'},
+										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.High, 'control_failed': Autonomy.High},
+										remapping={'joint_config': 'joint_config', 'group_name': 'group_name'})
 
 			# x:125 y:149
 			OperatableStateMachine.add('Wait',
@@ -123,6 +126,13 @@ class SearchVictimsSM(Behavior):
 										DecideIfVictim(),
 										transitions={'confirm': 'Confirm_Victim', 'discard': 'Discard_Victim', 'retry': 'ExplorationDriveTo'},
 										autonomy={'confirm': Autonomy.Off, 'discard': Autonomy.Off, 'retry': Autonomy.Off})
+
+			# x:400 y:34
+			OperatableStateMachine.add('ExplorationWithDetection',
+										_sm_explorationwithdetection_0,
+										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										remapping={'pose': 'pose', 'victim': 'victim'})
 
 
 		return _state_machine
