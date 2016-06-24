@@ -52,7 +52,7 @@ class SimpleMissionStartcheckSM(Behavior):
 		_state_machine.userdata.objectState = 0
 		_state_machine.userdata.joint_config = [0,0,0,0]
 		_state_machine.userdata.group_name = 'arm_group'
-		_state_machine.userdata.armType = 'valve'
+		_state_machine.userdata.armType = 'pipes'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
