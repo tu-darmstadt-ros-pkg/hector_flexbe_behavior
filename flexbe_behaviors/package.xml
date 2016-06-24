@@ -22,5 +22,6 @@
   <run_depend>behavior_explorationdriveto</run_depend>
   <run_depend>behavior_arm_tests</run_depend>
   <run_depend>behavior_search_victims</run_depend>
+  <run_depend>behavior_simplemissionstartcheck</run_depend>
 
 </package>
