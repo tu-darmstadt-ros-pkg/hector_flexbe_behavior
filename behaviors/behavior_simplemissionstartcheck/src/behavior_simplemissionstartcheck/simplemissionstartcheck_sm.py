@@ -52,6 +52,7 @@ class SimpleMissionStartcheckSM(Behavior):
 		_state_machine.userdata.objectState = 0
 		_state_machine.userdata.joint_config = [0,0,0,0]
 		_state_machine.userdata.group_name = 'arm_group'
+		_state_machine.userdata.armType = 'valve'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -72,7 +73,7 @@ class SimpleMissionStartcheckSM(Behavior):
 										MoveArmDynState(),
 										transitions={'reached': 'finished', 'sampling_failed': 'MoveArmPipe', 'planning_failed': 'MoveArmPipe', 'control_failed': 'MoveArmPipe'},
 										autonomy={'reached': Autonomy.Off, 'sampling_failed': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
-										remapping={'object_pose': 'startCheckPosition', 'object_type': 'objectType', 'object_id': 'startCheckID'})
+										remapping={'object_pose': 'startCheckPosition', 'object_type': 'armType', 'object_id': 'startCheckID'})
 
 
 		return _state_machine
