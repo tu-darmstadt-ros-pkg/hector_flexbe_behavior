@@ -15,7 +15,8 @@ class Explore(EventState):
 	'''
 	Starts the Exploration Task via /move_base
 
-	
+	># speed			Speed of the robot
+
 	<= succeeded			Exploration Task was successful
 	<= failed 			Exploration Task failed
 
