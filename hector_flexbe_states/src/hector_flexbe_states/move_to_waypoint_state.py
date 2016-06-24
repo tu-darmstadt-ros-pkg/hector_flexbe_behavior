@@ -22,6 +22,7 @@ class MoveToWaypointState(EventState):
 
 	># waypoint		PoseStamped		Specifies the waypoint to which the robot should move.
 	># victim		string			object_id of detected object
+	># speed					Speed of the robot
 
 	<= reached 					Robot is now located at the specified waypoint.
 	<= failed 					Failed to send a motion request to the action server.
