@@ -95,7 +95,8 @@ class MoveArmDynState(EventState):
 			'dial_gauge': ObjectTypes.DIAL_GAUGE,
 			'level_gauge': ObjectTypes.LEVEL_GAUGE,
 			'valve': ObjectTypes.VALVE,
-			'hotspot': ObjectTypes.HOTSPOT
+			'hotspot': ObjectTypes.HOTSPOT,
+			'pipes' : ObjectTypes.PIPES
 		}
 		object_type = type_map.get(userdata.object_type, ObjectTypes.UNKNOWN)
 		
