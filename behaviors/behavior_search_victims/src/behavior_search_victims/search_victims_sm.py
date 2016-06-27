@@ -8,7 +8,7 @@
 
 import roslib; roslib.load_manifest('behavior_search_victims')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.move_arm_state import MoveArmState
+from flexbe_manipulation_states.get_joints_from_srdf_state import GetJointsFromSrdfState
 from flexbe_states.wait_state import WaitState
 from behavior_explorationdriveto.explorationdriveto_sm import ExplorationDriveToSM
 from hector_flexbe_states.confirm_victim import ConfirmVictim
@@ -17,6 +17,7 @@ from hector_flexbe_states.Decide_If_Victim import DecideIfVictim
 from behavior_exploration.exploration_sm import ExplorationSM
 from hector_flexbe_states.detect_object import DetectObject
 from hector_flexbe_states.move_arm_dyn_state import MoveArmDynState
+from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -53,10 +54,11 @@ class SearchVictimsSM(Behavior):
 
 
 	def create(self):
+		srdf = "hector_tracker_robot_moveit_config/config/taurob_tracker.srdf"
+		arm_gripper_joints = ["arm_joint_%d"%i for i in range(5)]
 		# x:685 y:553, x:911 y:41
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.pose = PoseStamped()
-		_state_machine.userdata.down_config = [0, 0, 0, 0]
 		_state_machine.userdata.group_name = 'arm_group'
 		_state_machine.userdata.explore_speed = 0.2
 		_state_machine.userdata.drive_to_speed = 0.4
@@ -92,17 +94,17 @@ class SearchVictimsSM(Behavior):
 
 
 		with _state_machine:
-			# x:84 y:49
-			OperatableStateMachine.add('SetInitialArmState',
-										MoveArmState(),
-										transitions={'reached': 'ExplorationWithDetection', 'planning_failed': 'SetInitialArmState', 'control_failed': 'SetInitialArmState'},
-										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.High, 'control_failed': Autonomy.High},
-										remapping={'joint_config': 'down_config', 'group_name': 'group_name'})
+			# x:30 y:40
+			OperatableStateMachine.add('Get_Compact_Drive_Config',
+										GetJointsFromSrdfState(config_name="compact_drive_pose", srdf_file=srdf, move_group="", robot_name=""),
+										transitions={'retrieved': 'Set_Initial_Arm', 'file_error': 'failed'},
+										autonomy={'retrieved': Autonomy.Off, 'file_error': Autonomy.Off},
+										remapping={'joint_values': 'compact_drive_config'})
 
-			# x:84 y:141
+			# x:94 y:303
 			OperatableStateMachine.add('Wait',
 										WaitState(wait_time=5),
-										transitions={'done': 'SetInitialArmState'},
+										transitions={'done': 'Set_Initial_Arm'},
 										autonomy={'done': Autonomy.Off})
 
 			# x:798 y:180
@@ -132,7 +134,7 @@ class SearchVictimsSM(Behavior):
 										transitions={'confirm': 'Confirm_Victim', 'discard': 'Discard_Victim', 'retry': 'ExplorationDriveTo'},
 										autonomy={'confirm': Autonomy.Full, 'discard': Autonomy.Full, 'retry': Autonomy.Full})
 
-			# x:400 y:34
+			# x:524 y:122
 			OperatableStateMachine.add('ExplorationWithDetection',
 										_sm_explorationwithdetection_0,
 										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
@@ -145,6 +147,13 @@ class SearchVictimsSM(Behavior):
 										transitions={'reached': 'Decide_If_Victim', 'sampling_failed': 'finished', 'planning_failed': 'finished', 'control_failed': 'finished'},
 										autonomy={'reached': Autonomy.Off, 'sampling_failed': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
 										remapping={'object_pose': 'pose', 'object_type': 'type', 'object_id': 'victim'})
+
+			# x:255 y:81
+			OperatableStateMachine.add('Set_Initial_Arm',
+										MoveitToJointsState(move_group="arm_with_gripper_group", joint_names=arm_gripper_joints, action_topic='/move_group'),
+										transitions={'reached': 'ExplorationWithDetection', 'planning_failed': 'failed', 'control_failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
+										remapping={'joint_config': 'compact_drive_config'})
 
 
 		return _state_machine
