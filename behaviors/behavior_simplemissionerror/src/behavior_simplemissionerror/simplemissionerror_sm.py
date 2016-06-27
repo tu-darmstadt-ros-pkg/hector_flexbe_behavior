@@ -65,14 +65,14 @@ class SimpleMissionErrorSM(Behavior):
 
 			# x:555 y:29
 			OperatableStateMachine.add('setStartpoint',
-										MarkPoint(),
+										GetRobotPose(),
 										transitions={'succeeded': 'Operator'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'startPoint'})
 
 			# x:553 y:120
 			OperatableStateMachine.add('setEndpoint',
-										MarkPoint(),
+										GetRobotPose(),
 										transitions={'succeeded': 'Operator'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'endPoint'})
