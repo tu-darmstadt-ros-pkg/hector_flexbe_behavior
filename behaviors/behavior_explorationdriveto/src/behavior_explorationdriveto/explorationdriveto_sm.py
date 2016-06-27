@@ -9,7 +9,7 @@
 import roslib; roslib.load_manifest('behavior_explorationdriveto')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtWaypoint import LookAtWaypoint
-from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState
+from hector_flexbe_states.move_arm import MoveToWaypointState
 from hector_flexbe_states.get_object_pose_state import GetObjectPoseState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -68,9 +68,9 @@ class ExplorationDriveToSM(Behavior):
 			# x:445 y:91
 			OperatableStateMachine.add('Move_To',
 										MoveToWaypointState(),
-										transitions={'reached': 'finished', 'failed': 'failed', 'update': 'GetVictimPose'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'update': Autonomy.Off},
-										remapping={'waypoint': 'pose', 'victim': 'victim', 'speed': 'speed'})
+										transitions={'reached': 'finished', 'failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'pose'})
 
 			# x:514 y:252
 			OperatableStateMachine.add('GetVictimPose',
