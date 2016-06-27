@@ -53,10 +53,10 @@ class SearchVictimsSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:43 y:428
+		# x:685 y:553, x:911 y:41
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.pose = PoseStamped()
-		_state_machine.userdata.joint_config = [0, 0, 0, 0]
+		_state_machine.userdata.down_config = [0, 0, 0, 0]
 		_state_machine.userdata.group_name = 'arm_group'
 		_state_machine.userdata.explore_speed = 0.2
 		_state_machine.userdata.drive_to_speed = 0.4
@@ -97,7 +97,7 @@ class SearchVictimsSM(Behavior):
 										MoveArmState(),
 										transitions={'reached': 'ExplorationWithDetection', 'planning_failed': 'SetInitialArmState', 'control_failed': 'SetInitialArmState'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.High, 'control_failed': Autonomy.High},
-										remapping={'joint_config': 'joint_config', 'group_name': 'group_name'})
+										remapping={'joint_config': 'down_config', 'group_name': 'group_name'})
 
 			# x:84 y:141
 			OperatableStateMachine.add('Wait',
@@ -130,7 +130,7 @@ class SearchVictimsSM(Behavior):
 			OperatableStateMachine.add('Decide_If_Victim',
 										DecideIfVictim(),
 										transitions={'confirm': 'Confirm_Victim', 'discard': 'Discard_Victim', 'retry': 'ExplorationDriveTo'},
-										autonomy={'confirm': Autonomy.Off, 'discard': Autonomy.Off, 'retry': Autonomy.Off})
+										autonomy={'confirm': Autonomy.Full, 'discard': Autonomy.Full, 'retry': Autonomy.Full})
 
 			# x:400 y:34
 			OperatableStateMachine.add('ExplorationWithDetection',
