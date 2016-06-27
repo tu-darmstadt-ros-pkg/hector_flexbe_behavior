@@ -3,7 +3,7 @@
 <behavior name="SimpleMission">
 
 	<executable package_path="behavior_simplemission.simplemission_sm" class="SimpleMissionSM" />
-	<tagstring>demo</tagstring>
+	<tagstring>demo, mission</tagstring>
 	<author>Gabriel</author>
 	<date>Thu Jun 02 2016</date>
 	<description>

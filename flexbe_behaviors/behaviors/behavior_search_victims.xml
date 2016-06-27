@@ -3,7 +3,7 @@
 <behavior name="Search Victims">
 
 	<executable package_path="behavior_search_victims.search_victims_sm" class="SearchVictimsSM" />
-	<tagstring>test</tagstring>
+	<tagstring>test, mission</tagstring>
 	<author>Elisa und Gabriel</author>
 	<date>Thu May 19 2016</date>
 	<description>
