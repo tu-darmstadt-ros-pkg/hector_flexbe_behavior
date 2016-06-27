@@ -11,21 +11,19 @@ from smach import CBState
 
 
 
-class Mapping(EventState):
+class SetMappingState(EventState):
 	'''
-	Example for a state to demonstrate which functionality is available for state implementation.
-	This example lets the behavior wait until the given target_time has passed since the behavior has been started.
+	Activate or deactivate mapping.
 
-	-- target_time 	float 	Time which needs to have passed since the behavior started.
+	-- active 	bool 	Mapping changed to active or inactive.
 
-	<= continue 			Given time has passed.
-	<= failed 				Example for a failure outcome.
+	<= succeeded 		Mapping changed.
 
 	'''
 
-	def __init__(self):
+	def __init__(self, active):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(Mapping, self).__init__(outcomes = ['succeeded'], input_keys = ['switch'])
+		super(SetMappingState, self).__init__(outcomes = ['succeeded'])
 
 		#self._mappingTopicSet = '/mapper/set_mode'
 		#self._mappingTopicGet = '/mapper/get_mode'

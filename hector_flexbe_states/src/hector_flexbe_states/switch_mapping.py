@@ -22,7 +22,7 @@ class SwitchMapping(EventState):
 	'''
 
 	def __init__(self):
-		super(Mapping, self).__init__(outcomes = ['succeeded'], input_keys = ['switch'])
+		super(SwitchMapping, self).__init__(outcomes = ['succeeded'], input_keys = ['switch'])
 
         	self.set_mapper_mode = rospy.ServiceProxy('/mapper/set_mode', SetMode)
 
