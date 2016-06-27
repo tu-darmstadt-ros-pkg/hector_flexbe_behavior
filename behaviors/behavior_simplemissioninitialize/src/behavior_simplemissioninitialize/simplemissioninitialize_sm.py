@@ -10,7 +10,8 @@ import roslib; roslib.load_manifest('behavior_simplemissioninitialize')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.StartCheck import StartCheck
 from hector_flexbe_states.Mapping import Mapping
-from hector_flexbe_states.MarkPoint import MarkPoint
+from hector_flexbe_states.mark_point import MarkPoint
+from flexbe_states.operator_decision_state import OperatorDecisionState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -45,10 +46,12 @@ class SimpleMissionInitializeSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['startPoint'])
+		# x:30 y:365
+		_state_machine = OperatableStateMachine(outcomes=['finished'], output_keys=['startPoint', 'endPoint'])
 		_state_machine.userdata.startPoint = PoseStamped()
 		_state_machine.userdata.switchTrue = True
+		_state_machine.userdata.endPoint = PoseStamped()
+		_state_machine.userdata.switchFalse = False
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -73,9 +76,29 @@ class SimpleMissionInitializeSM(Behavior):
 			# x:404 y:99
 			OperatableStateMachine.add('Startpoint',
 										MarkPoint(),
-										transitions={'succeeded': 'finished'},
+										transitions={'succeeded': 'Operator_Drive'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'startPoint'})
+
+			# x:385 y:263
+			OperatableStateMachine.add('Mark_Endpoint',
+										MarkPoint(),
+										transitions={'succeeded': 'Deactivate_Mapping'},
+										autonomy={'succeeded': Autonomy.Off},
+										remapping={'pose': 'endPoint'})
+
+			# x:346 y:358
+			OperatableStateMachine.add('Deactivate_Mapping',
+										Mapping(),
+										transitions={'succeeded': 'finished'},
+										autonomy={'succeeded': Autonomy.Off},
+										remapping={'switch': 'switchFalse'})
+
+			# x:384 y:176
+			OperatableStateMachine.add('Operator_Drive',
+										OperatorDecisionState(outcomes=['done'], hint="Drive robot to end pose", suggestion=None),
+										transitions={'done': 'Mark_Endpoint'},
+										autonomy={'done': Autonomy.Full})
 
 
 		return _state_machine
