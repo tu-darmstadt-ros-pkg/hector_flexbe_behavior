@@ -55,10 +55,16 @@ class CreatePath(EventState):
 	def on_enter(self, userdata):
 		
 		path = self._serv.call('trajectory', GetRobotTrajectoryRequest())
+		
 		userdata.path = path.trajectory
+		
+		#userdata.path.header.frame_id = 'map'
 		Logger.loginfo('Failed to send motion request to waypoint (%(x).3f, %(y).3f)' % {
 				'x': path.trajectory.poses[1].pose.position.x,
 				'y': path.trajectory.poses[1].pose.position.y
+			})
+		Logger.loginfo('Frame id (%(x)s)' % {
+				'x': path.trajectory.header.frame_id
 			})
 		self._succeeded = True
 	

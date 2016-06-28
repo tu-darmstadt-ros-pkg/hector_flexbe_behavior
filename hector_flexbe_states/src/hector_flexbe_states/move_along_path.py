@@ -55,8 +55,10 @@ class MoveAlongPath(EventState):
 	def on_enter(self, userdata):
 		
 		self._path = MoveBaseActionPath()
-		userdata.path = userdata.path.reverse()
+		#userdata.path.poses = userdata.path.poses.reverse()
+		userdata.path.poses = list(reversed(userdata.path.poses))
 		self._path.goal.target_path.poses = userdata.path.poses
+		self._path.header.frame_id = 'map'
 
 		self._failed = False
 
