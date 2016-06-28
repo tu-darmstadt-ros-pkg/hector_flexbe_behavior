@@ -72,7 +72,7 @@ class ExplorationDriveToSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'update': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'victim': 'victim', 'speed': 'speed'})
 
-			# x:514 y:252
+			# x:530 y:247
 			OperatableStateMachine.add('GetVictimPose',
 										GetObjectPoseState(),
 										transitions={'done': 'Move_To', 'unknown': 'failed', 'not_available': 'failed'},

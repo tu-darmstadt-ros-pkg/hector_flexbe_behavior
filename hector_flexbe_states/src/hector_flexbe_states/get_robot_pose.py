@@ -2,27 +2,24 @@
 import rospy
 
 from flexbe_core import EventState, Logger
-from flexbe_core.proxy import ProxyPublisher
 from flexbe_core.proxy import ProxySubscriberCached
 from geometry_msgs.msg import PoseStamped
 
-from smach import CBState
 
 
-
-class MarkPoint(EventState):
+class GetRobotPose(EventState):
 	'''
-	Marks the robots current pose and returns it
+	Retrieves the robots current pose and returns it
 
-
-	<= succeeded 			Point has been marked successfully.
 
 	#> pose 	PoseStamped	Position and Pose which has been marked
+
+	<= succeeded 			Point has been marked successfully.
 
 	'''
 
 	def __init__(self):
-		super(MarkPoint, self).__init__(outcomes = ['succeeded'], output_keys = ['pose'])
+		super(GetRobotPose, self).__init__(outcomes = ['succeeded'], output_keys = ['pose'])
 
 		self._objectTopic = '/robot_pose'
 		self._sub = ProxySubscriberCached({self._objectTopic: PoseStamped})

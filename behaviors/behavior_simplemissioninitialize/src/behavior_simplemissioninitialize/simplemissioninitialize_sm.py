@@ -9,8 +9,9 @@
 import roslib; roslib.load_manifest('behavior_simplemissioninitialize')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.StartCheck import StartCheck
-from hector_flexbe_states.Mapping import Mapping
-from hector_flexbe_states.MarkPoint import MarkPoint
+from flexbe_states.operator_decision_state import OperatorDecisionState
+from hector_flexbe_states.set_mapping_state import SetMappingState
+from hector_flexbe_states.get_robot_pose import GetRobotPose
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -45,10 +46,10 @@ class SimpleMissionInitializeSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['startPoint'])
+		# x:30 y:365
+		_state_machine = OperatableStateMachine(outcomes=['finished'], output_keys=['startPoint', 'endPoint'])
 		_state_machine.userdata.startPoint = PoseStamped()
-		_state_machine.userdata.switchTrue = True
+		_state_machine.userdata.endPoint = PoseStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -60,22 +61,40 @@ class SimpleMissionInitializeSM(Behavior):
 			# x:30 y:95
 			OperatableStateMachine.add('StartCheck',
 										StartCheck(),
-										transitions={'succeeded': 'ActivateMapping'},
+										transitions={'succeeded': 'Activate_Mapping'},
 										autonomy={'succeeded': Autonomy.Off})
 
-			# x:198 y:97
-			OperatableStateMachine.add('ActivateMapping',
-										Mapping(),
-										transitions={'succeeded': 'Startpoint'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'switch': 'switchTrue'})
+			# x:384 y:176
+			OperatableStateMachine.add('Operator_Drive',
+										OperatorDecisionState(outcomes=['done'], hint="Drive robot to end pose", suggestion=None),
+										transitions={'done': 'Get_End_Point'},
+										autonomy={'done': Autonomy.Full})
 
-			# x:404 y:99
-			OperatableStateMachine.add('Startpoint',
-										MarkPoint(),
+			# x:193 y:88
+			OperatableStateMachine.add('Activate_Mapping',
+										SetMappingState(active=True),
+										transitions={'succeeded': 'Get_Start_Point'},
+										autonomy={'succeeded': Autonomy.Off})
+
+			# x:381 y:364
+			OperatableStateMachine.add('Deactivate_Mapping',
+										SetMappingState(active=False),
 										transitions={'succeeded': 'finished'},
+										autonomy={'succeeded': Autonomy.Off})
+
+			# x:386 y:74
+			OperatableStateMachine.add('Get_Start_Point',
+										GetRobotPose(),
+										transitions={'succeeded': 'Operator_Drive'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'startPoint'})
+
+			# x:394 y:260
+			OperatableStateMachine.add('Get_End_Point',
+										GetRobotPose(),
+										transitions={'succeeded': 'Deactivate_Mapping'},
+										autonomy={'succeeded': Autonomy.Off},
+										remapping={'pose': 'endPoint'})
 
 
 		return _state_machine

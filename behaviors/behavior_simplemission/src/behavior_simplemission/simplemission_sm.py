@@ -9,10 +9,7 @@
 import roslib; roslib.load_manifest('behavior_simplemission')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from behavior_simplemissioninitialize.simplemissioninitialize_sm import SimpleMissionInitializeSM
-from hector_flexbe_states.MarkPoint import MarkPoint
-from hector_flexbe_states.Mapping import Mapping
 from behavior_simplemissiondoaction.simplemissiondoaction_sm import SimpleMissionDoActionSM
-from flexbe_states.wait_state import WaitState
 from behavior_simplemissiondriveto.simplemissiondriveto_sm import SimpleMissionDriveToSM
 from behavior_simplemissionerror.simplemissionerror_sm import SimpleMissionErrorSM
 # Additional imports can be added inside the following tags
@@ -71,51 +68,31 @@ class SimpleMissionSM(Behavior):
 			# x:31 y:51
 			OperatableStateMachine.add('SimpleMissionInitialize',
 										self.use_behavior(SimpleMissionInitializeSM, 'SimpleMissionInitialize'),
-										transitions={'finished': 'Operator_Drive', 'failed': 'Operator_Drive'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'startPoint': 'startPoint'})
+										transitions={'finished': 'SimpleMissionDoAction'},
+										autonomy={'finished': Autonomy.Inherit},
+										remapping={'startPoint': 'startPoint', 'endPoint': 'endPoint'})
 
-			# x:496 y:56
-			OperatableStateMachine.add('Mark_Endpoint',
-										MarkPoint(),
-										transitions={'succeeded': 'Deactivate_Mapping'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'pose': 'endPoint'})
-
-			# x:672 y:55
-			OperatableStateMachine.add('Deactivate_Mapping',
-										Mapping(),
-										transitions={'succeeded': 'SimpleMissionDoAction'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'switch': 'switchFalse'})
-
-			# x:673 y:234
+			# x:515 y:72
 			OperatableStateMachine.add('SimpleMissionDoAction',
 										self.use_behavior(SimpleMissionDoActionSM, 'SimpleMissionDoAction'),
 										transitions={'finished': 'DriveToStart', 'failed': 'SimpleMissionError'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:291 y:56
-			OperatableStateMachine.add('Operator_Drive',
-										WaitState(wait_time=5),
-										transitions={'done': 'Mark_Endpoint'},
-										autonomy={'done': Autonomy.High})
-
-			# x:432 y:122
+			# x:818 y:222
 			OperatableStateMachine.add('DriveToEnd',
 										self.use_behavior(SimpleMissionDriveToSM, 'DriveToEnd'),
 										transitions={'finished': 'SimpleMissionDoAction', 'failed': 'SimpleMissionError'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'endPoint'})
 
-			# x:221 y:236
+			# x:218 y:222
 			OperatableStateMachine.add('DriveToStart',
 										self.use_behavior(SimpleMissionDriveToSM, 'DriveToStart'),
 										transitions={'finished': 'DriveToEnd', 'failed': 'SimpleMissionError'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'startPoint'})
 
-			# x:440 y:412
+			# x:524 y:372
 			OperatableStateMachine.add('SimpleMissionError',
 										self.use_behavior(SimpleMissionErrorSM, 'SimpleMissionError'),
 										transitions={'failed': 'failed', 'toStart': 'DriveToStart', 'toEnd': 'DriveToEnd'},

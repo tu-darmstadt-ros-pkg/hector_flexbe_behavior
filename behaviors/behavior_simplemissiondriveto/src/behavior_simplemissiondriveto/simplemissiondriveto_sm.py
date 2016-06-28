@@ -8,7 +8,7 @@
 
 import roslib; roslib.load_manifest('behavior_simplemissiondriveto')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState
+from hector_flexbe_states.move_arm import MoveToWaypointState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped

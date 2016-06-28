@@ -9,7 +9,7 @@
 import roslib; roslib.load_manifest('behavior_simplemissionerror')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.ErrorOperator import ErrorOperator
-from hector_flexbe_states.MarkPoint import MarkPoint
+from hector_flexbe_states.mark_point import MarkPoint
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -65,14 +65,14 @@ class SimpleMissionErrorSM(Behavior):
 
 			# x:555 y:29
 			OperatableStateMachine.add('setStartpoint',
-										MarkPoint(),
+										GetRobotPose(),
 										transitions={'succeeded': 'Operator'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'startPoint'})
 
 			# x:553 y:120
 			OperatableStateMachine.add('setEndpoint',
-										MarkPoint(),
+										GetRobotPose(),
 										transitions={'succeeded': 'Operator'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'endPoint'})

@@ -3,7 +3,7 @@
 <behavior name="SimpleMissionDriveTo">
 
 	<executable package_path="behavior_simplemissiondriveto.simplemissiondriveto_sm" class="SimpleMissionDriveToSM" />
-	<tagstring>demo</tagstring>
+	<tagstring>demo, sub</tagstring>
 	<author>Gabriel Elisa</author>
 	<date>Tue Jun 07 2016</date>
 	<description>
