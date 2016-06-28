@@ -35,7 +35,7 @@ class CreatePath(EventState):
 		
 		self._failed = False
 		self._succeeded = False
-
+	
 		self._serv = ProxyServiceCaller({'trajectory': GetRobotTrajectory})
 		
 		
@@ -47,14 +47,20 @@ class CreatePath(EventState):
 		if self._failed:
 			return 'failed'
 		if self._succeeded:
-			return 'reached'
+			return 'succeeded'
 
 		
 
 			
 	def on_enter(self, userdata):
 		
-		userdata.path = self._serv.call('trajectory', GetRobotTrajectoryRequest())
+		path = self._serv.call('trajectory', GetRobotTrajectoryRequest())
+		userdata.path = path.trajectory
+		Logger.loginfo('Failed to send motion request to waypoint (%(x).3f, %(y).3f)' % {
+				'x': path.trajectory.poses[1].pose.position.x,
+				'y': path.trajectory.poses[1].pose.position.y
+			})
+		self._succeeded = True
 	
 			
 

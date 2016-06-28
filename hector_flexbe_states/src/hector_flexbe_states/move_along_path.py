@@ -3,11 +3,9 @@
 import rospy
 from flexbe_core import EventState, Logger
 
-from flexbe_core.proxy import ProxyActionClient
+from flexbe_core.proxy import ProxyActionClient, ProxyPublisher
 
 from hector_move_base_msgs.msg import MoveBaseAction, MoveBaseGoal, MoveBaseActionPath
-from monstertruck_msgs.srv import SetAlternativeTolerance
-from actionlib_msgs.msg import GoalID
 from rospy import Time
 
 
@@ -38,7 +36,7 @@ class MoveAlongPath(EventState):
 		self._reached = False
 
 		self._pathTopic = '/controller/path'
-		self._pub = ProxyPublisherCached({self._pathTopic: MoveBaseActionPath})
+		self._pub = ProxyPublisher({self._pathTopic: MoveBaseActionPath})
 		
 		
 	def execute(self, userdata):
@@ -57,7 +55,7 @@ class MoveAlongPath(EventState):
 	def on_enter(self, userdata):
 		
 		self._path = MoveBaseActionPath()
-		self._path.goal.target_path.poses = userdata.path
+		self._path.goal.target_path.poses = userdata.path.poses
 
 		self._failed = False
 
