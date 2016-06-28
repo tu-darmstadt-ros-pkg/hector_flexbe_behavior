@@ -1,0 +1,23 @@
+<package>
+  <name>behavior_pathdrivemission</name>
+  <version>1.0.0</version>
+  <description>
+     Robot moves along a given path
+  </description>
+  <maintainer email="todo@todo.com">Gabriel, Elisa</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_pathdrivemission</url>
+  <author>Gabriel, Elisa</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>hector_flexbe_states</run_depend>
+  <run_depend>flexbe_states</run_depend>
+  <run_depend>flexbe_manipulation_states</run_depend>
+  <run_depend>flexbe_navigation_states</run_depend>
+  <run_depend>flexbe_utility_states</run_depend>
+
+</package>
