@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Detect Pipes">
+
+	<executable package_path="behavior_detect_pipes.detect_pipes_sm" class="DetectPipesSM" />
+	<tagstring>test</tagstring>
+	<author>Philipp Schillinger</author>
+	<date>Tue Jun 28 2016</date>
+	<description>
+		Position as required and try different ways to detect the pipe positions
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

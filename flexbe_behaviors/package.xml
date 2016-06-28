@@ -23,5 +23,6 @@
   <run_depend>behavior_arm_tests</run_depend>
   <run_depend>behavior_search_victims</run_depend>
   <run_depend>behavior_simplemissionstartcheck</run_depend>
+  <run_depend>behavior_detect_pipes</run_depend>
 
 </package>
