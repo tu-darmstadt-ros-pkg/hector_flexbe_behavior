@@ -37,7 +37,7 @@ class MoveToFixedWaypoint(EventState):
 		self._action_topic = '/move_base'
 		Logger.loginfo("OUTPUT TEST")
 		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
-		self.set_tolerance = rospy.ServiceProxy('/controller/set_alternative_tolerances', SetAlternativeTolerance)
+		#self.set_tolerance = rospy.ServiceProxy('/controller/set_alternative_tolerances', SetAlternativeTolerance)
 		
 		self._failed = False
 		self._reached = False
@@ -72,9 +72,9 @@ class MoveToFixedWaypoint(EventState):
 		self._failed = False
 		self._reached = False
 		
-		goal_id = GoalID()
-		goal_id.id = 'abcd'
-		goal_id.stamp = Time.now()
+		#goal_id = GoalID()
+		#goal_id.id = 'abcd'
+		#goal_id.stamp = Time.now()
 
 		action_goal = MoveBaseGoal()
 		action_goal.target_pose = userdata.waypoint
@@ -85,7 +85,7 @@ class MoveToFixedWaypoint(EventState):
 
 		try:
 			self._move_client.send_goal(self._action_topic, action_goal)
-			resp = self.set_tolerance(goal_id, 0.2, 1.55)
+			#resp = self.set_tolerance(goal_id, 0.2, 1.55)
 		except Exception as e:
 			Logger.logwarn('Failed to send motion request to waypoint (%(x).3f, %(y).3f):\n%(err)s' % {
 				'err': str(e),
