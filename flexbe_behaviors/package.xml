@@ -25,5 +25,6 @@
   <run_depend>behavior_simplemissionstartcheck</run_depend>
   <run_depend>behavior_detect_pipes</run_depend>
   <run_depend>behavior_pathdrivemission</run_depend>
+  <run_depend>behavior_drivepath_test</run_depend>
 
 </package>

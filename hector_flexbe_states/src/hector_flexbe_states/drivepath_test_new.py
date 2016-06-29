@@ -7,6 +7,7 @@ from flexbe_core.proxy import ProxyActionClient, ProxyPublisher
 
 from hector_move_base_msgs.msg import MoveBaseAction, MoveBaseGoal, MoveBaseActionPath
 from rospy import Time
+from geometry_msgs.msg import PoseStamped
 
 
 '''
@@ -15,7 +16,7 @@ Created on 15.06.2015
 @author: Philipp Schillinger
 '''
 
-class MoveAlongPath(EventState):
+class DrivepathTestNew(EventState):
 	'''
 	Lets the robot move along a given path.
 
@@ -30,7 +31,7 @@ class MoveAlongPath(EventState):
 		'''
 		Constructor
 		'''
-		super(MoveAlongPath, self).__init__(outcomes=['reached', 'failed'], input_keys=['path','speed'])
+		super(DrivepathTestNew, self).__init__(outcomes=['reached', 'failed'])
 		
 		self._failed = False
 		self._reached = False
@@ -55,14 +56,12 @@ class MoveAlongPath(EventState):
 	def on_enter(self, userdata):
 		
 		self._path = MoveBaseActionPath()
-		#userdata.path.poses = userdata.path.poses.reverse()
-		for i in (0, len(userdata.path.poses)-1):
-			userdata.path.poses[i].pose.position.x = -userdata.path.poses[i].pose.position.x
-			userdata.path.poses[i].pose.position.y = -userdata.path.poses[i].pose.position.y
-			userdata.path.poses[i].pose.position.z = -userdata.path.poses[i].pose.position.z
-		#userdata.path.poses = list(reversed(userdata.path.poses))
-		self._path.goal.target_path.poses = userdata.path.poses
-		self._path.header.frame_id = 'map'
+		self._point = PoseStamped()
+		self._point.pose.orientation.w = 1
+		self._point.pose.position.x = 0
+		self._path.goal.target_path.poses.append(self._point)
+		Logger.loginfo('%(x).3f %(y).3f %(z).3f' % {'x': self._point.pose.orientation.x, 'y': self._point.pose.orientation.y, 'z': self._point.pose.orientation.z})
+
 
 		self._failed = False
 
