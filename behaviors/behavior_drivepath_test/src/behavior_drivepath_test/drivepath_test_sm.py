@@ -57,13 +57,13 @@ class DrivepathTestSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('Test',
 										DrivepathTest(),
-										transitions={'reached': 'Test2', 'failed': 'failed'},
+										transitions={'reached': 'Test', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.High, 'failed': Autonomy.Off})
 
 			# x:221 y:37
 			OperatableStateMachine.add('Test2',
 										DrivepathTestNew(),
-										transitions={'reached': 'Test', 'failed': 'failed'},
+										transitions={'reached': 'Test2', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.High, 'failed': Autonomy.Off})
 
 
