@@ -9,6 +9,7 @@
 import roslib; roslib.load_manifest('behavior_pathdrivemission')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.create_path import CreatePath
+from hector_flexbe_states.invert_path import InvertPath
 from hector_flexbe_states.move_along_path import MoveAlongPath
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -58,12 +59,19 @@ class PathDriveMissionSM(Behavior):
 			# x:169 y:61
 			OperatableStateMachine.add('Create_Path',
 										CreatePath(),
-										transitions={'succeeded': 'Move_along_Path', 'failed': 'failed'},
-										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										transitions={'succeeded': 'Invert_Path', 'retry': 'Create_Path'},
+										autonomy={'succeeded': Autonomy.Off, 'retry': Autonomy.Off},
 										remapping={'path': 'path'})
 
-			# x:431 y:125
-			OperatableStateMachine.add('Move_along_Path',
+			# x:309 y:56
+			OperatableStateMachine.add('Invert_Path',
+										InvertPath(),
+										transitions={'reached': 'Move_Along_Path', 'failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'path': 'path'})
+
+			# x:574 y:45
+			OperatableStateMachine.add('Move_Along_Path',
 										MoveAlongPath(),
 										transitions={'reached': 'finished', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},

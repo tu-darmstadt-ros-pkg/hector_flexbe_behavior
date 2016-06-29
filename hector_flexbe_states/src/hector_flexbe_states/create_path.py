@@ -20,9 +20,10 @@ Created on 15.06.2015
 
 class CreatePath(EventState):
 	'''
-	Lets the robot move along a given path.
+	Record a path.
 	
-	
+	#> path		Path				Generated path.	
+
 	<= succeeded					Robot is now located at the specified waypoint.
 	<= retry 					Retry to operate robot.
 	'''
