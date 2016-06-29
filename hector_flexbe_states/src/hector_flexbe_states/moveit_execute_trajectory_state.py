@@ -55,6 +55,7 @@ class MoveitExecuteTrajectoryState(EventState):
 
 		request = ExecuteKnownTrajectoryRequest()
 		request.trajectory.joint_trajectory = userdata.joint_trajectory
+		request.wait_for_execution = True
 		
 		try: 
 			self._result = self._srv.call(self._topic, request)
