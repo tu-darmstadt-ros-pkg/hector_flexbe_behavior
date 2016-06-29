@@ -24,18 +24,16 @@ class CreatePath(EventState):
 	
 	
 	<= succeeded					Robot is now located at the specified waypoint.
-	<= failed 					Failed to send a motion request to the action server.
+	<= retry 					Retry to operate robot.
 	'''
 
 	def __init__(self):
 		'''
 		Constructor
 		'''
-		super(CreatePath, self).__init__(outcomes=['succeeded', 'failed'], output_keys=['path'])
+		super(CreatePath, self).__init__(outcomes=['succeeded', 'retry'], output_keys=['path'])
 		
-		self._failed = False
-		self._succeeded = False
-	
+
 		self._serv = ProxyServiceCaller({'trajectory': GetRobotTrajectory})
 		self._start_time = None
 		
