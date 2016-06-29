@@ -43,6 +43,7 @@ class CalculateIKState(EventState):
 
 		self._move_group = move_group
 		self._result = None
+		self._failed = False
 		self._ignore_collisions = ignore_collisions
 		
 		
@@ -50,20 +51,29 @@ class CalculateIKState(EventState):
 		'''
 		Execute this state
 		'''
+		if self._failed:
+			return 'failed'
+			
 		if self._result.error_code.val == MoveItErrorCodes.SUCCESS:
 			userdata.joint_config = self._result.solution.joint_state.position
 			return 'planned'
 		else:
 			Logger.logwarn('IK calculation resulted in error %d' % self._result.error_code.val)
+			self._failed = True
 			return 'failed'
 
 			
 	def on_enter(self, userdata):
+		self._failed = False
 		request = GetPositionIKRequest()
 		request.ik_request.group_name = self._move_group
 		request.ik_request.avoid_collisions = not self._ignore_collisions
 
 		request.ik_request.pose_stamped = userdata.eef_pose
 
-		self._result = self._srv.call(self._topic, request)
+		try:
+			self._result = self._srv.call(self._topic, request)
+		except Exception as e:
+			Logger.logwarn('Failed to calculate IK!\n%s' % str(e))
+			self._failed = True
 
