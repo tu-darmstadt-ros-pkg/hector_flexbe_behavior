@@ -67,6 +67,7 @@ class InvertPath(EventState):
 		#self._path.goal.target_path.poses = userdata.path.poses
 		#self._path.goal.target_path.header.frame_id = 'map'
 
+
 		self._failed = False
 
 		self._reached = True	

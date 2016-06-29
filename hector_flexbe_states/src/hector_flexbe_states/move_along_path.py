@@ -58,6 +58,7 @@ class MoveAlongPath(EventState):
 	def on_enter(self, userdata):
 
 		ma = MarkerArray()
+		self._path = MoveBaseActionPath()
 				
 		for i in range(len(userdata.path.poses)):
 			
@@ -73,8 +74,11 @@ class MoveAlongPath(EventState):
 			ma.markers.append(marker)
 
 		self._failed = False
+
+		self._path.goal.target_path.poses = userdata.path.poses
+		self._path.goal.target_path.header.frame_id = 'map'
 		
-		self._pub.publish(self._pathTopic, userdata.path)
+		self._pub.publish(self._pathTopic, self._path)
 		self._pub.publish(self._marker_topic, ma)
 		self._reached = True
 		
