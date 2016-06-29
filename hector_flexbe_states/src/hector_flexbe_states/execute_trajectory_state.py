@@ -7,7 +7,7 @@ import actionlib
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyActionClient
 
-from trajectory_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal, FollowJointTrajectoryResult
+from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal, FollowJointTrajectoryResult
 
 '''
 Created on 10/31/2014
