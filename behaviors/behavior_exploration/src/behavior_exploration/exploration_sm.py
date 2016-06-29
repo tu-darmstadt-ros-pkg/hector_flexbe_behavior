@@ -32,6 +32,7 @@ class ExplorationSM(Behavior):
 		self.name = 'Exploration'
 
 		# parameters of this behavior
+		self.add_parameter('speed', 0.3)
 
 		# references to used behaviors
 
@@ -46,9 +47,9 @@ class ExplorationSM(Behavior):
 
 	def create(self):
 		# x:41 y:562, x:172 y:564
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.lookAround = 'look_around'
-		_state_machine.userdata.speed = 2
+		_state_machine.userdata.speed = self.speed
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]

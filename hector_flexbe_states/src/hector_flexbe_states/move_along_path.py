@@ -35,7 +35,8 @@ class MoveAlongPath(EventState):
 		self._failed = False
 		self._reached = False
 
-		self._pathTopic = '/controller/path'
+		#self._pathTopic = '/controller/path'
+		self._pathTopic = '/drivepath'		
 		self._pub = ProxyPublisher({self._pathTopic: MoveBaseActionPath})
 		
 		

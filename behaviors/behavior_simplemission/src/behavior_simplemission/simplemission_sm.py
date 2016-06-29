@@ -33,6 +33,7 @@ class SimpleMissionSM(Behavior):
 		self.name = 'SimpleMission'
 
 		# parameters of this behavior
+		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
 		self.add_behavior(SimpleMissionInitializeSM, 'SimpleMissionInitialize')

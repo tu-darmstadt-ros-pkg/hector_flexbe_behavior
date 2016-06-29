@@ -29,7 +29,7 @@ class GetRobotPose(EventState):
 
 	def execute(self, userdata):
 		
-		if self._succeeded = True
+		if self._succeeded == True:
 			return 'succeeded' 
 		
 

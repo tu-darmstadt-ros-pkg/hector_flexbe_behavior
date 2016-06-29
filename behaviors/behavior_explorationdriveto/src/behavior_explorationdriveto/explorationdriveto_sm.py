@@ -32,6 +32,7 @@ class ExplorationDriveToSM(Behavior):
 		self.name = 'ExplorationDriveTo'
 
 		# parameters of this behavior
+		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
 
@@ -46,10 +47,10 @@ class ExplorationDriveToSM(Behavior):
 
 	def create(self):
 		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose', 'victim', 'speed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose', 'victim'])
 		_state_machine.userdata.pose = PoseStamped()
 		_state_machine.userdata.victim = ''
-		_state_machine.userdata.speed = 0.2
+		_state_machine.userdata.speed = self.speed
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
