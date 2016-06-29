@@ -37,43 +37,34 @@ class CreatePath(EventState):
 		self._succeeded = False
 	
 		self._serv = ProxyServiceCaller({'trajectory': GetRobotTrajectory})
+		self._start_time = None
 		
 		
 	def execute(self, userdata):
 		'''
 		Execute this state
 		'''
-		
-		if self._failed:
-			return 'failed'
-		if self._succeeded:
-			return 'succeeded'
+		# wait for manual exit
+		pass
 
 		
 
 			
 	def on_enter(self, userdata):
+		self._start_time = rospy.Time.now()
+
+	def on_exit(self, userdata):
 		
 		path = self._serv.call('trajectory', GetRobotTrajectoryRequest())
 		
-		userdata.path = path.trajectory
+		result = path.trajectory
+		result.poses = filter(lambda p: p.header.stamp > self._start_time, path.trajectory.poses)
 		
-		#userdata.path.header.frame_id = 'map'
-		Logger.loginfo('Failed to send motion request to waypoint (%(x).3f, %(y).3f)' % {
-				'x': path.trajectory.poses[1].pose.position.x,
-				'y': path.trajectory.poses[1].pose.position.y
-			})
-		Logger.loginfo('Frame id (%(x)s)' % {
-				'x': path.trajectory.header.frame_id
-			})
-		self._succeeded = True
+		userdata.path = result
 	
 			
 
 	def on_stop(self):
-		pass
-
-	def on_exit(self, userdata):	
 		pass
 
 	def on_pause(self):
