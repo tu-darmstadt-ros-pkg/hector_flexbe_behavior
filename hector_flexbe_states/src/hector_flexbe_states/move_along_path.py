@@ -57,10 +57,14 @@ class MoveAlongPath(EventState):
 		self._path = MoveBaseActionPath()
 		#userdata.path.poses = userdata.path.poses.reverse()
 		for i in (0, len(userdata.path.poses)-1):
-			userdata.path.poses[i].pose.position.x = -userdata.path.poses[i].pose.position.x
-			userdata.path.poses[i].pose.position.y = -userdata.path.poses[i].pose.position.y
-			userdata.path.poses[i].pose.position.z = -userdata.path.poses[i].pose.position.z
-		#userdata.path.poses = list(reversed(userdata.path.poses))
+			#userdata.path.poses[i].pose.position.x = -userdata.path.poses[i].pose.position.x
+			#userdata.path.poses[i].pose.position.y = -userdata.path.poses[i].pose.position.y
+			#userdata.path.poses[i].pose.position.z = -userdata.path.poses[i].pose.position.z
+			userdata.path.poses[i].pose.orientation.x = 0
+			userdata.path.poses[i].pose.orientation.y = 0
+			userdata.path.poses[i].pose.orientation.z = 0
+			userdata.path.poses[i].pose.orientation.w = 1
+		userdata.path.poses = list(reversed(userdata.path.poses))
 		self._path.goal.target_path.poses = userdata.path.poses
 		self._path.header.frame_id = 'map'
 
