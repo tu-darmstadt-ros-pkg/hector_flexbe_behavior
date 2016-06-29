@@ -14,5 +14,14 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="pose_offset" default="0.3" label="pose_offset" hint="Sets the pose_offset">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
 
 </behavior>
