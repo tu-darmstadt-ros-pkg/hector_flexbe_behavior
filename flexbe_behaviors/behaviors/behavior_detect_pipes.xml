@@ -21,6 +21,11 @@
 			<max value="1" />
 		</param>
 
+		<param type="numeric" name="close_offset" default="0.1" label="close_offset" hint="Sets the close_offset">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
 	</params>
 
 

@@ -48,16 +48,16 @@ class GetPipePose(EventState):
 		tempPose = self._tf.transformPose('base_link', centerpose)
 		
 		if self._choice == TOP_LEFT:
-			tempPose.position.y = tempPose.position.y - 0.105
+			tempPose.position.y = tempPose.position.y + 0.105
 			tempPose.position.z = tempPose.position.z + 0.105
 		if self._choice == TOP_RIGHT:
-			tempPose.position.y = tempPose.position.y + 0.105
+			tempPose.position.y = tempPose.position.y - 0.105
 			tempPose.position.z = tempPose.position.z + 0.105
 		if self._choice == DOWN_RIGHT:
-			tempPose.position.y = tempPose.position.y - 0.105
+			tempPose.position.y = tempPose.position.y + 0.105
 			tempPose.position.z = tempPose.position.z - 0.105
 		if self._choice == DOWN_LEFT:	
-			tempPose.position.y = tempPose.position.y + 0.105
+			tempPose.position.y = tempPose.position.y - 0.105
 			tempPose.position.z = tempPose.position.z - 0.105
 
 		userdata.pipepose = tempPose
