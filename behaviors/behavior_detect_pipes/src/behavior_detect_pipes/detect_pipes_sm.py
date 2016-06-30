@@ -44,6 +44,7 @@ class DetectPipesSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('pose_offset', 0.3)
+		self.add_parameter('close_offset', 0.1)
 
 		# references to used behaviors
 
@@ -136,7 +137,7 @@ class DetectPipesSM(Behavior):
 		with _sm_move_to_close_pose_2:
 			# x:97 y:43
 			OperatableStateMachine.add('Move_Pose_Cartesian',
-										CalculationState(calculation=lambda p: self.update_pose(p, .05)),
+										CalculationState(calculation=lambda p: self.update_pose(p, self.close_offset)),
 										transitions={'done': 'Visualize_Pipes_Close_Pose'},
 										autonomy={'done': Autonomy.Off},
 										remapping={'input_value': 'pipes_pose', 'output_value': 'pipes_close_pose'})
@@ -284,18 +285,18 @@ class DetectPipesSM(Behavior):
 
 		with _sm_get_pipes_6:
 			# x:51 y:28
-			OperatableStateMachine.add('Get_Compact_Arm_Config',
-										GetJointsFromSrdfState(config_name="compact_drive_pose", srdf_file=srdf, move_group="", robot_name=""),
-										transitions={'retrieved': 'Move_To_Compact_Arm', 'file_error': 'failed'},
+			OperatableStateMachine.add('Get_Observation_Arm_Config',
+										GetJointsFromSrdfState(config_name="observation_pose", srdf_file=srdf, move_group="", robot_name=""),
+										transitions={'retrieved': 'Move_To_Observation_Pose', 'file_error': 'failed'},
 										autonomy={'retrieved': Autonomy.Off, 'file_error': Autonomy.Off},
-										remapping={'joint_values': 'joints_compact_drive'})
+										remapping={'joint_values': 'joints_observation_pose'})
 
 			# x:53 y:111
-			OperatableStateMachine.add('Move_To_Compact_Arm',
-										MoveitToJointsState(move_group="arm_with_gripper_group", joint_names=joints_arm_with_gripper, action_topic='/move_group'),
+			OperatableStateMachine.add('Move_To_Observation_Pose',
+										MoveitToJointsState(move_group="arm_group", joint_names=joints_arm_with_gripper[0:4], action_topic='/move_group'),
 										transitions={'reached': 'Detect_Pipes', 'planning_failed': 'failed', 'control_failed': 'failed'},
 										autonomy={'reached': Autonomy.Low, 'planning_failed': Autonomy.High, 'control_failed': Autonomy.High},
-										remapping={'joint_config': 'joints_compact_drive'})
+										remapping={'joint_config': 'joints_observation_pose'})
 
 			# x:67 y:303
 			OperatableStateMachine.add('Get_Pipes_Pose',
