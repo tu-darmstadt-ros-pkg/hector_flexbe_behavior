@@ -8,13 +8,14 @@
 
 import roslib; roslib.load_manifest('behavior_detect_pipes')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_manipulation_states.get_joints_from_srdf_state import GetJointsFromSrdfState
+from hector_flexbe_states.pipe_detection_state import PipeDetectionState
 from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState
 from hector_flexbe_states.monitor_percept_state import MonitorPerceptState
 from flexbe_utility_states.publish_pose_state import PublishPoseState
-from hector_flexbe_states.pipe_detection_state import PipeDetectionState
+from flexbe_manipulation_states.get_joints_from_srdf_state import GetJointsFromSrdfState
 from flexbe_states.calculation_state import CalculationState
 from hector_flexbe_states.calculate_ik_state import CalculateIKState
+from hector_flexbe_states.gripper_roll_state import GripperRollState
 from hector_flexbe_states.moveit_execute_trajectory_state import MoveitExecuteTrajectoryState
 from hector_flexbe_states.calculate_cartesian_path_state import CalculateCartesianPathState
 from flexbe_states.operator_decision_state import OperatorDecisionState
@@ -57,6 +58,9 @@ class DetectPipesSM(Behavior):
 
 		# O 98 480 
 		# Run in full autonomy to skip looking, run in high to decide
+
+		# O 271 456 /EEF_To_Detected/Move_To_Out_Pose
+		# This correction causes problems with cartesian path
 
 
 
@@ -196,6 +200,12 @@ class DetectPipesSM(Behavior):
 										autonomy={'planned': Autonomy.Low, 'failed': Autonomy.High},
 										remapping={'eef_pose': 'pipes_out_pose', 'joint_config': 'joint_config'})
 
+			# x:276 y:395
+			OperatableStateMachine.add('Correct_Gripper_Rotation',
+										GripperRollState(rotation=GripperRollState.HORIZONTAL, duration=1.0),
+										transitions={'done': 'finished', 'failed': 'failed'},
+										autonomy={'done': Autonomy.Low, 'failed': Autonomy.High})
+
 
 		# x:433 y:490
 		_sm_select_pipe_4 = OperatableStateMachine(outcomes=['finished'], input_keys=['pipes_pose'], output_keys=['pipes_pose'])
@@ -284,12 +294,11 @@ class DetectPipesSM(Behavior):
 		_sm_get_pipes_6 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pipes_pose'], output_keys=['pipes_pose'])
 
 		with _sm_get_pipes_6:
-			# x:51 y:28
-			OperatableStateMachine.add('Get_Observation_Arm_Config',
-										GetJointsFromSrdfState(config_name="observation_pose", srdf_file=srdf, move_group="", robot_name=""),
-										transitions={'retrieved': 'Move_To_Observation_Pose', 'file_error': 'failed'},
-										autonomy={'retrieved': Autonomy.Off, 'file_error': Autonomy.Off},
-										remapping={'joint_values': 'joints_observation_pose'})
+			# x:72 y:210
+			OperatableStateMachine.add('Detect_Pipes',
+										PipeDetectionState(max_attempts=100),
+										transitions={'found': 'Get_Pipes_Pose', 'unknown': 'failed'},
+										autonomy={'found': Autonomy.Low, 'unknown': Autonomy.High})
 
 			# x:53 y:111
 			OperatableStateMachine.add('Move_To_Observation_Pose',
@@ -312,11 +321,12 @@ class DetectPipesSM(Behavior):
 										autonomy={'done': Autonomy.Low},
 										remapping={'pose': 'pipes_pose'})
 
-			# x:72 y:210
-			OperatableStateMachine.add('Detect_Pipes',
-										PipeDetectionState(max_attempts=100),
-										transitions={'found': 'Get_Pipes_Pose', 'unknown': 'failed'},
-										autonomy={'found': Autonomy.Low, 'unknown': Autonomy.High})
+			# x:51 y:28
+			OperatableStateMachine.add('Get_Observation_Arm_Config',
+										GetJointsFromSrdfState(config_name="observation_pose", srdf_file=srdf, move_group="", robot_name=""),
+										transitions={'retrieved': 'Move_To_Observation_Pose', 'file_error': 'failed'},
+										autonomy={'retrieved': Autonomy.Off, 'file_error': Autonomy.Off},
+										remapping={'joint_values': 'joints_observation_pose'})
 
 
 
