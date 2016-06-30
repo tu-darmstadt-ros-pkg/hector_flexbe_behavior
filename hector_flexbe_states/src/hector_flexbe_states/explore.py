@@ -73,7 +73,7 @@ class Explore(EventState):
 
 
 	def on_exit(self, userdata):
-		pass
+		self._move_client.cancel(self._action_topic)
 
 
 	def on_start(self):
