@@ -7,6 +7,7 @@ from flexbe_core.proxy import ProxyActionClient
 
 from hector_perception_msgs.msg import DetectObjectAction, DetectObjectGoal
 from flexbe_core.proxy import ProxyTransformListener
+from geometry_msgs.msg import PoseStamped
 
 '''
 Created on 15.06.2015
@@ -45,20 +46,20 @@ class GetPipePose(EventState):
 			
 	def on_enter(self, userdata):
 		tempPose = PoseStamped()
-		tempPose = self._tf.transformPose('base_link', centerpose)
+		tempPose = self._tf.transformPose('base_link', userdata.centerpose)
 		
-		if self._choice == TOP_LEFT:
-			tempPose.position.y = tempPose.position.y + 0.105
-			tempPose.position.z = tempPose.position.z + 0.105
-		if self._choice == TOP_RIGHT:
-			tempPose.position.y = tempPose.position.y - 0.105
-			tempPose.position.z = tempPose.position.z + 0.105
-		if self._choice == DOWN_RIGHT:
-			tempPose.position.y = tempPose.position.y + 0.105
-			tempPose.position.z = tempPose.position.z - 0.105
-		if self._choice == DOWN_LEFT:	
-			tempPose.position.y = tempPose.position.y - 0.105
-			tempPose.position.z = tempPose.position.z - 0.105
+		if self._choice == GetPipePose.TOP_LEFT:
+			tempPose.pose.position.y = tempPose.pose.position.y + 0.105
+			tempPose.pose.position.z = tempPose.pose.position.z + 0.105
+		if self._choice == GetPipePose.TOP_RIGHT:
+			tempPose.pose.position.y = tempPose.pose.position.y - 0.105
+			tempPose.pose.position.z = tempPose.pose.position.z + 0.105
+		if self._choice == GetPipePose.DOWN_RIGHT:
+			tempPose.pose.position.y = tempPose.pose.position.y + 0.105
+			tempPose.pose.position.z = tempPose.pose.position.z - 0.105
+		if self._choice == GetPipePose.DOWN_LEFT:	
+			tempPose.pose.position.y = tempPose.pose.position.y - 0.105
+			tempPose.pose.position.z = tempPose.pose.position.z - 0.105
 
 		userdata.pipepose = tempPose
 		
