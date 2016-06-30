@@ -3,7 +3,7 @@
 <behavior name="Drivepath Test">
 
 	<executable package_path="behavior_drivepath_test.drivepath_test_sm" class="DrivepathTestSM" />
-	<tagstring></tagstring>
+	<tagstring>demo, mission</tagstring>
 	<author>def</author>
 	<date>Tue Jun 28 2016</date>
 	<description>

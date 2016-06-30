@@ -31,10 +31,12 @@ class DrivepathTest(EventState):
 		'''
 		Constructor
 		'''
-		super(DrivepathTest, self).__init__(outcomes=['reached', 'failed'])
+		super(DrivepathTest, self).__init__(outcomes=['reached', 'failed'], input_keys = ['poses'])
 		
 		self._failed = False
 		self._reached = False
+
+		self._path = MoveBaseActionPath()
 
 		self._pathTopic = '/controller/path'
 		self._pub = ProxyPublisher({self._pathTopic: MoveBaseActionPath})
@@ -55,24 +57,13 @@ class DrivepathTest(EventState):
 			
 	def on_enter(self, userdata):
 		
-		self._path = MoveBaseActionPath()
-		self._point = PoseStamped()
-		self._point.pose.orientation.w = 1
-		self._point.pose.position.x = 1
-		self._point.header.frame_id = 'map'
-		self._path.goal.target_path.poses.append(self._point)
-		self._point.pose.position.x = 2
-		self._path.goal.target_path.poses.append(self._point)
-		self._point.pose.position.x = 3
-		self._path.goal.target_path.poses.append(self._point)
-		Logger.loginfo('%(x).3f %(y).3f %(z).3f' % {'x': self._point.pose.orientation.x, 'y': self._point.pose.orientation.y, 'z': self._point.pose.orientation.z})
-		self._path.header.frame_id = 'map'
-		self._path.goal.target_path.header.frame_id = 'map'
-
-
+	
 		self._failed = False
-
-		
+			
+		self._path.goal.target_path.poses = userdata.poses
+		self._path.goal.target_path.header.frame_id = 'map'
+			
+			
 		self._pub.publish(self._pathTopic, self._path)
 		self._reached = True
 		

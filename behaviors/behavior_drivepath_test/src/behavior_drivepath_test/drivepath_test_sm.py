@@ -8,8 +8,9 @@
 
 import roslib; roslib.load_manifest('behavior_drivepath_test')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from hector_flexbe_states.get_robot_pose import GetRobotPose
+from hector_flexbe_states.build_path import BuildPath
 from hector_flexbe_states.drivepath_test import DrivepathTest
-from hector_flexbe_states.drivepath_test_new import DrivepathTestNew
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -46,6 +47,7 @@ class DrivepathTestSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine.userdata.poses = []
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -55,16 +57,25 @@ class DrivepathTestSM(Behavior):
 
 		with _state_machine:
 			# x:30 y:40
+			OperatableStateMachine.add('Get Pose',
+										GetRobotPose(),
+										transitions={'succeeded': 'Build Path'},
+										autonomy={'succeeded': Autonomy.Off},
+										remapping={'pose': 'pose'})
+
+			# x:256 y:42
+			OperatableStateMachine.add('Build Path',
+										BuildPath(),
+										transitions={'succeeded': 'Test', 'next': 'Get Pose'},
+										autonomy={'succeeded': Autonomy.High, 'next': Autonomy.High},
+										remapping={'pose': 'pose', 'poses': 'poses'})
+
+			# x:408 y:44
 			OperatableStateMachine.add('Test',
 										DrivepathTest(),
-										transitions={'reached': 'Test', 'failed': 'failed'},
-										autonomy={'reached': Autonomy.High, 'failed': Autonomy.Off})
-
-			# x:221 y:37
-			OperatableStateMachine.add('Test2',
-										DrivepathTestNew(),
-										transitions={'reached': 'Test2', 'failed': 'failed'},
-										autonomy={'reached': Autonomy.High, 'failed': Autonomy.Off})
+										transitions={'reached': 'finished', 'failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'poses': 'poses'})
 
 
 		return _state_machine
