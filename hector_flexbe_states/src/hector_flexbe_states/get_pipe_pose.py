@@ -55,10 +55,10 @@ class GetPipePose(EventState):
 			tempPose.pose.position.y = tempPose.pose.position.y - 0.105
 			tempPose.pose.position.z = tempPose.pose.position.z + 0.105
 		if self._choice == GetPipePose.DOWN_RIGHT:
-			tempPose.pose.position.y = tempPose.pose.position.y + 0.105
+			tempPose.pose.position.y = tempPose.pose.position.y - 0.105
 			tempPose.pose.position.z = tempPose.pose.position.z - 0.105
 		if self._choice == GetPipePose.DOWN_LEFT:	
-			tempPose.pose.position.y = tempPose.pose.position.y - 0.105
+			tempPose.pose.position.y = tempPose.pose.position.y + 0.105
 			tempPose.pose.position.z = tempPose.pose.position.z - 0.105
 
 		userdata.pipepose = tempPose
