@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from hector_flexbe_states.create_path import CreatePath
 from hector_flexbe_states.invert_path import InvertPath
 from hector_flexbe_states.move_along_path import MoveAlongPath
+from hector_flexbe_states.sparse_path import SparsePath
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -66,16 +67,23 @@ class PathDriveMissionSM(Behavior):
 			# x:309 y:56
 			OperatableStateMachine.add('Invert_Path',
 										InvertPath(),
-										transitions={'reached': 'Move_Along_Path', 'failed': 'failed'},
+										transitions={'reached': 'Sparse_Path', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'path': 'path'})
 
-			# x:574 y:45
+			# x:670 y:162
 			OperatableStateMachine.add('Move_Along_Path',
 										MoveAlongPath(),
 										transitions={'reached': 'finished', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'path': 'path', 'speed': 'speed'})
+
+			# x:482 y:64
+			OperatableStateMachine.add('Sparse_Path',
+										SparsePath(max_dist=.2, max_angle=.2, min_dist=.1),
+										transitions={'done': 'Move_Along_Path'},
+										autonomy={'done': Autonomy.Off},
+										remapping={'path': 'path'})
 
 
 		return _state_machine
