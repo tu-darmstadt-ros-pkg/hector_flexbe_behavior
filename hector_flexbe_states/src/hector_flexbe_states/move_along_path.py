@@ -69,7 +69,9 @@ class MoveAlongPath(EventState):
 			marker.scale.y = 0.02
 			marker.scale.z = 0.02
 			marker.color.b = 1.0
-			marker.color.a = 0.5
+			marker.color.r = 0.9 - 0.7 * i / len(userdata.path.poses)
+			marker.color.g = 0.9 - 0.7 * i / len(userdata.path.poses)
+			marker.color.a = 0.8 - 0.5 * i / len(userdata.path.poses)
 			marker.id = i
 			ma.markers.append(marker)
 
