@@ -69,7 +69,7 @@ class ExplorationSM(Behavior):
 			OperatableStateMachine.add('Error',
 										ErrorExploration(),
 										transitions={'restart': 'Look_Around'},
-										autonomy={'restart': Autonomy.High})
+										autonomy={'restart': Autonomy.Off})
 
 			# x:399 y:46
 			OperatableStateMachine.add('Explore',
