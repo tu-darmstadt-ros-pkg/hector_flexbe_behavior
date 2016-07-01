@@ -27,5 +27,6 @@
   <run_depend>behavior_pathdrivemission</run_depend>
   <run_depend>behavior_drivepath_test</run_depend>
   <run_depend>behavior_simplemissionman4</run_depend>
+  <run_depend>behavior_search_victims_no_arm</run_depend>
 
 </package>
