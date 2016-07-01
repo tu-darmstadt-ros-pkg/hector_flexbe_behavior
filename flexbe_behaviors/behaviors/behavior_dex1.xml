@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Dex1">
+
+	<executable package_path="behavior_dex1.dex1_sm" class="Dex1SM" />
+	<tagstring>mission</tagstring>
+	<author>Philipp Schillinger</author>
+	<date>Tue Jun 28 2016</date>
+	<description>
+		Position at pipes and offer choices for manipulation and inspection
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="pose_offset" default="0.25" label="pose_offset" hint="Sets the pose_offset">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="close_offset" default="0.05" label="close_offset" hint="Sets the close_offset">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="enum" name="pipes_side" default="right" label="Pipes Side" hint="At which side of the robot are the pipes?">
+			<option value="left" />
+			<option value="right" />
+		</param>
+
+	</params>
+
+
+</behavior>

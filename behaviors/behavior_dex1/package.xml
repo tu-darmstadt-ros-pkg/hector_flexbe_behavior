@@ -1,0 +1,23 @@
+<package>
+  <name>behavior_dex1</name>
+  <version>1.0.0</version>
+  <description>
+     Position at pipes and offer choices for manipulation and inspection
+  </description>
+  <maintainer email="todo@todo.com">Philipp Schillinger</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_dex1</url>
+  <author>Philipp Schillinger</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>flexbe_states</run_depend>
+  <run_depend>flexbe_manipulation_states</run_depend>
+  <run_depend>flexbe_navigation_states</run_depend>
+  <run_depend>flexbe_utility_states</run_depend>
+  <run_depend>hector_flexbe_states</run_depend>
+
+</package>
