@@ -35,7 +35,6 @@ class MoveToFixedWaypoint(EventState):
 											input_keys=['waypoint','speed'])
 		
 		self._action_topic = '/move_base'
-		Logger.loginfo("OUTPUT TEST")
 		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
 		#self.set_tolerance = rospy.ServiceProxy('/controller/set_alternative_tolerances', SetAlternativeTolerance)
 		
