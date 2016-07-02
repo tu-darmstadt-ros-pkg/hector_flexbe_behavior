@@ -60,6 +60,7 @@ class CalculateCartesianPathState(EventState):
 		if self._result.error_code.val == MoveItErrorCodes.SUCCESS and self._result.fraction > .2:
 			userdata.plan_fraction = self._result.fraction
 			userdata.joint_trajectory = self._result.solution.joint_trajectory
+			Logger.loginfo('Successfully planned %.2f of the path' % self._result.fraction)
 			return 'planned'
 		elif self._result.error_code.val == MoveItErrorCodes.SUCCESS:
 			Logger.logwarn('Only planned %.2f of the path' % self._result.fraction)
