@@ -75,7 +75,7 @@ class MoveToFixedWaypoint(EventState):
 			
 	def on_enter(self, userdata):
 
-
+		
 		speedValue = self._dynrec.get_configuration(timeout = 0.5)
 		if speedValue is not None:
 			self._defaultspeed = speedValue['speed']	
@@ -94,6 +94,7 @@ class MoveToFixedWaypoint(EventState):
 		action_goal = MoveBaseGoal()
 		action_goal.target_pose = userdata.waypoint
 		action_goal.speed = userdata.speed
+		action_goal.reverse_allowed = self._allow_backwards
 
 		if action_goal.target_pose.header.frame_id == "":
 			action_goal.target_pose.header.frame_id = "world"

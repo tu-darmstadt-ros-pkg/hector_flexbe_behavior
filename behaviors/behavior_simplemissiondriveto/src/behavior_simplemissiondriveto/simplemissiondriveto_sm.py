@@ -31,6 +31,7 @@ class SimpleMissionDriveToSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.3)
+		self.add_parameter('allow_backwards', False)
 
 		# references to used behaviors
 
@@ -58,7 +59,7 @@ class SimpleMissionDriveToSM(Behavior):
 		with _state_machine:
 			# x:213 y:74
 			OperatableStateMachine.add('Move_To',
-										MoveToFixedWaypoint(),
+										MoveToFixedWaypoint(allow_backwards=self.allow_backwards),
 										transitions={'reached': 'finished', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'speed': 'speed'})

@@ -33,6 +33,7 @@ class SimpleMissionMan4SM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.1)
+		self.add_parameter('allow_backwards', False)
 
 		# references to used behaviors
 		self.add_behavior(SimpleMissionInitializeSM, 'SimpleMissionInitialize')

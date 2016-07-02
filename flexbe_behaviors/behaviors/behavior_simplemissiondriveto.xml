@@ -21,6 +21,8 @@
 			<max value="1.5" />
 		</param>
 
+		<param type="boolean" name="allow_backwards" default="False" label="Allow Backwards" hint="Allow robot to drive backwards to its goal" />
+
 	</params>
 
 
