@@ -7,6 +7,7 @@ from flexbe_core import EventState, Logger
 from rospy import Time
 import time
 from hector_move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from dynamic_reconfigure.client import Client
 
 
 
@@ -27,7 +28,8 @@ class Explore(EventState):
 		
 		self._action_topic = '/move_base'
 		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
-
+		self._dynrec = Client("/vehicle_controller", timeout = 10)
+		self._defaultspeed = 0.1
 		self._succeeded = False
 		self._failed = False
 
@@ -35,6 +37,7 @@ class Explore(EventState):
 
 		if self._move_client.has_result(self._action_topic):
 			result = self._move_client.get_result(self._action_topic)
+			self._dynrec.update_configuration({'speed':self._defaultspeed})	
 			if result.result == 1:
 				self._reached = True
 				Logger.loginfo('Exploration succeeded')
@@ -46,7 +49,12 @@ class Explore(EventState):
 		
 
 	def on_enter(self, userdata):
-
+			
+		speedValue = self._dynrec.get_configuration(timeout = 0.5)
+		if speedValue is not None:
+			self._defaultspeed = speedValue['speed']	
+			
+		self._dynrec.update_configuration({'speed':userdata.speed})		
 		self._succeeded = False
 		self._failed = False
 		
