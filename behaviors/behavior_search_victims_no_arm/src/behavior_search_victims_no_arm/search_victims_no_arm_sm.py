@@ -50,15 +50,9 @@ class SearchVictimsnoArmSM(Behavior):
 
 
 	def create(self):
-		srdf = "hector_tracker_robot_moveit_config/config/taurob_tracker.srdf"
-		arm_gripper_joints = ["arm_joint_%d"%i for i in range(5)]
 		# x:685 y:553, x:911 y:41
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.pose = PoseStamped()
-		_state_machine.userdata.group_name = 'arm_group'
-		_state_machine.userdata.explore_speed = 0.2
-		_state_machine.userdata.drive_to_speed = 0.2
-		_state_machine.userdata.type = 'hotspot'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -66,7 +60,7 @@ class SearchVictimsnoArmSM(Behavior):
 		# [/MANUAL_CREATE]
 
 		# x:30 y:365, x:130 y:365, x:230 y:365, x:330 y:365, x:430 y:365
-		_sm_explorationwithdetection_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['speed'], output_keys=['pose', 'victim'], conditions=[
+		_sm_explorationwithdetection_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], output_keys=['pose', 'victim'], conditions=[
 										('finished', [('Exploration', 'finished')]),
 										('failed', [('Exploration', 'failed')]),
 										('finished', [('Detect_Object', 'found')])
@@ -94,7 +88,7 @@ class SearchVictimsnoArmSM(Behavior):
 										_sm_explorationwithdetection_0,
 										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'speed': 'explore_speed', 'pose': 'pose', 'victim': 'victim'})
+										remapping={'pose': 'pose', 'victim': 'victim'})
 
 			# x:420 y:255
 			OperatableStateMachine.add('Confirm_Victim',
