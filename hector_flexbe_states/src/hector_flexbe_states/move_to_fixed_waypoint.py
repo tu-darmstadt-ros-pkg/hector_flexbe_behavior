@@ -9,6 +9,7 @@ from hector_move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from monstertruck_msgs.srv import SetAlternativeTolerance
 from actionlib_msgs.msg import GoalID
 from rospy import Time
+from dynamic_reconfigure.client import Client
 
 '''
 Created on 15.06.2015
@@ -20,6 +21,8 @@ class MoveToFixedWaypoint(EventState):
 	'''
 	Lets the robot move to a given waypoint.
 
+	-- allow_backwards 	Boolean 	Allow the robot to drive backwards when approaching the given waypoint.
+
 	># waypoint		PoseStamped		Specifies the waypoint to which the robot should move.
 	># speed					Speed of the robot
 
@@ -27,7 +30,7 @@ class MoveToFixedWaypoint(EventState):
 	<= failed 					Failed to send a motion request to the action server.
 	'''
 
-	def __init__(self):
+	def __init__(self, allow_backwards = False):
 		'''
 		Constructor
 		'''
@@ -38,6 +41,11 @@ class MoveToFixedWaypoint(EventState):
 		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
 		#self.set_tolerance = rospy.ServiceProxy('/controller/set_alternative_tolerances', SetAlternativeTolerance)
 		
+		self._dynrec = Client("/vehicle_controller", timeout = 10)
+		self._defaultspeed = 0.1
+
+		self._allow_backwards = allow_backwards
+
 		self._failed = False
 		self._reached = False
 		
@@ -54,6 +62,7 @@ class MoveToFixedWaypoint(EventState):
 
 		if self._move_client.has_result(self._action_topic):
 			result = self._move_client.get_result(self._action_topic)
+			self._dynrec.update_configuration({'speed':self._defaultspeed})	
 			if result.result == 1:
 				self._reached = True
 				return 'reached'
@@ -65,6 +74,13 @@ class MoveToFixedWaypoint(EventState):
 
 			
 	def on_enter(self, userdata):
+
+
+		speedValue = self._dynrec.get_configuration(timeout = 0.5)
+		if speedValue is not None:
+			self._defaultspeed = speedValue['speed']	
+			
+		self._dynrec.update_configuration({'speed':userdata.speed})		
 
 		self._startTime = Time.now()
 
