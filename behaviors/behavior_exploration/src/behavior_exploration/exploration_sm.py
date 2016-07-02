@@ -32,7 +32,7 @@ class ExplorationSM(Behavior):
 		self.name = 'Exploration'
 
 		# parameters of this behavior
-		self.add_parameter('speed', 0.3)
+		self.add_parameter('speed', 0.1)
 
 		# references to used behaviors
 

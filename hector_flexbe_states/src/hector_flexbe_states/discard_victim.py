@@ -6,9 +6,10 @@ from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyPublisher
 from hector_worldmodel_msgs.msg import Object
 from hector_worldmodel_msgs.msg import ObjectState
-from hector_worldmodel_msgs.srv import SetObjectState
+from hector_worldmodel_msgs.srv import SetObjectState, SetObjectStateRequest
 from geometry_msgs.msg import PoseStamped
 from rospy import Time
+from flexbe_core.proxy import ProxyServiceCaller
 
 
 class DiscardVictim(EventState):
@@ -26,7 +27,8 @@ class DiscardVictim(EventState):
 		super(DiscardVictim, self).__init__(outcomes = ['discarded'], input_keys = ['victim'])
 
 
-		self.set_victim_state = rospy.ServiceProxy('/worldmodel/set_object_state', SetObjectState)
+		self._setVictimState = '/worldmodel/set_object_state'
+		self._srvSet = ProxyServiceCaller({self._setVictimState: SetObjectState})
 
 
 	def execute(self, userdata):
@@ -39,7 +41,8 @@ class DiscardVictim(EventState):
 
 		state = ObjectState()
 		state.state = -2		
-		self.set_victim_state(userdata.victim, state)
+		request = SetObjectStateRequest(userdata.victim, state)
+		resp = self._srvSet.call(self._setVictimState, request)
 		Logger.loginfo('%(x)s discarded' % {
 				'x': userdata.victim 
 		})

@@ -32,7 +32,7 @@ class ExplorationDriveToSM(Behavior):
 		self.name = 'ExplorationDriveTo'
 
 		# parameters of this behavior
-		self.add_parameter('speed', 0.2)
+		self.add_parameter('speed', 0.1)
 
 		# references to used behaviors
 
