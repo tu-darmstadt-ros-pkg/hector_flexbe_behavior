@@ -13,16 +13,16 @@ from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsStat
 from hector_flexbe_states.monitor_percept_state import MonitorPerceptState
 from flexbe_utility_states.publish_pose_state import PublishPoseState
 from hector_flexbe_states.pipe_detection_state import PipeDetectionState
+from flexbe_states.operator_decision_state import OperatorDecisionState
+from hector_flexbe_states.LookAtWaypoint import LookAtWaypoint
 from flexbe_states.calculation_state import CalculationState
+from hector_flexbe_states.select_pipe_pose import SelectPipePose
 from hector_flexbe_states.calculate_ik_state import CalculateIKState
 from hector_flexbe_states.gripper_roll_state import GripperRollState
 from hector_flexbe_states.moveit_execute_trajectory_state import MoveitExecuteTrajectoryState
 from hector_flexbe_states.calculate_cartesian_path_state import CalculateCartesianPathState
-from flexbe_states.operator_decision_state import OperatorDecisionState
 from hector_flexbe_states.gripper_state import GripperState
 from flexbe_states.log_state import LogState
-from hector_flexbe_states.LookAtWaypoint import LookAtWaypoint
-from hector_flexbe_states.get_pipe_pose import GetPipePose
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from flexbe_core.proxy import ProxyTransformListener
@@ -67,11 +67,12 @@ class DetectPipesSM(Behavior):
 		percept_class = 'pipes'
 		move_group = "arm_with_gripper_group"
 		move_group_no_eef = "arm_group"
-		# x:1128 y:547, x:472 y:46
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['pipes_pose'])
-		_state_machine.userdata.pipes_pose = None
+		# x:268 y:162, x:472 y:46
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine.userdata.object_pose = None
 		_state_machine.userdata.object_type = percept_class
 		_state_machine.userdata.test_pregrasp = [0, 1.57, 0.77, 0.38, 0]
+		_state_machine.userdata.index = -1
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -204,49 +205,10 @@ class DetectPipesSM(Behavior):
 										autonomy={'done': Autonomy.Low, 'failed': Autonomy.High})
 
 
-		# x:433 y:490
-		_sm_select_pipe_4 = OperatableStateMachine(outcomes=['finished'], input_keys=['pipes_pose'], output_keys=['pipes_pose'])
-
-		with _sm_select_pipe_4:
-			# x:387 y:28
-			OperatableStateMachine.add('Choose_Pipe',
-										OperatorDecisionState(outcomes=['top_left', 'top_right', 'center', 'bottom_left', 'bottom_right'], hint="Which pipe should be used?", suggestion='center'),
-										transitions={'top_left': 'Set_Top_Left', 'top_right': 'Set_Top_Right', 'center': 'finished', 'bottom_left': 'Set_Bottom_Left', 'bottom_right': 'Set_Bottom_Right'},
-										autonomy={'top_left': Autonomy.Full, 'top_right': Autonomy.Full, 'center': Autonomy.High, 'bottom_left': Autonomy.Full, 'bottom_right': Autonomy.Full})
-
-			# x:56 y:228
-			OperatableStateMachine.add('Set_Top_Left',
-										GetPipePose(choice=GetPipePose.TOP_LEFT),
-										transitions={'succeeded': 'finished'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'centerpose': 'pipes_pose', 'pipepose': 'pipes_pose'})
-
-			# x:253 y:228
-			OperatableStateMachine.add('Set_Top_Right',
-										GetPipePose(choice=GetPipePose.TOP_RIGHT),
-										transitions={'succeeded': 'finished'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'centerpose': 'pipes_pose', 'pipepose': 'pipes_pose'})
-
-			# x:548 y:228
-			OperatableStateMachine.add('Set_Bottom_Left',
-										GetPipePose(choice=GetPipePose.DOWN_LEFT),
-										transitions={'succeeded': 'finished'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'centerpose': 'pipes_pose', 'pipepose': 'pipes_pose'})
-
-			# x:744 y:228
-			OperatableStateMachine.add('Set_Bottom_Right',
-										GetPipePose(choice=GetPipePose.DOWN_RIGHT),
-										transitions={'succeeded': 'finished'},
-										autonomy={'succeeded': Autonomy.Off},
-										remapping={'centerpose': 'pipes_pose', 'pipepose': 'pipes_pose'})
-
-
 		# x:272 y:264, x:55 y:574
-		_sm_eef_to_detected_5 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pipes_pose'], output_keys=['pipes_pose'])
+		_sm_eef_to_detected_4 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pipes_pose'], output_keys=['pipes_pose'])
 
-		with _sm_eef_to_detected_5:
+		with _sm_eef_to_detected_4:
 			# x:58 y:35
 			OperatableStateMachine.add('Move_To_Out_Pose',
 										_sm_move_to_out_pose_3,
@@ -287,8 +249,27 @@ class DetectPipesSM(Behavior):
 										autonomy={'move_back': Autonomy.High, 'end': Autonomy.Full})
 
 
-		# x:98 y:521, x:405 y:155
-		_sm_get_pipes_6 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pipes_pose'], output_keys=['pipes_pose'])
+		# x:30 y:365, x:130 y:365
+		_sm_select_pipe_5 = OperatableStateMachine(outcomes=['finished', 'next'], input_keys=['index', 'object_pose', 'object_data'], output_keys=['index', 'pipe_pose'])
+
+		with _sm_select_pipe_5:
+			# x:98 y:78
+			OperatableStateMachine.add('Increment_Index',
+										CalculationState(calculation=lambda x: x+1),
+										transitions={'done': 'Select_Pipe'},
+										autonomy={'done': Autonomy.Off},
+										remapping={'input_value': 'index', 'output_value': 'index'})
+
+			# x:102 y:178
+			OperatableStateMachine.add('Select_Pipe',
+										SelectPipePose(),
+										transitions={'selected': 'next', 'out_of_range': 'finished'},
+										autonomy={'selected': Autonomy.Off, 'out_of_range': Autonomy.Off},
+										remapping={'object_pose': 'object_pose', 'object_data': 'object_data', 'pose_choice': 'index', 'pipe_pose': 'pipe_pose'})
+
+
+		# x:427 y:433, x:453 y:131
+		_sm_get_pipes_6 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['object_pose'], output_keys=['object_pose', 'object_data'])
 
 		with _sm_get_pipes_6:
 			# x:51 y:28
@@ -310,14 +291,14 @@ class DetectPipesSM(Behavior):
 										MonitorPerceptState(required_support=0, percept_class='pipes', track_percepts=False),
 										transitions={'detected': 'Visualize_Pipes_Pose'},
 										autonomy={'detected': Autonomy.Off},
-										remapping={'object_id': 'object_id', 'object_pose': 'pipes_pose', 'object_data': 'object_data'})
+										remapping={'object_id': 'object_id', 'object_pose': 'object_pose', 'object_data': 'object_data'})
 
 			# x:59 y:396
 			OperatableStateMachine.add('Visualize_Pipes_Pose',
 										PublishPoseState(topic='/pipes/center_pose'),
 										transitions={'done': 'finished'},
 										autonomy={'done': Autonomy.Low},
-										remapping={'pose': 'pipes_pose'})
+										remapping={'pose': 'object_pose'})
 
 			# x:72 y:210
 			OperatableStateMachine.add('Detect_Pipes',
@@ -333,14 +314,7 @@ class DetectPipesSM(Behavior):
 										_sm_get_pipes_6,
 										transitions={'finished': 'Select_Pipe', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pipes_pose': 'pipes_pose'})
-
-			# x:783 y:322
-			OperatableStateMachine.add('EEF_To_Detected',
-										_sm_eef_to_detected_5,
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pipes_pose': 'pipes_pose'})
+										remapping={'object_pose': 'object_pose', 'object_data': 'object_data'})
 
 			# x:492 y:328
 			OperatableStateMachine.add('Move_To_Pregrasp',
@@ -364,9 +338,16 @@ class DetectPipesSM(Behavior):
 
 			# x:94 y:222
 			OperatableStateMachine.add('Select_Pipe',
-										_sm_select_pipe_4,
-										transitions={'finished': 'Decide_Look_At'},
-										autonomy={'finished': Autonomy.Inherit},
+										_sm_select_pipe_5,
+										transitions={'finished': 'finished', 'next': 'Decide_Look_At'},
+										autonomy={'finished': Autonomy.Inherit, 'next': Autonomy.Inherit},
+										remapping={'index': 'index', 'object_pose': 'object_pose', 'object_data': 'object_data', 'pipe_pose': 'pipes_pose'})
+
+			# x:783 y:322
+			OperatableStateMachine.add('EEF_To_Detected',
+										_sm_eef_to_detected_4,
+										transitions={'finished': 'Select_Pipe', 'failed': 'Select_Pipe'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pipes_pose': 'pipes_pose'})
 
 
