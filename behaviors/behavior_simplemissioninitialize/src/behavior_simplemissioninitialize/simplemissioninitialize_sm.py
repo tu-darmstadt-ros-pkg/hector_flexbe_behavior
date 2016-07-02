@@ -10,7 +10,6 @@ import roslib; roslib.load_manifest('behavior_simplemissioninitialize')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.StartCheck import StartCheck
 from flexbe_states.operator_decision_state import OperatorDecisionState
-from hector_flexbe_states.set_mapping_state import SetMappingState
 from hector_flexbe_states.get_robot_pose import GetRobotPose
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -61,7 +60,7 @@ class SimpleMissionInitializeSM(Behavior):
 			# x:30 y:95
 			OperatableStateMachine.add('StartCheck',
 										StartCheck(),
-										transitions={'succeeded': 'Activate_Mapping'},
+										transitions={'succeeded': 'Get_Start_Point'},
 										autonomy={'succeeded': Autonomy.Off})
 
 			# x:384 y:176
@@ -69,18 +68,6 @@ class SimpleMissionInitializeSM(Behavior):
 										OperatorDecisionState(outcomes=['done'], hint="Drive robot to end pose", suggestion=None),
 										transitions={'done': 'Get_End_Point'},
 										autonomy={'done': Autonomy.Full})
-
-			# x:193 y:88
-			OperatableStateMachine.add('Activate_Mapping',
-										SetMappingState(active=True),
-										transitions={'succeeded': 'Get_Start_Point'},
-										autonomy={'succeeded': Autonomy.Off})
-
-			# x:381 y:364
-			OperatableStateMachine.add('Deactivate_Mapping',
-										SetMappingState(active=False),
-										transitions={'succeeded': 'finished'},
-										autonomy={'succeeded': Autonomy.Off})
 
 			# x:386 y:74
 			OperatableStateMachine.add('Get_Start_Point',
@@ -92,7 +79,7 @@ class SimpleMissionInitializeSM(Behavior):
 			# x:394 y:260
 			OperatableStateMachine.add('Get_End_Point',
 										GetRobotPose(),
-										transitions={'succeeded': 'Deactivate_Mapping'},
+										transitions={'succeeded': 'finished'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'endPoint'})
 
