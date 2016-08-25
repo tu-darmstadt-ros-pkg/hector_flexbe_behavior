@@ -46,8 +46,8 @@ class ExplorationSM(Behavior):
 
 
 	def create(self):
-		# x:41 y:562, x:172 y:564
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:48 y:364
+		_state_machine = OperatableStateMachine(outcomes=['finished'])
 		_state_machine.userdata.lookAround = 'look_around'
 		_state_machine.userdata.speed = self.speed
 

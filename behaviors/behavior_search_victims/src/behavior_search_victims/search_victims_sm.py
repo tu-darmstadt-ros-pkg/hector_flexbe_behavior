@@ -55,8 +55,8 @@ class SearchVictimsSM(Behavior):
 	def create(self):
 		srdf = "hector_tracker_robot_moveit_config/config/taurob_tracker.srdf"
 		arm_gripper_joints = ["arm_joint_%d"%i for i in range(5)]
-		# x:715 y:382, x:626 y:54
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:466 y:28
+		_state_machine = OperatableStateMachine(outcomes=['failed'])
 		_state_machine.userdata.pose = PoseStamped()
 		_state_machine.userdata.group_name = 'complete_arm_with_gripper_group'
 		_state_machine.userdata.type = 'victim'
@@ -77,8 +77,8 @@ class SearchVictimsSM(Behavior):
 			# x:40 y:44
 			OperatableStateMachine.add('Explore',
 										self.use_behavior(ExplorationSM, 'Explore and Detect/Explore'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+										transitions={'finished': 'finished'},
+										autonomy={'finished': Autonomy.Inherit})
 
 			# x:346 y:59
 			OperatableStateMachine.add('Detect_Victim',
@@ -90,7 +90,7 @@ class SearchVictimsSM(Behavior):
 
 
 		with _state_machine:
-			# x:169 y:112
+			# x:81 y:103
 			OperatableStateMachine.add('Get_Initial_Arm_Pose',
 										GetJointsFromSrdfState(config_name="compact_drive_pose", srdf_file=srdf, move_group="", robot_name=""),
 										transitions={'retrieved': 'Set_Initial_Arm_Pose', 'file_error': 'failed'},
@@ -117,7 +117,7 @@ class SearchVictimsSM(Behavior):
 										transitions={'confirm': 'Confirm_Victim', 'discard': 'Discard_Victim', 'retry': 'Approach Object'},
 										autonomy={'confirm': Autonomy.Full, 'discard': Autonomy.Full, 'retry': Autonomy.Full})
 
-			# x:816 y:93
+			# x:763 y:139
 			OperatableStateMachine.add('Explore and Detect',
 										_sm_explore_and_detect_0,
 										transitions={'finished': 'Approach Object', 'failed': 'failed'},
@@ -131,7 +131,7 @@ class SearchVictimsSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'sampling_failed': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
 										remapping={'object_pose': 'pose', 'object_type': 'type', 'object_id': 'victim'})
 
-			# x:199 y:252
+			# x:277 y:155
 			OperatableStateMachine.add('Set_Initial_Arm_Pose',
 										MoveitToJointsState(move_group="complete_arm_with_gripper_group", joint_names=arm_gripper_joints, action_topic='/move_group'),
 										transitions={'reached': 'Explore and Detect', 'planning_failed': 'failed', 'control_failed': 'failed'},
