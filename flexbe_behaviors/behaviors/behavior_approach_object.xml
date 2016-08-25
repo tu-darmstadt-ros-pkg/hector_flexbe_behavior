@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Approach Object">
+
+	<executable package_path="behavior_approach_object.approach_object_sm" class="ApproachObjectSM" />
+	<tagstring>demo, sub</tagstring>
+	<author>Gabriel Elisa</author>
+	<date>Tue Jun 07 2016</date>
+	<description>
+		Drive to exact given point
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0.1" label="speed" hint="Sets the speed">
+			<min value="0" />
+			<max value="1.5" />
+		</param>
+
+	</params>
+
+
+</behavior>

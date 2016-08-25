@@ -6,7 +6,7 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_explorationdriveto')
+import roslib; roslib.load_manifest('behavior_approach_victim')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtWaypoint import LookAtWaypoint
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState
@@ -21,15 +21,15 @@ from geometry_msgs.msg import PoseStamped
 Created on Tue Jun 07 2016
 @author: Gabriel Elisa
 '''
-class ExplorationDriveToSM(Behavior):
+class ApproachVictimSM(Behavior):
 	'''
 	Drive to exact given point
 	'''
 
 
 	def __init__(self):
-		super(ExplorationDriveToSM, self).__init__()
-		self.name = 'ExplorationDriveTo'
+		super(ApproachVictimSM, self).__init__()
+		self.name = 'Approach Victim'
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.1)

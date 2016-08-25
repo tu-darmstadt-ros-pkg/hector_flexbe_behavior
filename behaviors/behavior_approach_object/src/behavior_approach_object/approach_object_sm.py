@@ -6,7 +6,7 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_explorationdriveto')
+import roslib; roslib.load_manifest('behavior_approach_object')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtWaypoint import LookAtWaypoint
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState
@@ -21,15 +21,15 @@ from geometry_msgs.msg import PoseStamped
 Created on Tue Jun 07 2016
 @author: Gabriel Elisa
 '''
-class ExplorationDriveToSM(Behavior):
+class ApproachObjectSM(Behavior):
 	'''
 	Drive to exact given point
 	'''
 
 
 	def __init__(self):
-		super(ExplorationDriveToSM, self).__init__()
-		self.name = 'ExplorationDriveTo'
+		super(ApproachObjectSM, self).__init__()
+		self.name = 'Approach Object'
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.1)
@@ -69,12 +69,12 @@ class ExplorationDriveToSM(Behavior):
 			# x:445 y:91
 			OperatableStateMachine.add('Move_To',
 										MoveToWaypointState(),
-										transitions={'reached': 'finished', 'failed': 'failed', 'update': 'Get_Victim_Pose'},
+										transitions={'reached': 'finished', 'failed': 'failed', 'update': 'Get_Pose'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'update': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'victim': 'victim', 'speed': 'speed'})
 
 			# x:530 y:247
-			OperatableStateMachine.add('Get_Victim_Pose',
+			OperatableStateMachine.add('Get_Pose',
 										GetObjectPoseState(),
 										transitions={'done': 'Move_To', 'unknown': 'failed', 'not_available': 'failed'},
 										autonomy={'done': Autonomy.Off, 'unknown': Autonomy.Off, 'not_available': Autonomy.Off},

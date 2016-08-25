@@ -29,5 +29,7 @@
   <run_depend>behavior_simplemissionman4</run_depend>
   <run_depend>behavior_search_victims_no_arm</run_depend>
   <run_depend>behavior_dex1</run_depend>
+  <run_depend>behavior_approach_victim</run_depend>
+  <run_depend>behavior_approach_object</run_depend>
 
 </package>
