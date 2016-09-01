@@ -10,10 +10,10 @@ import roslib; roslib.load_manifest('behavior_search_victims_no_arm')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from behavior_exploration.exploration_sm import ExplorationSM
 from hector_flexbe_states.detect_object import DetectObject
-from hector_flexbe_states.confirm_victim import ConfirmVictim
 from hector_flexbe_states.discard_victim import DiscardVictim
 from behavior_explorationdriveto.explorationdriveto_sm import ExplorationDriveToSM
 from flexbe_states.operator_decision_state import OperatorDecisionState
+from hector_flexbe_states.confirm_victim import ConfirmVictim
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -37,7 +37,7 @@ class SearchVictimsnoArmSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(ExplorationSM, 'ExplorationWithDetection/Exploration')
+		self.add_behavior(ExplorationSM, 'Explore and Detect/Exploration')
 		self.add_behavior(ExplorationDriveToSM, 'ExplorationDriveTo')
 
 		# Additional initialization code can be added inside the following tags
@@ -59,22 +59,21 @@ class SearchVictimsnoArmSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:30 y:365, x:130 y:365, x:230 y:365, x:330 y:365, x:430 y:365
-		_sm_explorationwithdetection_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], output_keys=['pose', 'victim'], conditions=[
+		# x:30 y:322, x:130 y:322, x:230 y:322, x:330 y:322
+		_sm_explore_and_detect_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], output_keys=['victim', 'pose'], conditions=[
 										('finished', [('Exploration', 'finished')]),
-										('failed', [('Exploration', 'failed')]),
-										('finished', [('Detect_Object', 'found')])
+										('finished', [('Detect_Victim', 'found')])
 										])
 
-		with _sm_explorationwithdetection_0:
-			# x:40 y:44
+		with _sm_explore_and_detect_0:
+			# x:59 y:60
 			OperatableStateMachine.add('Exploration',
-										self.use_behavior(ExplorationSM, 'ExplorationWithDetection/Exploration'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+										self.use_behavior(ExplorationSM, 'Explore and Detect/Exploration'),
+										transitions={'finished': 'finished'},
+										autonomy={'finished': Autonomy.Inherit})
 
-			# x:346 y:59
-			OperatableStateMachine.add('Detect_Object',
+			# x:223 y:68
+			OperatableStateMachine.add('Detect_Victim',
 										DetectObject(),
 										transitions={'found': 'finished'},
 										autonomy={'found': Autonomy.Off},
@@ -83,24 +82,17 @@ class SearchVictimsnoArmSM(Behavior):
 
 
 		with _state_machine:
-			# x:159 y:82
-			OperatableStateMachine.add('ExplorationWithDetection',
-										_sm_explorationwithdetection_0,
+			# x:98 y:55
+			OperatableStateMachine.add('Explore and Detect',
+										_sm_explore_and_detect_0,
 										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pose': 'pose', 'victim': 'victim'})
-
-			# x:420 y:255
-			OperatableStateMachine.add('Confirm_Victim',
-										ConfirmVictim(),
-										transitions={'confirmed': 'ExplorationWithDetection'},
-										autonomy={'confirmed': Autonomy.Off},
-										remapping={'victim': 'victim'})
+										remapping={'victim': 'victim', 'pose': 'pose'})
 
 			# x:412 y:338
 			OperatableStateMachine.add('Discard_Victim',
 										DiscardVictim(),
-										transitions={'discarded': 'ExplorationWithDetection'},
+										transitions={'discarded': 'Explore and Detect'},
 										autonomy={'discarded': Autonomy.Off},
 										remapping={'victim': 'victim'})
 
@@ -116,6 +108,13 @@ class SearchVictimsnoArmSM(Behavior):
 										OperatorDecisionState(outcomes=['confirmed','discarded','retry'], hint='Confirm or discard victim', suggestion='confirmed'),
 										transitions={'confirmed': 'Confirm_Victim', 'discarded': 'Discard_Victim', 'retry': 'ExplorationDriveTo'},
 										autonomy={'confirmed': Autonomy.High, 'discarded': Autonomy.Full, 'retry': Autonomy.Full})
+
+			# x:420 y:255
+			OperatableStateMachine.add('Confirm_Victim',
+										ConfirmVictim(),
+										transitions={'confirmed': 'Explore and Detect'},
+										autonomy={'confirmed': Autonomy.Off},
+										remapping={'victim': 'victim'})
 
 
 		return _state_machine
