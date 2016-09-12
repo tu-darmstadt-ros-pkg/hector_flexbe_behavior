@@ -46,7 +46,7 @@ class ApproachVictimSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
+		# x:556 y:138, x:59 y:223
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose', 'victim'])
 		_state_machine.userdata.pose = PoseStamped()
 		_state_machine.userdata.victim = ''
@@ -59,24 +59,24 @@ class ApproachVictimSM(Behavior):
 
 
 		with _state_machine:
-			# x:175 y:79
-			OperatableStateMachine.add('Look_At',
+			# x:38 y:50
+			OperatableStateMachine.add('Look_At_Victim',
 										LookAtWaypoint(),
-										transitions={'reached': 'Move_To', 'failed': 'failed'},
+										transitions={'reached': 'Move_To_Victim', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'pose'})
 
-			# x:445 y:91
-			OperatableStateMachine.add('Move_To',
+			# x:338 y:50
+			OperatableStateMachine.add('Move_To_Victim',
 										MoveToWaypointState(),
 										transitions={'reached': 'finished', 'failed': 'failed', 'update': 'Get_Victim_Pose'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'update': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'victim': 'victim', 'speed': 'speed'})
 
-			# x:530 y:247
+			# x:342 y:216
 			OperatableStateMachine.add('Get_Victim_Pose',
 										GetObjectPoseState(),
-										transitions={'done': 'Move_To', 'unknown': 'failed', 'not_available': 'failed'},
+										transitions={'done': 'Move_To_Victim', 'unknown': 'failed', 'not_available': 'failed'},
 										autonomy={'done': Autonomy.Off, 'unknown': Autonomy.Off, 'not_available': Autonomy.Off},
 										remapping={'object_id': 'victim', 'object_pose': 'pose'})
 

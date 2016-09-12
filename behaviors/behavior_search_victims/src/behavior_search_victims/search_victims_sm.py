@@ -59,7 +59,7 @@ class SearchVictimsSM(Behavior):
 		_state_machine = OperatableStateMachine(outcomes=['failed'])
 		_state_machine.userdata.pose = PoseStamped()
 		_state_machine.userdata.group_name = 'complete_arm_with_gripper_group'
-		_state_machine.userdata.type = 'victim'
+		_state_machine.userdata.type = 'hotspot'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
