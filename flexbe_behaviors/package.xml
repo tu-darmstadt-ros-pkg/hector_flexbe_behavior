@@ -31,5 +31,8 @@
   <run_depend>behavior_dex1</run_depend>
   <run_depend>behavior_approach_victim</run_depend>
   <run_depend>behavior_approach_object</run_depend>
+  <run_depend>behavior_explore</run_depend>
+  <run_depend>behavior_explore_and_search_victims</run_depend>
+  <run_depend>behavior_explore_and_search_victims_using_arm</run_depend>
 
 </package>
