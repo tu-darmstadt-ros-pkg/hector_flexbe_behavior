@@ -76,9 +76,9 @@ class MoveToWaypointState(EventState):
 		self._failed = False
 		self._reached = False
 		
-		#goal_id = GoalID()
-		#goal_id.id = 'abcd'
-		#goal_id.stamp = Time.now()
+		goal_id = GoalID()
+		goal_id.id = 'abcd'
+		goal_id.stamp = Time.now()
 
 		action_goal = MoveBaseGoal()
 		action_goal.target_pose = userdata.waypoint
