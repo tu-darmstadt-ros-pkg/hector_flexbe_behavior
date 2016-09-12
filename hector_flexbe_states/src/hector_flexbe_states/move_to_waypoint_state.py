@@ -89,7 +89,7 @@ class MoveToWaypointState(EventState):
 
 		try:
 			self._move_client.send_goal(self._action_topic, action_goal)
-			#resp = self.set_tolerance(goal_id, 0.2, 1.55)
+			resp = self.set_tolerance(goal_id, 0.2, 1.55)
 		except Exception as e:
 			Logger.logwarn('Failed to send motion request to waypoint (%(x).3f, %(y).3f):\n%(err)s' % {
 				'err': str(e),
