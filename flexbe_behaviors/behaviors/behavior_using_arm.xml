@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="using Arm">
+
+	<executable package_path="behavior_using_arm.using_arm_sm" class="usingArmSM" />
+	<tagstring>test, mission</tagstring>
+	<author>Elisa und Gabriel</author>
+	<date>Thu May 19 2016</date>
+	<description>
+		Explore and search victims
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Explore" />
+	<contains name="Approach Victim" />
+
+	<!-- Available Parameters -->
+
+</behavior>
