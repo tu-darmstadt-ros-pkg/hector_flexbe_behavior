@@ -61,7 +61,7 @@ class EnterSiteInitialSM(Behavior):
 		_state_machine.userdata.flipper_drive = 0.0
 		_state_machine.userdata.COM_joint_config = [0, 1.76, 0.73, 0]
 		_state_machine.userdata.drive_joint_config = [0, 0.7, 0.7,0]
-		_state_machine.userdata.group_name = arm_group
+		_state_machine.userdata.group_name = 'arm_group'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
