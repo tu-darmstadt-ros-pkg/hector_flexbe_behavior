@@ -40,7 +40,7 @@ class MonitorIMUState(EventState):
 		super(MonitorIMUState, self).__init__(outcomes=['triggered'],
 											input_keys=['tilt_threshold'])
 
-		self._imu_topic = '/imu/data'
+		self._imu_topic = '/robot_pose'
 		self._op = operation
                 
 		self._sub = ProxySubscriberCached({self._imu_topic: Imu})
