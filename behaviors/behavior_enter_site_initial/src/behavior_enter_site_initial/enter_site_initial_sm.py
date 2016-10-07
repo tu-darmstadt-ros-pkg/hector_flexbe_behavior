@@ -59,7 +59,7 @@ class EnterSiteInitialSM(Behavior):
 		_state_machine.userdata.flipper_ready = 0.75
 		_state_machine.userdata.initialpose = Pose() # manual section
 		_state_machine.userdata.flipper_drive = 0.0
-		_state_machine.userdata.COM_joint_config = [0, 2.3, 0.7, 1.57]
+		_state_machine.userdata.COM_joint_config = [0, 2.3, 0.7, 1.0]
 		_state_machine.userdata.drive_joint_config = [0, 0.7, 0.7,0]
 		_state_machine.userdata.group_name = 'arm_group'
 
