@@ -37,7 +37,7 @@ class MoveFlipperState(EventState):
                 self._state_topic = '/flipper_control/flipper_traj_controller/state'
 		self._sub = ProxySubscriberCached({self._state_topic: JointTrajectoryControllerState})
 
-		self._action_topic = '/argonaut_robot/flipper/flipper_traj_controller/follow_joint_trajectory'
+                self._action_topic = '/flipper_control/flipper_traj_controller/follow_joint_trajectory'
 		self._client = ProxyActionClient({self._action_topic: FollowJointTrajectoryAction})
 
 		self._failed = False
