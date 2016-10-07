@@ -55,6 +55,7 @@ class MonitorIMUState(EventState):
 			self._sub.remove_last_msg(self._imu_topic)
 			q = msg.orientation
 			rpy = euler_from_quaternion([q.x,q.y,q.z,q.w])
+            print 'Roll: ' % rpy[0] ', Pitch: ' % rpy[1] ', Yaw: ' % rpy[2] 
 			pitch = rpy[1]
 			if self._op * abs(pitch) > self._op * userdata.tilt_threshold:
 				print 'Trigger with pitch: %.5f' % pitch
