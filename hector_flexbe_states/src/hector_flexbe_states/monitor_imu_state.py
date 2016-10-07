@@ -6,7 +6,7 @@ from flexbe_core import EventState, Logger
 
 from flexbe_core.proxy import ProxySubscriberCached
 
-from sensor_msgs.msg import Imu
+from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion
 
 
@@ -43,7 +43,7 @@ class MonitorIMUState(EventState):
 		self._imu_topic = '/robot_pose'
 		self._op = operation
                 
-		self._sub = ProxySubscriberCached({self._imu_topic: Imu})
+		self._sub = ProxySubscriberCached({self._imu_topic: PoseStamped})
 		
 		
 	def execute(self, userdata):
@@ -53,7 +53,7 @@ class MonitorIMUState(EventState):
 		if self._sub.has_msg(self._imu_topic):
 			msg = self._sub.get_last_msg(self._imu_topic)
 			self._sub.remove_last_msg(self._imu_topic)
-			q = msg.orientation
+			q = msg.pose.orientation
 			rpy = euler_from_quaternion([q.x,q.y,q.z,q.w])
 			#print 'Roll: ' % rpy[0] ', Pitch: ' % rpy[1] ', Yaw: ' % rpy[2] 
 			print rpy
