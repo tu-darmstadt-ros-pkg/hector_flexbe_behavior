@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Enter Site Initial">
+
+	<executable package_path="behavior_enter_site_initial.enter_site_initial_sm" class="EnterSiteInitialSM" />
+	<tagstring>sub motion</tagstring>
+	<author>Philipp Schillinger</author>
+	<date>Wed Jun 17 2015</date>
+	<description>
+		Initially enter the site by crossing the step without localization. Assumes this to be step_1 and localizes afterwards.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

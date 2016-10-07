@@ -1,0 +1,20 @@
+<package>
+  <name>behavior_enter_site_initial</name>
+  <version>1.0.0</version>
+  <description>
+     Enter the site by crossing the step.
+  </description>
+  <maintainer email="todo@todo.com">Philipp Schillinger</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/behavior_enter_site_initial</url>
+  <author>Philipp Schillinger</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>flexbe_core</run_depend>
+  <run_depend>flexbe_argos_states</run_depend>
+  <run_depend>flexbe_states</run_depend>
+
+</package>

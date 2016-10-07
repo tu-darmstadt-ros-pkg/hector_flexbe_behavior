@@ -34,5 +34,6 @@
   <run_depend>behavior_explore</run_depend>
   <run_depend>behavior_explore_and_search_victims</run_depend>
   <run_depend>behavior_explore_and_search_victims_using_arm</run_depend>
+  <run_depend>behavior_enter_site_initial</run_depend>
 
 </package>
