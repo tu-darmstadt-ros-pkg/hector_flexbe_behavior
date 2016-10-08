@@ -52,14 +52,14 @@ class EnterSiteInitialSM(Behavior):
 		# x:290 y:398, x:549 y:193
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.above_step_tilt_threshold = 0.2
-		_state_machine.userdata.step_speed = 0.2 # always forward from docking
+		_state_machine.userdata.step_speed = 0.1 # always forward from docking
 		_state_machine.userdata.step_tilt_threshold = 0.2
 		_state_machine.userdata.flipper_step = -0.5
 		_state_machine.userdata.zero_speed = 0
 		_state_machine.userdata.flipper_ready = 0.75
 		_state_machine.userdata.initialpose = Pose() # manual section
 		_state_machine.userdata.flipper_drive = 0.0
-		_state_machine.userdata.COM_joint_config = [0, 2.3, 1.0, 0.7]
+		_state_machine.userdata.COM_joint_config = [0, 2.56, 1.0, 0.7]
 		_state_machine.userdata.drive_joint_config = [0, 0.7, 0.7,0]
 		_state_machine.userdata.group_name = 'arm_group'
 
