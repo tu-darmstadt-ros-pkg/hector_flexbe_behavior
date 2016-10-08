@@ -56,7 +56,7 @@ class EnterSiteInitialSM(Behavior):
 		_state_machine.userdata.step_tilt_threshold = 0.2
 		_state_machine.userdata.flipper_step = -0.5
 		_state_machine.userdata.zero_speed = 0
-		_state_machine.userdata.flipper_ready = 0.75
+		_state_machine.userdata.flipper_ready = 0.5
 		_state_machine.userdata.initialpose = Pose() # manual section
 		_state_machine.userdata.flipper_drive = 0.0
 		_state_machine.userdata.COM_joint_config = [0, 2.56, 1.0, 0.7]
