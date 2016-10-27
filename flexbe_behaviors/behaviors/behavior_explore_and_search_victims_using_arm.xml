@@ -3,11 +3,11 @@
 <behavior name="Explore and Search Victims using Arm">
 
 	<executable package_path="behavior_explore_and_search_victims_using_arm.explore_and_search_victims_using_arm_sm" class="ExploreandSearchVictimsusingArmSM" />
-	<tagstring>test, mission</tagstring>
+	<tagstring>Mission</tagstring>
 	<author>Elisa und Gabriel</author>
 	<date>Thu May 19 2016</date>
 	<description>
-		Explore and search victims
+		Explore and search victims with arm movements.
 	</description>
 
 

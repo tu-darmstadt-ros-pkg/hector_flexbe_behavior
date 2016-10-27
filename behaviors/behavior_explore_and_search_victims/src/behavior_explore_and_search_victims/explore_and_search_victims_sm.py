@@ -26,7 +26,7 @@ Created on Thu May 19 2016
 '''
 class ExploreandSearchVictimsSM(Behavior):
 	'''
-	Explore and search victims without moving arm
+	Explore and search victims without arm movements.
 	'''
 
 
@@ -89,27 +89,27 @@ class ExploreandSearchVictimsSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit},
 										remapping={'pose': 'pose', 'victim': 'victim'})
 
-			# x:346 y:223
+			# x:301 y:328
 			OperatableStateMachine.add('Discard_Victim',
 										DiscardVictim(),
 										transitions={'discarded': 'Explore and Detect'},
 										autonomy={'discarded': Autonomy.Off},
 										remapping={'victim': 'victim'})
 
-			# x:543 y:198
+			# x:496 y:252
 			OperatableStateMachine.add('Verify_Victim',
 										OperatorDecisionState(outcomes=['confirmed','discarded','retry'], hint='Confirm or discard victim', suggestion='confirmed'),
 										transitions={'confirmed': 'Confirm_Victim', 'discarded': 'Discard_Victim', 'retry': 'Approach Victim'},
 										autonomy={'confirmed': Autonomy.High, 'discarded': Autonomy.Full, 'retry': Autonomy.Full})
 
-			# x:538 y:54
+			# x:491 y:54
 			OperatableStateMachine.add('Approach Victim',
 										self.use_behavior(ApproachVictimSM, 'Approach Victim'),
 										transitions={'finished': 'Verify_Victim', 'failed': 'Verify_Victim'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'pose': 'pose', 'victim': 'victim'})
 
-			# x:346 y:127
+			# x:301 y:178
 			OperatableStateMachine.add('Confirm_Victim',
 										ConfirmVictim(),
 										transitions={'confirmed': 'Explore and Detect'},
