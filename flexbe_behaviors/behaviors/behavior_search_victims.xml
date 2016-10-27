@@ -13,7 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="Exploration" />
-	<contains name="Approach Object" />
+	<contains name="Approach Victim" />
 
 	<!-- Available Parameters -->
 

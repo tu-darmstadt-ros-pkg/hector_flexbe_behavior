@@ -8,12 +8,12 @@
 
 import roslib; roslib.load_manifest('behavior_search_victims_no_arm')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from behavior_exploration.exploration_sm import ExplorationSM
+from behavior_explore.explore_sm import ExploreSM
 from hector_flexbe_states.detect_object import DetectObject
 from hector_flexbe_states.discard_victim import DiscardVictim
-from behavior_explorationdriveto.explorationdriveto_sm import ExplorationDriveToSM
 from flexbe_states.operator_decision_state import OperatorDecisionState
 from hector_flexbe_states.confirm_victim import ConfirmVictim
+from behavior_approach_victim.approach_victim_sm import ApproachVictimSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped
@@ -37,8 +37,8 @@ class SearchVictimsnoArmSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(ExplorationSM, 'Explore and Detect/Exploration')
-		self.add_behavior(ExplorationDriveToSM, 'ExplorationDriveTo')
+		self.add_behavior(ExploreSM, 'Explore and Detect/Explore')
+		self.add_behavior(ApproachVictimSM, 'Approach Victim')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -59,16 +59,16 @@ class SearchVictimsnoArmSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:30 y:322, x:130 y:322, x:230 y:322, x:330 y:322
+		# x:212 y:333, x:130 y:322, x:54 y:320, x:330 y:322
 		_sm_explore_and_detect_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], output_keys=['victim', 'pose'], conditions=[
-										('finished', [('Exploration', 'finished')]),
-										('finished', [('Detect_Victim', 'found')])
+										('finished', [('Detect_Victim', 'found')]),
+										('finished', [('Explore', 'finished')])
 										])
 
 		with _sm_explore_and_detect_0:
-			# x:59 y:60
-			OperatableStateMachine.add('Exploration',
-										self.use_behavior(ExplorationSM, 'Explore and Detect/Exploration'),
+			# x:54 y:58
+			OperatableStateMachine.add('Explore',
+										self.use_behavior(ExploreSM, 'Explore and Detect/Explore'),
 										transitions={'finished': 'finished'},
 										autonomy={'finished': Autonomy.Inherit})
 
@@ -85,7 +85,7 @@ class SearchVictimsnoArmSM(Behavior):
 			# x:98 y:55
 			OperatableStateMachine.add('Explore and Detect',
 										_sm_explore_and_detect_0,
-										transitions={'finished': 'ExplorationDriveTo', 'failed': 'failed'},
+										transitions={'finished': 'Approach Victim', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'victim': 'victim', 'pose': 'pose'})
 
@@ -96,17 +96,10 @@ class SearchVictimsnoArmSM(Behavior):
 										autonomy={'discarded': Autonomy.Off},
 										remapping={'victim': 'victim'})
 
-			# x:881 y:197
-			OperatableStateMachine.add('ExplorationDriveTo',
-										self.use_behavior(ExplorationDriveToSM, 'ExplorationDriveTo'),
-										transitions={'finished': 'Decide_If_Victim', 'failed': 'Decide_If_Victim'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'pose': 'pose', 'victim': 'victim'})
-
 			# x:612 y:279
 			OperatableStateMachine.add('Decide_If_Victim',
 										OperatorDecisionState(outcomes=['confirmed','discarded','retry'], hint='Confirm or discard victim', suggestion='confirmed'),
-										transitions={'confirmed': 'Confirm_Victim', 'discarded': 'Discard_Victim', 'retry': 'ExplorationDriveTo'},
+										transitions={'confirmed': 'Confirm_Victim', 'discarded': 'Discard_Victim', 'retry': 'Approach Victim'},
 										autonomy={'confirmed': Autonomy.High, 'discarded': Autonomy.Full, 'retry': Autonomy.Full})
 
 			# x:420 y:255
@@ -115,6 +108,13 @@ class SearchVictimsnoArmSM(Behavior):
 										transitions={'confirmed': 'Explore and Detect'},
 										autonomy={'confirmed': Autonomy.Off},
 										remapping={'victim': 'victim'})
+
+			# x:798 y:98
+			OperatableStateMachine.add('Approach Victim',
+										self.use_behavior(ApproachVictimSM, 'Approach Victim'),
+										transitions={'finished': 'Decide_If_Victim', 'failed': 'Decide_If_Victim'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										remapping={'pose': 'pose', 'victim': 'victim'})
 
 
 		return _state_machine

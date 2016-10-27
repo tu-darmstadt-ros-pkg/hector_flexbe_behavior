@@ -12,8 +12,8 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="Exploration" />
-	<contains name="ExplorationDriveTo" />
+	<contains name="Explore" />
+	<contains name="Approach Victim" />
 
 	<!-- Available Parameters -->
 

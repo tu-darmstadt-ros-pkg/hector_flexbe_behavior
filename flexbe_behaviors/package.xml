@@ -13,13 +13,11 @@
 
   <!-- Add here all ROS packages that contain behaviors -->
   <run_depend>behavior_example_behavior</run_depend>
-  <run_depend>behavior_exploration</run_depend>
   <run_depend>behavior_simplemission</run_depend>
   <run_depend>behavior_simplemissioninitialize</run_depend>
   <run_depend>behavior_simplemissiondoaction</run_depend>
   <run_depend>behavior_simplemissiondriveto</run_depend>
   <run_depend>behavior_simplemissionerror</run_depend>
-  <run_depend>behavior_explorationdriveto</run_depend>
   <run_depend>behavior_arm_tests</run_depend>
   <run_depend>behavior_search_victims</run_depend>
   <run_depend>behavior_simplemissionstartcheck</run_depend>
@@ -30,9 +28,10 @@
   <run_depend>behavior_search_victims_no_arm</run_depend>
   <run_depend>behavior_dex1</run_depend>
   <run_depend>behavior_approach_victim</run_depend>
-  <run_depend>behavior_approach_object</run_depend>
   <run_depend>behavior_explore</run_depend>
+  <run_depend>behavior_exploration</run_depend>
   <run_depend>behavior_explore_and_search_victims</run_depend>
+  <run_depend>behavior_set_points</run_depend>
+  <run_depend>behavior_driving_between_two_waypoints</run_depend>
   <run_depend>behavior_explore_and_search_victims_using_arm</run_depend>
-
 </package>
