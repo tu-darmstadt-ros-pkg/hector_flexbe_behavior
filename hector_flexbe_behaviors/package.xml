@@ -1,8 +1,8 @@
 <package>
-  <name>flexbe_behaviors</name>
+  <name>hector_flexbe_behaviors</name>
   <version>1.0.0</version>
   <description>
-     flexbe_behaviors references all implemented behaviors.
+     hector_flexbe_behaviors references all implemented behaviors.
   </description>
   <maintainer email="todo@todo.com">TODO</maintainer>
   <license>BSD</license>
