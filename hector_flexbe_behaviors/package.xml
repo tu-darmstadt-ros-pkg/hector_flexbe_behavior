@@ -34,4 +34,9 @@
   <run_depend>behavior_set_points</run_depend>
   <run_depend>behavior_driving_between_two_waypoints</run_depend>
   <run_depend>behavior_explore_and_search_victims_using_arm</run_depend>
+
+  <export>
+
+    <flexbe_behaviors />
+  </export>
 </package>

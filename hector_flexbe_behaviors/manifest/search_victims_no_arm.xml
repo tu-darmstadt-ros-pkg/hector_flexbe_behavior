@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Search Victims no Arm">
+
+	<executable package_path="hector_flexbe_behaviors.search_victims_no_arm_sm" class="SearchVictimsnoArmSM" />
+	<tagstring>test, mission</tagstring>
+	<author>Elisa und Gabriel</author>
+	<date>Thu May 19 2016</date>
+	<description>
+		Explore and search victims without moving arm
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Explore" />
+	<contains name="Approach Victim" />
+
+	<!-- Available Parameters -->
+
+</behavior>

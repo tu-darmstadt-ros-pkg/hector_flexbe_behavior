@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Drivepath Test">
+
+	<executable package_path="hector_flexbe_behaviors.drivepath_test_sm" class="DrivepathTestSM" />
+	<tagstring>demo, mission</tagstring>
+	<author>def</author>
+	<date>Tue Jun 28 2016</date>
+	<description>
+		abc
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

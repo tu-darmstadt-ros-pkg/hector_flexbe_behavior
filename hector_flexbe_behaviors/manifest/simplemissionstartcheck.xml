@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMissionStartcheck">
+
+	<executable package_path="hector_flexbe_behaviors.simplemissionstartcheck_sm" class="SimpleMissionStartcheckSM" />
+	<tagstring>demo, sub</tagstring>
+	<author>Gabriel und Elisa</author>
+	<date>Fri Jun 24 2016</date>
+	<description>
+		Perform the Startcheck at the beginning of each Preliminary Task
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

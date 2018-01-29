@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMissionDoAction">
+
+	<executable package_path="hector_flexbe_behaviors.simplemissiondoaction_sm" class="SimpleMissionDoActionSM" />
+	<tagstring>demo, sub</tagstring>
+	<author>Gabriel</author>
+	<date>Thu Jun 02 2016</date>
+	<description>
+		Executes the simple Mission Action
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

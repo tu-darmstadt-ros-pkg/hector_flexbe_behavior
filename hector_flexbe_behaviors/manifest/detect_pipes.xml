@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Detect Pipes">
+
+	<executable package_path="hector_flexbe_behaviors.detect_pipes_sm" class="DetectPipesSM" />
+	<tagstring>test</tagstring>
+	<author>Philipp Schillinger</author>
+	<date>Tue Jun 28 2016</date>
+	<description>
+		Position as required and try different ways to detect the pipe positions
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="pose_offset" default="0.3" label="pose_offset" hint="Sets the pose_offset">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="close_offset" default="0.1" label="close_offset" hint="Sets the close_offset">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>

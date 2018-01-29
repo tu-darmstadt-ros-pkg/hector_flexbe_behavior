@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMissionMan4">
+
+	<executable package_path="hector_flexbe_behaviors.simplemissionman4_sm" class="SimpleMissionMan4SM" />
+	<tagstring>demo, mission</tagstring>
+	<author>Gabriel</author>
+	<date>Thu Jun 02 2016</date>
+	<description>
+		Simple mission structure
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="SimpleMissionInitialize" />
+	<contains name="SimpleMissionDriveTo" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0.1" label="speed" hint="Sets the speed">
+			<min value="0" />
+			<max value="1.5" />
+		</param>
+
+		<param type="boolean" name="allow_backwards" default="False" label="Allow Backwards" hint="Allow robot to drive backwards to its goal" />
+
+	</params>
+
+
+</behavior>

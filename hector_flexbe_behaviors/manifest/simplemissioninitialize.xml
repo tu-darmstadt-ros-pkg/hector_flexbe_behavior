@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMissionInitialize">
+
+	<executable package_path="hector_flexbe_behaviors.simplemissioninitialize_sm" class="SimpleMissionInitializeSM" />
+	<tagstring>demo, sub</tagstring>
+	<author>Gabriel</author>
+	<date>Thu Jun 02 2016</date>
+	<description>
+		All steps which need to be done during startup
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

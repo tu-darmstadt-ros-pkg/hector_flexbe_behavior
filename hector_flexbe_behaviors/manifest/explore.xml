@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Explore">
+
+	<executable package_path="hector_flexbe_behaviors.explore_sm" class="ExploreSM" />
+	<tagstring>test, sub</tagstring>
+	<author>Gabriel und Elisa</author>
+	<date>Sat May 07 2016</date>
+	<description>
+		Explores and creates a map of it's surroundings
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0.1" label="speed" hint="Sets the speed">
+			<min value="0" />
+			<max value="1.5" />
+		</param>
+
+	</params>
+
+
+</behavior>

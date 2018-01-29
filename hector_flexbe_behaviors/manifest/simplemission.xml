@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="SimpleMission">
+
+	<executable package_path="hector_flexbe_behaviors.simplemission_sm" class="SimpleMissionSM" />
+	<tagstring>demo, mission</tagstring>
+	<author>Gabriel</author>
+	<date>Thu Jun 02 2016</date>
+	<description>
+		Simple mission structure
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="SimpleMissionInitialize" />
+	<contains name="SimpleMissionDoAction" />
+	<contains name="SimpleMissionDriveTo" />
+	<contains name="SimpleMissionError" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the speed">
+			<min value="0" />
+			<max value="1.5" />
+		</param>
+
+	</params>
+
+
+</behavior>
