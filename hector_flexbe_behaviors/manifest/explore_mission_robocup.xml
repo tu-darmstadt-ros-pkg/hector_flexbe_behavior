@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Explore Mission Robocup">
+
+	<executable package_path="hector_flexbe_behaviors.explore_mission_robocup_sm" class="ExploreMissionRobocupSM" />
+	<tagstring>robocup, exploration</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Thu Jul 20 2017</date>
+	<description>
+		Default behavior for exploration based Robocup missions
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

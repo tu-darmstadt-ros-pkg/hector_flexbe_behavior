@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="GPS Follow sparse waypoints">
+
+	<executable package_path="hector_flexbe_behaviors.gps_follow_sparse_waypoints_sm" class="GPSFollowsparsewaypointsSM" />
+	<tagstring>RC17, GPS</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Mon Jul 17 2017</date>
+	<description>
+		Follow waypoints given by GPS coordinates
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Follow waypoints" />
+
+	<!-- Available Parameters -->
+
+</behavior>

@@ -34,6 +34,13 @@
   <run_depend>behavior_set_points</run_depend>
   <run_depend>behavior_driving_between_two_waypoints</run_depend>
   <run_depend>behavior_explore_and_search_victims_using_arm</run_depend>
+  <run_depend>behavior_explore_argos_test</run_depend>
+  <run_depend>behavior_explore_lite</run_depend>
+  <run_depend>behavior_head_sweep</run_depend>
+  <run_depend>behavior_gps_follow_sparse_waypoints</run_depend>
+  <run_depend>behavior_explore_mission_robocup</run_depend>
+  <run_depend>behavior_follow_waypoints</run_depend>
+  <run_depend>behavior_gps_follow_waypoints</run_depend>
 
   <export>
 

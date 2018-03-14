@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="GPS follow waypoints">
+
+	<executable package_path="hector_flexbe_behaviors.gps_follow_waypoints_sm" class="GPSfollowwaypointsSM" />
+	<tagstring>rc17, gps</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Fri Jul 28 2017</date>
+	<description>
+		Follow waypoints for outdoor challenge
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

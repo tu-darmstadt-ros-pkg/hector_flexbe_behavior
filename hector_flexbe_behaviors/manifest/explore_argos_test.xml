@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Explore Argos Test">
+
+	<executable package_path="hector_flexbe_behaviors.explore_argos_test_sm" class="ExploreArgosTestSM" />
+	<tagstring></tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Tue May 09 2017</date>
+	<description>
+		Exploration test behavior for argos workspace
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
