@@ -7,10 +7,10 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_behaviors.simplemissioninitialize_sm import SimpleMissionInitializeSM
-from flexbe_behaviors.simplemissiondoaction_sm import SimpleMissionDoActionSM
-from flexbe_behaviors.simplemissiondriveto_sm import SimpleMissionDriveToSM
-from flexbe_behaviors.simplemissionerror_sm import SimpleMissionErrorSM
+from hector_flexbe_behaviors.simplemissioninitialize_sm import SimpleMissionInitializeSM
+from hector_flexbe_behaviors.simplemissiondoaction_sm import SimpleMissionDoActionSM
+from hector_flexbe_behaviors.simplemissiondriveto_sm import SimpleMissionDriveToSM
+from hector_flexbe_behaviors.simplemissionerror_sm import SimpleMissionErrorSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped

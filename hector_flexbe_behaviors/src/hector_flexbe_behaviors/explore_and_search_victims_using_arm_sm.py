@@ -12,8 +12,8 @@ from hector_flexbe_states.confirm_victim import ConfirmVictim
 from hector_flexbe_states.discard_victim import DiscardVictim
 from hector_flexbe_states.move_arm_dyn_state import MoveArmDynState
 from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState
-from flexbe_behaviors.approach_victim_sm import ApproachVictimSM
-from flexbe_behaviors.explore_sm import ExploreSM
+from hector_flexbe_behaviors.approach_victim_sm import ApproachVictimSM
+from hector_flexbe_behaviors.explore_sm import ExploreSM
 from hector_flexbe_states.detect_object import DetectObject
 from flexbe_states.operator_decision_state import OperatorDecisionState
 # Additional imports can be added inside the following tags

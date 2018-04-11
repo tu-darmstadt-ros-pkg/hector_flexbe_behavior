@@ -7,8 +7,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_behaviors.simplemissioninitialize_sm import SimpleMissionInitializeSM
-from flexbe_behaviors.simplemissiondriveto_sm import SimpleMissionDriveToSM
+from hector_flexbe_behaviors.simplemissioninitialize_sm import SimpleMissionInitializeSM
+from hector_flexbe_behaviors.simplemissiondriveto_sm import SimpleMissionDriveToSM
 from flexbe_states.operator_decision_state import OperatorDecisionState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]

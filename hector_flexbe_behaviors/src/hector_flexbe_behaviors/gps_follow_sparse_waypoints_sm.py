@@ -9,7 +9,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_argos_states.import_gps_from_csv_state import ImportGpsFromCsvState
 from flexbe_argos_states.parse_gps_waypoints_state import ParseGPSWaypointsState
-from flexbe_behaviors.follow_waypoints_sm import FollowwaypointsSM
+from hector_flexbe_behaviors.follow_waypoints_sm import FollowwaypointsSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 

@@ -11,11 +11,11 @@ from flexbe_manipulation_states.get_joints_from_srdf_state import GetJointsFromS
 from hector_flexbe_states.confirm_victim import ConfirmVictim
 from hector_flexbe_states.discard_victim import DiscardVictim
 from hector_flexbe_states.Decide_If_Victim import DecideIfVictim
-from flexbe_behaviors.exploration_sm import ExplorationSM
+from hector_flexbe_behaviors.exploration_sm import ExplorationSM
 from hector_flexbe_states.detect_object import DetectObject
 from hector_flexbe_states.move_arm_dyn_state import MoveArmDynState
 from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState
-from flexbe_behaviors.approach_victim_sm import ApproachVictimSM
+from hector_flexbe_behaviors.approach_victim_sm import ApproachVictimSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PoseStamped

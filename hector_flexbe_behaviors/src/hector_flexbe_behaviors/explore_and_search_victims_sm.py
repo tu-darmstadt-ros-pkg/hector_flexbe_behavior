@@ -7,11 +7,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_behaviors.explore_sm import ExploreSM
+from hector_flexbe_behaviors.explore_sm import ExploreSM
 from hector_flexbe_states.detect_object import DetectObject
 from hector_flexbe_states.discard_victim import DiscardVictim
 from flexbe_states.operator_decision_state import OperatorDecisionState
-from flexbe_behaviors.approach_victim_sm import ApproachVictimSM
+from hector_flexbe_behaviors.approach_victim_sm import ApproachVictimSM
 from hector_flexbe_states.confirm_victim import ConfirmVictim
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
