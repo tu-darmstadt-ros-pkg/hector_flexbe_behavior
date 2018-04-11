@@ -6,7 +6,6 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_simplemissiondoaction')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_states.wait_state import WaitState
 # Additional imports can be added inside the following tags

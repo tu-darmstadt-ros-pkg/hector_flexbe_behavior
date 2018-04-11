@@ -6,7 +6,6 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_detect_pipes')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_manipulation_states.get_joints_from_srdf_state import GetJointsFromSrdfState
 from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState

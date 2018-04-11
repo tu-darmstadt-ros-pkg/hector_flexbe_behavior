@@ -6,11 +6,10 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_gps_follow_sparse_waypoints')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_argos_states.import_gps_from_csv_state import ImportGpsFromCsvState
 from flexbe_argos_states.parse_gps_waypoints_state import ParseGPSWaypointsState
-from behavior_follow_waypoints.follow_waypoints_sm import FollowwaypointsSM
+from flexbe_behaviors.follow_waypoints_sm import FollowwaypointsSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 

@@ -2,7 +2,7 @@
   <name>hector_flexbe_behaviors</name>
   <version>1.0.0</version>
   <description>
-     hector_flexbe_behaviors references all implemented behaviors.
+     hector_flexbe_behaviors includes all implemented behaviors.
   </description>
   <maintainer email="todo@todo.com">TODO</maintainer>
   <license>BSD</license>
@@ -11,39 +11,7 @@
 
   <run_depend>rospy</run_depend>
 
-  <!-- Add here all ROS packages that contain behaviors -->
-  <run_depend>behavior_example_behavior</run_depend>
-  <run_depend>behavior_simplemission</run_depend>
-  <run_depend>behavior_simplemissioninitialize</run_depend>
-  <run_depend>behavior_simplemissiondoaction</run_depend>
-  <run_depend>behavior_simplemissiondriveto</run_depend>
-  <run_depend>behavior_simplemissionerror</run_depend>
-  <run_depend>behavior_arm_tests</run_depend>
-  <run_depend>behavior_search_victims</run_depend>
-  <run_depend>behavior_simplemissionstartcheck</run_depend>
-  <run_depend>behavior_detect_pipes</run_depend>
-  <run_depend>behavior_pathdrivemission</run_depend>
-  <run_depend>behavior_drivepath_test</run_depend>
-  <run_depend>behavior_simplemissionman4</run_depend>
-  <run_depend>behavior_search_victims_no_arm</run_depend>
-  <run_depend>behavior_dex1</run_depend>
-  <run_depend>behavior_approach_victim</run_depend>
-  <run_depend>behavior_explore</run_depend>
-  <run_depend>behavior_exploration</run_depend>
-  <run_depend>behavior_explore_and_search_victims</run_depend>
-  <run_depend>behavior_set_points</run_depend>
-  <run_depend>behavior_driving_between_two_waypoints</run_depend>
-  <run_depend>behavior_explore_and_search_victims_using_arm</run_depend>
-  <run_depend>behavior_explore_argos_test</run_depend>
-  <run_depend>behavior_explore_lite</run_depend>
-  <run_depend>behavior_head_sweep</run_depend>
-  <run_depend>behavior_gps_follow_sparse_waypoints</run_depend>
-  <run_depend>behavior_explore_mission_robocup</run_depend>
-  <run_depend>behavior_follow_waypoints</run_depend>
-  <run_depend>behavior_gps_follow_waypoints</run_depend>
-
   <export>
-
     <flexbe_behaviors />
   </export>
 </package>

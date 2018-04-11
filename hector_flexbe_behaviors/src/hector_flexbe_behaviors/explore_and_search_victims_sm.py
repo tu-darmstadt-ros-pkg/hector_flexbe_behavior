@@ -6,13 +6,12 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_explore_and_search_victims')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from behavior_explore.explore_sm import ExploreSM
+from flexbe_behaviors.explore_sm import ExploreSM
 from hector_flexbe_states.detect_object import DetectObject
 from hector_flexbe_states.discard_victim import DiscardVictim
 from flexbe_states.operator_decision_state import OperatorDecisionState
-from behavior_approach_victim.approach_victim_sm import ApproachVictimSM
+from flexbe_behaviors.approach_victim_sm import ApproachVictimSM
 from hector_flexbe_states.confirm_victim import ConfirmVictim
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]

@@ -6,7 +6,6 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_pathdrivemission')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.create_path import CreatePath
 from hector_flexbe_states.invert_path import InvertPath

@@ -6,7 +6,6 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_explore')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.LookAtPattern import LookAtPattern
 from hector_flexbe_states.error_exploration import ErrorExploration

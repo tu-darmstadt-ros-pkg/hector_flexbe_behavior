@@ -6,10 +6,9 @@
 # Only code inside the [MANUAL] tags will be kept.        #
 ###########################################################
 
-import roslib; roslib.load_manifest('behavior_simplemissionman4')
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from behavior_simplemissioninitialize.simplemissioninitialize_sm import SimpleMissionInitializeSM
-from behavior_simplemissiondriveto.simplemissiondriveto_sm import SimpleMissionDriveToSM
+from flexbe_behaviors.simplemissioninitialize_sm import SimpleMissionInitializeSM
+from flexbe_behaviors.simplemissiondriveto_sm import SimpleMissionDriveToSM
 from flexbe_states.operator_decision_state import OperatorDecisionState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
