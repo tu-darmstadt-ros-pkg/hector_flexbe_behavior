@@ -14,5 +14,14 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the speed">
+			<min value="0.2" />
+			<max value="3.0" />
+		</param>
+
+	</params>
+
 
 </behavior>
