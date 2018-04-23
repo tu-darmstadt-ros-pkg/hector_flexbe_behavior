@@ -21,6 +21,8 @@
 			<max value="2.0" />
 		</param>
 
+		<param type="boolean" name="use_planning" default="True" label="use_planning" hint="Sets the use_planning" />
+
 	</params>
 
 
