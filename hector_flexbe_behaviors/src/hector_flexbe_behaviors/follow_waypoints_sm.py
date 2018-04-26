@@ -49,7 +49,7 @@ class FollowwaypointsSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:237 y:360
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
-		_state_machine.userdata.waypoints2 = []
+		_state_machine.userdata.waypoints = []
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -63,7 +63,7 @@ class FollowwaypointsSM(Behavior):
 										GetPathState(pathTopic='/path_to_follow'),
 										transitions={'succeeded': 'reverse_waypoints', 'failed': 'get_path'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'waypoints': 'waypoints'})
+										remapping={'waypoints2': 'waypoints2'})
 
 			# x:627 y:66
 			OperatableStateMachine.add('follow_waypoints',
