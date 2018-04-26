@@ -61,18 +61,18 @@ class FollowwaypointsSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('get_path',
 										GetPathState(pathTopic='/path_to_follow'),
-										transitions={'succeeded': 'follow_waypoints', 'failed': 'get_path'},
+										transitions={'succeeded': 'reverse_waypoints', 'failed': 'get_path'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints': 'waypoints'})
 
-			# x:376 y:56
+			# x:627 y:66
 			OperatableStateMachine.add('follow_waypoints',
-										FollowWaypointsState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, use_planning=self.use_planning),
+										FollowWaypointsState(desired_speed=self.speed, position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, use_planning=self.use_planning),
 										transitions={'reached': 'follow_waypoints', 'failed': 'failed', 'reverse': 'reverse_waypoints'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'reverse': Autonomy.Off},
 										remapping={'waypoints': 'waypoints', 'waypoints2': 'waypoints2'})
 
-			# x:833 y:89
+			# x:276 y:55
 			OperatableStateMachine.add('reverse_waypoints',
 										ReverseListState(),
 										transitions={'succeeded': 'follow_waypoints', 'failed': 'follow_waypoints'},

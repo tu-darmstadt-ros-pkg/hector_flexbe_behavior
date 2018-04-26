@@ -3,7 +3,7 @@
 <behavior name="Explore Mission Robocup">
 
 	<executable package_path="hector_flexbe_behaviors.explore_mission_robocup_sm" class="ExploreMissionRobocupSM" />
-	<tagstring>robocup, exploration</tagstring>
+	<tagstring>robocup, exploration, rc18</tagstring>
 	<author>Gabriel Huettenberger</author>
 	<date>Thu Jul 20 2017</date>
 	<description>

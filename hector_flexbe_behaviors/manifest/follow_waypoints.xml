@@ -3,7 +3,7 @@
 <behavior name="Follow waypoints">
 
 	<executable package_path="hector_flexbe_behaviors.follow_waypoints_sm" class="FollowwaypointsSM" />
-	<tagstring>rc17, rc18</tagstring>
+	<tagstring>rc17, rc18, robocup</tagstring>
 	<author>Gabriel Huettenberger</author>
 	<date>Fri Jul 28 2017</date>
 	<description>
