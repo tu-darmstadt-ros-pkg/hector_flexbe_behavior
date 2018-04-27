@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="rc_exp5">
+
+	<executable package_path="flexbe_behaviors.rc_exp5_sm" class="rc_exp5SM" />
+	<tagstring>rc18</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Fri Apr 27 2018</date>
+	<description>
+		Custom behavior for exp5 mission of robocup german open 2018
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0" label="speed" hint="Sets the speed">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>
