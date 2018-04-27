@@ -2,7 +2,7 @@
 
 <behavior name="rc_exp5">
 
-	<executable package_path="flexbe_behaviors.rc_exp5_sm" class="rc_exp5SM" />
+	<executable package_path="hector_flexbe_behaviors.rc_exp5_sm" class="rc_exp5SM" />
 	<tagstring>rc18</tagstring>
 	<author>Gabriel Huettenberger</author>
 	<date>Fri Apr 27 2018</date>
