@@ -16,9 +16,14 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="speed" default="0" label="speed" hint="Sets the speed">
+		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the speed">
 			<min value="0" />
 			<max value="1" />
+		</param>
+
+		<param type="numeric" name="reexplore_time" default="3" label="reexplore_time" hint="Sets the reexplore_time">
+			<min value="0" />
+			<max value="10" />
 		</param>
 
 	</params>

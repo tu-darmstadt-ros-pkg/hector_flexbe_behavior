@@ -31,7 +31,8 @@ class rc_exp5SM(Behavior):
 		self.name = 'rc_exp5'
 
 		# parameters of this behavior
-		self.add_parameter('speed', 0)
+		self.add_parameter('speed', 0.2)
+		self.add_parameter('reexplore_time', 3)
 
 		# references to used behaviors
 
@@ -47,7 +48,7 @@ class rc_exp5SM(Behavior):
 	def create(self):
 		# x:463 y:164, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
-		_state_machine.userdata.speed = self.speed
+		_state_machine.userdata.reexplore = self.reexplore_time
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -65,7 +66,7 @@ class rc_exp5SM(Behavior):
 
 			# x:228 y:71
 			OperatableStateMachine.add('Explore_to_waypoint',
-										ExploreToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=3, rotate_to_goal=0, reexplore_time=1),
+										ExploreToWaypointState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=3, rotate_to_goal=0, reexplore_time=self.reexplore_time),
 										transitions={'reached': 'finished', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'waypoint'})

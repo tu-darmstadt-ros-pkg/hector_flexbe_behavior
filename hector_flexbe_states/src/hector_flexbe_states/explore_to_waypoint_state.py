@@ -73,6 +73,7 @@ class ExploreToWaypointState(EventState):
 #				return 'failed'
 		temp_time = rospy.get_rostime() - self._start_time;
  		if (temp_time.to_sec() > self._reexplore_time):
+                        Logger.loginfo('reexploring')
 			self._client.send_goal(self._action_topic, self._action_goal)
 			self._start_time = rospy.get_rostime()
 
@@ -80,12 +81,11 @@ class ExploreToWaypointState(EventState):
 	def on_enter(self, userdata):
 		self._failed = False
 		self._reached = False
-		self._waypoints = userdata.waypoints
+		self._waypoint = userdata.waypoint
 
 		self._start_time = rospy.get_rostime()
 		self._action_goal = MoveBaseGoal()
-		Logger.loginfo(len(userdata.waypoints))
-		self._action_goal.target_pose = userdata.waypoints.pop()
+		self._action_goal.target_pose = userdata.waypoint.pop()
 		self._action_goal.follow_path_options.desired_speed = self._desired_speed
 		self._action_goal.follow_path_options.goal_pose_position_tolerance = self._position_tolerance
 		self._action_goal.follow_path_options.goal_pose_angle_tolerance = self._angle_tolerance
