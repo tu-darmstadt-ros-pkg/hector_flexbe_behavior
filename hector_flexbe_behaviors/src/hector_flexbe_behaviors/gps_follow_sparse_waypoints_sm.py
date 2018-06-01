@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ###########################################################
 #               WARNING: Generated code!                  #
 #              **************************                 #
@@ -12,7 +13,7 @@ from flexbe_argos_states.parse_gps_waypoints_state import ParseGPSWaypointsState
 from hector_flexbe_behaviors.follow_waypoints_sm import FollowwaypointsSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
-
+from geometry_msgs.msg import PoseStamped
 # [/MANUAL_IMPORT]
 
 
@@ -47,7 +48,7 @@ class GPSFollowsparsewaypointsSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
-		_state_machine.userdata.current_waypoint = PoseStamped()
+		_state_machine.userdata.current_waypoint = PoseStamped
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -61,7 +62,7 @@ class GPSFollowsparsewaypointsSM(Behavior):
 										ImportGpsFromCsvState(waypointString='/home/gabriel/Downloads/example_gps.csv', pattern=''),
 										transitions={'succeeded': 'parse waypoints'},
 										autonomy={'succeeded': Autonomy.Off},
-										remapping={'waypoints': 'waypoints'})
+										remapping={'waypoints': 'waypoints', 'waypoints2': 'waypoints2'})
 
 			# x:308 y:42
 			OperatableStateMachine.add('parse waypoints',
