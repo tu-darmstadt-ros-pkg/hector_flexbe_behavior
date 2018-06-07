@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="MAN Align">
+
+	<executable package_path="hector_flexbe_behaviors.man_align_sm" class="MANAlignSM" />
+	<tagstring>rc18</tagstring>
+	<author>Gabriel Hüttenberger</author>
+	<date>Tue Jun 05 2018</date>
+	<description>
+		Autonomous behavior for align task in Robocup
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
