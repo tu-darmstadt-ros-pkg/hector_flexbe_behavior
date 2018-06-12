@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move arm to park">
+
+	<executable package_path="hector_flexbe_behaviors.move_arm_to_park_sm" class="MovearmtoparkSM" />
+	<tagstring>rc</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Tue Jun 12 2018</date>
+	<description>
+		Moves the arm to the park position
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
