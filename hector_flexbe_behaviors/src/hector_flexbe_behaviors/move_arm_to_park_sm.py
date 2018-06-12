@@ -53,7 +53,7 @@ class MovearmtoparkSM(Behavior):
 		_state_machine.userdata.joint_names3 = ['arm_yaw_joint']
 		_state_machine.userdata.joint_positions3 = [1.57]
 		_state_machine.userdata.joint_names4 = ['arm_pitch_joint_1','arm_pitch_joint_0']
-		_state_machine.userdata.joint_positions4 = [-1.50,1.50]
+		_state_machine.userdata.joint_positions4 = [-1.57,1.57]
 		_state_machine.userdata.joint_names5 = ['arm_roll_joint']
 		_state_machine.userdata.joint_positions5 = [0]
 		_state_machine.userdata.joint_names6 = ['gripper_servo_joint']
