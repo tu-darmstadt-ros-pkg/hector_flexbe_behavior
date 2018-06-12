@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move arm to startcheck">
+
+	<executable package_path="hector_flexbe_behaviors.move_arm_to_startcheck_sm" class="MovearmtostartcheckSM" />
+	<tagstring>rc</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Mon Jun 11 2018</date>
+	<description>
+		Move arm from drive position to startcheck position
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
