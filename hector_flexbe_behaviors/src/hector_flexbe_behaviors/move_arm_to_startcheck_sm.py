@@ -8,8 +8,10 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.service_caller_state import ServiceCallerState
+from flexbe_manipulation_states.get_joint_values_state import GetJointValuesState
 from hector_flexbe_states.direct_joint_control_state import DirectJointControlState
+from hector_flexbe_states.service_caller_state import ServiceCallerState
+from hector_flexbe_states.check_joints_state import CheckJointsState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -62,6 +64,9 @@ class MovearmtostartcheckSM(Behavior):
 		_state_machine.userdata.joint_names6 = ['arm_roll_joint','gripper_servo_joint']
 		_state_machine.userdata.joint_positions7 = [0]
 		_state_machine.userdata.joint_names7 = ['arm_pitch_joint_1']
+		_state_machine.userdata.joint_names_full = ['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']
+		_state_machine.userdata.thresholds = [3,0.05,0.05,0.05,0.02,0.02]
+		_state_machine.userdata.joint_positions_startcheck = [-1.57,1.57,1.57,-1.57,0,0]
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -70,21 +75,14 @@ class MovearmtostartcheckSM(Behavior):
 
 
 		with _state_machine:
-			# x:32 y:50
-			OperatableStateMachine.add('set_high_threshold',
-										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
-										transitions={'success': 'close_gripper', 'failed': 'failed'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'value': 'high_threshold'})
+			# x:30 y:40
+			OperatableStateMachine.add('get_initial_position',
+										GetJointValuesState(joints=['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']),
+										transitions={'retrieved': 'check_initial_position'},
+										autonomy={'retrieved': Autonomy.Off},
+										remapping={'joint_values': 'joint_positions_initial'})
 
-			# x:248 y:52
-			OperatableStateMachine.add('close_gripper',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
-										transitions={'reached': 'move_pitch1', 'control_failed': 'failed', 'failed': 'failed'},
-										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
-
-			# x:464 y:75
+			# x:701 y:80
 			OperatableStateMachine.add('move_pitch1',
 										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
 										transitions={'reached': 'move_roll', 'control_failed': 'failed', 'failed': 'failed'},
@@ -132,6 +130,27 @@ class MovearmtostartcheckSM(Behavior):
 										transitions={'reached': 'move_roll2', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions7', 'joint_names': 'joint_names7'})
+
+			# x:365 y:94
+			OperatableStateMachine.add('set_high_threshold',
+										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
+										transitions={'success': 'close_gripper', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'value': 'high_threshold'})
+
+			# x:224 y:59
+			OperatableStateMachine.add('check_initial_position',
+										CheckJointsState(),
+										transitions={'success': 'set_high_threshold', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'current_joint_positions': 'joint_positions_initial', 'target_joint_positions': 'joint_positions_startcheck', 'thresholds': 'thresholds'})
+
+			# x:519 y:74
+			OperatableStateMachine.add('close_gripper',
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										transitions={'reached': 'move_pitch1', 'control_failed': 'failed', 'failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
 
 
 		return _state_machine
