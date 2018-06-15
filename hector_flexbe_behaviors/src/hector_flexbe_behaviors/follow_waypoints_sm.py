@@ -67,7 +67,7 @@ class FollowwaypointsSM(Behavior):
 
 			# x:627 y:66
 			OperatableStateMachine.add('follow_waypoints',
-										FollowWaypointsState(desired_speed=self.speed, position_tolerance=0.0, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, use_planning=self.use_planning),
+										FollowWaypointsState(desired_speed=self.speed, position_tolerance=0.0, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=True, use_planning=self.use_planning),
 										transitions={'reached': 'follow_waypoints', 'failed': 'failed', 'reverse': 'reverse_waypoints'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'reverse': Autonomy.Off},
 										remapping={'waypoints': 'waypoints', 'waypoints2': 'waypoints2'})
