@@ -65,7 +65,7 @@ class MovearmtostartcheckSM(Behavior):
 		_state_machine.userdata.joint_positions7 = [0]
 		_state_machine.userdata.joint_names7 = ['arm_pitch_joint_1']
 		_state_machine.userdata.joint_names_full = ['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']
-		_state_machine.userdata.thresholds = [3,0.2,0.2,0.2,0.2,0.2]
+		_state_machine.userdata.thresholds = [3,0.2,0.3,0.2,0.2,0.2]
 		_state_machine.userdata.joint_positions_startcheck = [-1.57,1.57,1.57,-1.57,0,0]
 
 		# Additional creation code can be added inside the following tags

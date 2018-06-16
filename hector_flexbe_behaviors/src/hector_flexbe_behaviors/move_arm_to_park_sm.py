@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_argos_states.get_joint_values_state import GetJointValuesState
+from flexbe_manipulation_states.get_joint_values_state import GetJointValuesState
 from hector_flexbe_states.direct_joint_control_state import DirectJointControlState
 from hector_flexbe_states.service_caller_state import ServiceCallerState
 from hector_flexbe_states.check_joints_state import CheckJointsState
@@ -65,7 +65,7 @@ class MovearmtoparkSM(Behavior):
 		_state_machine.userdata.joint_names7 = ['arm_pitch_joint_1']
 		_state_machine.userdata.joint_positions7 = [-1.57]
 		_state_machine.userdata.joint_positions_park = [-0.5,0,0,0,0,-3.13]
-		_state_machine.userdata.thresholds = [5,0.75,1.57,0.5,0.5,10]
+		_state_machine.userdata.thresholds = [5,0.75,1.2,1,1,10]
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
