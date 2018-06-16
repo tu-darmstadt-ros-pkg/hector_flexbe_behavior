@@ -65,7 +65,7 @@ class MovearmtoparkSM(Behavior):
 		_state_machine.userdata.joint_names7 = ['arm_pitch_joint_1']
 		_state_machine.userdata.joint_positions7 = [-1.57]
 		_state_machine.userdata.joint_positions_park = [-0.5,0,0,0,0,-3.13]
-		_state_machine.userdata.thresholds = [5,0.75,1.2,1,1,10]
+		_state_machine.userdata.thresholds = [5,0.75,1.2,1,1.5,10]
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
