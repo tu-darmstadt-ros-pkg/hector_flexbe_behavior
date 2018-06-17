@@ -24,7 +24,7 @@ class Explore(EventState):
 	'''
 
 	def __init__(self):
-		super(Explore, self).__init__(outcomes = ['succeeded', 'failed'], input_keys =['speed'])
+		super(Explore, self).__init__(outcomes = ['succeeded', 'failed', 'stuck'], input_keys =['speed'])
 		
 		self._action_topic = '/move_base'
 		self._move_client = ProxyActionClient({self._action_topic: MoveBaseAction})
@@ -42,6 +42,10 @@ class Explore(EventState):
 				self._reached = True
 				Logger.loginfo('Exploration succeeded')
 				return 'succeeded'
+                        if result.result == -8:
+                                self._stuck = True
+                                Logger.loginfo('I think I am stuck')
+                                return 'stuck'
 			else:
 				self._failed = True
 				Logger.logwarn('Exploration failed!')

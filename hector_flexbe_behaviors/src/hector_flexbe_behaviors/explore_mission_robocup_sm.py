@@ -10,6 +10,8 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_argos_states.explore import Explore
 from flexbe_states.wait_state import WaitState
+from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
+from flexbe_argos_states.move_to_waypoint_state import MoveToWaypointState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -60,8 +62,8 @@ class ExploreMissionRobocupSM(Behavior):
 			# x:91 y:128
 			OperatableStateMachine.add('Start Exploration',
 										Explore(),
-										transitions={'succeeded': 'Wait', 'failed': 'Wait'},
-										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										transitions={'succeeded': 'Wait', 'failed': 'Wait', 'stuck': 'get_recovery_point'},
+										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'speed': 'speed', 'reexplore_time': 'reexplore_time'})
 
 			# x:341 y:63
@@ -69,6 +71,20 @@ class ExploreMissionRobocupSM(Behavior):
 										WaitState(wait_time=1),
 										transitions={'done': 'Start Exploration'},
 										autonomy={'done': Autonomy.Off})
+
+			# x:271 y:234
+			OperatableStateMachine.add('get_recovery_point',
+										GetRecoveryInfoState(service_topic='/trajectory_recovery_info'),
+										transitions={'success': 'stuck_behavior', 'failed': 'Start Exploration'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'waypoint'})
+
+			# x:548 y:243
+			OperatableStateMachine.add('stuck_behavior',
+										MoveToWaypointState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reverse_allowed=True),
+										transitions={'reached': 'Start Exploration', 'failed': 'Start Exploration'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'waypoint'})
 
 
 		return _state_machine

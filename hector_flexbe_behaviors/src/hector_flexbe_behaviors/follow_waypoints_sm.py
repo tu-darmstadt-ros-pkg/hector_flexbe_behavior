@@ -11,6 +11,8 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from flexbe_argos_states.get_path_state import GetPathState
 from flexbe_argos_states.follow_waypoints_state import FollowWaypointsState
 from flexbe_argos_states.reverse_list_state import ReverseListState
+from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
+from flexbe_argos_states.move_to_waypoint_state import MoveToWaypointState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -67,9 +69,9 @@ class FollowwaypointsSM(Behavior):
 
 			# x:627 y:66
 			OperatableStateMachine.add('follow_waypoints',
-										FollowWaypointsState(desired_speed=self.speed, position_tolerance=0.0, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=True, use_planning=self.use_planning),
-										transitions={'reached': 'follow_waypoints', 'failed': 'failed', 'reverse': 'reverse_waypoints'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'reverse': Autonomy.Off},
+										FollowWaypointsState(desired_speed=self.speed, position_tolerance=0.0, angle_tolerance=3, rotate_to_goal=False, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=self.use_planning),
+										transitions={'reached': 'follow_waypoints', 'failed': 'failed', 'reverse': 'reverse_waypoints', 'stuck': 'stuck_recovery'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'reverse': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoints': 'waypoints', 'waypoints2': 'waypoints2'})
 
 			# x:276 y:55
@@ -78,6 +80,20 @@ class FollowwaypointsSM(Behavior):
 										transitions={'succeeded': 'follow_waypoints', 'failed': 'follow_waypoints'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints': 'waypoints', 'waypoints2': 'waypoints2'})
+
+			# x:571 y:257
+			OperatableStateMachine.add('stuck_recovery',
+										GetRecoveryInfoState(service_topic='/trajectory_recovery_info'),
+										transitions={'success': 'stuck_behavior', 'failed': 'follow_waypoints'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'waypoint'})
+
+			# x:746 y:258
+			OperatableStateMachine.add('stuck_behavior',
+										MoveToWaypointState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=3, rotate_to_goal=False, reverse_allowed=True),
+										transitions={'reached': 'follow_waypoints', 'failed': 'follow_waypoints'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'waypoint'})
 
 
 		return _state_machine
