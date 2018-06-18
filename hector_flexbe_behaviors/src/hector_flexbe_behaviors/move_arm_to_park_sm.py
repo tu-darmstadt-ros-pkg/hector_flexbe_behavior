@@ -77,7 +77,7 @@ class MovearmtoparkSM(Behavior):
 			# x:30 y:44
 			OperatableStateMachine.add('get_initial_position',
 										GetJointValuesState(joints=['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']),
-										transitions={'retrieved': 'check_initial_position'},
+										transitions={'retrieved': 'set_high_threshold'},
 										autonomy={'retrieved': Autonomy.Off},
 										remapping={'joint_values': 'joint_positions_initial'})
 
