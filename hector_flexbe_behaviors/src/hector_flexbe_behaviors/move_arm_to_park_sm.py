@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_manipulation_states.get_joint_values_state import GetJointValuesState
+from flexbe_argos_states.get_joint_values_state import GetJointValuesState
 from hector_flexbe_states.direct_joint_control_state import DirectJointControlState
 from hector_flexbe_states.service_caller_state import ServiceCallerState
 from hector_flexbe_states.check_joints_state import CheckJointsState
@@ -97,21 +97,21 @@ class MovearmtoparkSM(Behavior):
 
 			# x:601 y:378
 			OperatableStateMachine.add('move_pitch_1_2',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_roll', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions4', 'joint_names': 'joint_names4'})
 
 			# x:529 y:504
 			OperatableStateMachine.add('move_roll',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_pitch_1', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions5', 'joint_names': 'joint_names5'})
 
 			# x:186 y:549
 			OperatableStateMachine.add('move_gripper',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'set_low_threshold', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions6', 'joint_names': 'joint_names6'})
@@ -125,14 +125,14 @@ class MovearmtoparkSM(Behavior):
 
 			# x:487 y:43
 			OperatableStateMachine.add('move_pitch0',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_multiple', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
 
 			# x:356 y:581
 			OperatableStateMachine.add('move_pitch_1',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_gripper', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions7', 'joint_names': 'joint_names7'})
