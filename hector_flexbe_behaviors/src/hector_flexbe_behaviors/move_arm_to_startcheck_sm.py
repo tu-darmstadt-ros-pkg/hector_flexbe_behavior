@@ -84,21 +84,21 @@ class MovearmtostartcheckSM(Behavior):
 
 			# x:701 y:80
 			OperatableStateMachine.add('move_pitch1',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_roll', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions2', 'joint_names': 'joint_names2'})
 
 			# x:459 y:223
 			OperatableStateMachine.add('move_roll',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_pitch_1', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions3', 'joint_names': 'joint_names3'})
 
 			# x:535 y:327
 			OperatableStateMachine.add('move_pitch_1',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=4),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=3),
 										transitions={'reached': 'move_yaw', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions4', 'joint_names': 'joint_names4'})
@@ -119,7 +119,7 @@ class MovearmtostartcheckSM(Behavior):
 
 			# x:197 y:558
 			OperatableStateMachine.add('move_roll2',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'set_low_threshold', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions6', 'joint_names': 'joint_names6'})
@@ -147,7 +147,7 @@ class MovearmtostartcheckSM(Behavior):
 
 			# x:519 y:74
 			OperatableStateMachine.add('close_gripper',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'move_pitch1', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
