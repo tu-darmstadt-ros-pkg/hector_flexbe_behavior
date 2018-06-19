@@ -46,8 +46,8 @@ class MovearmtoinitialSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
-		_state_machine.userdata.joint_positions = [-0.51,0,0,0,0,1.57]
-		_state_machine.userdata.joint_names = ['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']
+		_state_machine.userdata.joint_positions = [0,0,0,0,1.57]
+		_state_machine.userdata.joint_names = ['arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']
 		_state_machine.userdata.high_threshold = 99
 		_state_machine.userdata.low_threshold = 0
 
