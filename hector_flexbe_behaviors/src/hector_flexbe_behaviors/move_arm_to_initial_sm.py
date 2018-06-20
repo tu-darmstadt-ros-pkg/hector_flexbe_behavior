@@ -74,7 +74,7 @@ class MovearmtoinitialSM(Behavior):
 
 			# x:265 y:49
 			OperatableStateMachine.add('move_multiple',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=4),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
 										transitions={'reached': 'set_low_threshold', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
