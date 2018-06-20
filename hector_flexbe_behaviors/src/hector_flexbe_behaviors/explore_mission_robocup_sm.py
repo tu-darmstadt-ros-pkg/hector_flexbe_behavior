@@ -81,7 +81,7 @@ class ExploreMissionRobocupSM(Behavior):
 
 			# x:548 y:243
 			OperatableStateMachine.add('stuck_behavior',
-										MoveToWaypointState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reverse_allowed=True),
+										MoveToWaypointState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=3, rotate_to_goal=False, reverse_allowed=True),
 										transitions={'reached': 'Start Exploration', 'failed': 'Start Exploration'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'waypoint'})
