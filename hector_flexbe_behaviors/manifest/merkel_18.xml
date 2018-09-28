@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Merkel_18">
+
+	<executable package_path="hector_flexbe_behaviors.merkel_18_sm" class="Merkel_18SM" />
+	<tagstring>vip,merkel</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Thu Sep 27 2018</date>
+	<description>
+		Behavior for Merkel visit of team Hector
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

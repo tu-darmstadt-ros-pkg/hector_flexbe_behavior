@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ###########################################################
 #               WARNING: Generated code!                  #
 #              **************************                 #
@@ -10,7 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from flexbe_manipulation_states.get_joints_from_srdf_state import GetJointsFromSrdfState
 from hector_flexbe_states.confirm_victim import ConfirmVictim
 from hector_flexbe_states.discard_victim import DiscardVictim
-from hector_flexbe_states.move_arm_dyn_state import MoveArmDynState
+from flexbe_argos_states.move_arm_dyn_state import MoveArmDynState
 from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState
 from hector_flexbe_behaviors.approach_victim_sm import ApproachVictimSM
 from hector_flexbe_behaviors.explore_sm import ExploreSM
@@ -66,7 +67,7 @@ class ExploreandSearchVictimsusingArmSM(Behavior):
 		# [/MANUAL_CREATE]
 
 		# x:341 y:65, x:130 y:322, x:348 y:169
-		_sm_explore_and_detect_0 = ConcurrencyContainer(outcomes=['finished'], output_keys=['pose', 'victim'], conditions=[
+		_sm_explore_and_detect_0 = ConcurrencyContainer(outcomes=['finished'], input_keys=['pose'], output_keys=['pose', 'victim'], conditions=[
 										('finished', [('Explore', 'finished')]),
 										('finished', [('Detect_Victim', 'found')])
 										])
@@ -147,8 +148,8 @@ class ExploreandSearchVictimsusingArmSM(Behavior):
 			# x:737 y:228
 			OperatableStateMachine.add('Verify_Victim',
 										OperatorDecisionState(outcomes=['confirmed','discarded','retry'], hint='Confirm or discard victim', suggestion='confirmed'),
-										transitions={'retry': 'Set_Initial_Arm_Pose_2', 'confirmed': 'Confirm_Victim', 'discarded': 'Discard_Victim'},
-										autonomy={'retry': Autonomy.Full, 'confirmed': Autonomy.High, 'discarded': Autonomy.Full})
+										transitions={'confirmed': 'Confirm_Victim', 'discarded': 'Discard_Victim', 'retry': 'Set_Initial_Arm_Pose_2'},
+										autonomy={'confirmed': Autonomy.High, 'discarded': Autonomy.Full, 'retry': Autonomy.Full})
 
 
 		return _state_machine
