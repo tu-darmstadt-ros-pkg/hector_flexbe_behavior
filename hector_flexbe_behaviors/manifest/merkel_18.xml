@@ -12,6 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="rc_exp5" />
 
 	<!-- Available Parameters -->
 

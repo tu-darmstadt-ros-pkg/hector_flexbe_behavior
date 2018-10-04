@@ -46,7 +46,7 @@ class ConfirmVictim(EventState):
 		Logger.loginfo('%(x)s confirmed' % {
 				'x': userdata.victim 
 		})
-		return 'succeeded'
+		return 'confirmed'
 
 	def on_exit(self, userdata):
 

@@ -85,7 +85,7 @@ class ExploreToWaypointState(EventState):
 
 		self._start_time = rospy.get_rostime()
 		self._action_goal = MoveBaseGoal()
-		self._action_goal.target_pose = userdata.waypoint.pop()
+		self._action_goal.target_pose = userdata.waypoint[0]
 		self._action_goal.follow_path_options.desired_speed = self._desired_speed
 		self._action_goal.follow_path_options.goal_pose_position_tolerance = self._position_tolerance
 		self._action_goal.follow_path_options.goal_pose_angle_tolerance = self._angle_tolerance

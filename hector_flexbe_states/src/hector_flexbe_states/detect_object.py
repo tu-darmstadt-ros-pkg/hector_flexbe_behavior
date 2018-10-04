@@ -24,22 +24,22 @@ class DetectObject(EventState):
 
 	def __init__(self):
 		
-		super(DetectObject, self).__init__(outcomes = [ 'found'], input_keys =['pose'], output_keys = ['pose', 'victim'])
+		super(DetectObject, self).__init__(outcomes = [ 'found'], output_keys = ['pose', 'victim'])
 
 		self._objectTopic = '/worldmodel/object'
 		self._sub = ProxySubscriberCached({self._objectTopic: Object})
-
+		self._pose = PoseStamped()
 
 	def execute(self, userdata):
 	
 
 		current_obj = self._sub.get_last_msg(self._objectTopic)
 		if current_obj:
-			if current_obj.info.class_id == 'victim' and current_obj.state.state == 2: 
-				userdata.pose = PoseStamped()
-				userdata.pose.pose = current_obj.pose.pose
-				userdata.pose.header.stamp = Time.now()
-				userdata.pose.header.frame_id = 'map'
+			if current_obj.info.class_id == 'heat_source' and current_obj.state.state == 2: 
+				self._pose.pose = current_obj.pose.pose
+				self._pose.header.stamp = Time.now()
+				self._pose.header.frame_id = 'world'
+				userdata.pose = self._pose
 				userdata.victim = current_obj.info.object_id
 				Logger.loginfo('detected %(x)s' % {
 					'x': current_obj.info.object_id
