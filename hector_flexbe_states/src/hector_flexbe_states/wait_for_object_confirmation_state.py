@@ -7,7 +7,7 @@ import actionlib
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyActionClient
 
-from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal, FollowJointTrajectoryResult
+from  hector_supervision_ui_msgs.msg import WorldModelEventAction, WorldModelEventGoal
 
 '''
 Created on 10/31/2014
@@ -29,15 +29,15 @@ class WaitForObjectConfirmationState(EventState):
 	'''
 
 
-	def __init__(self, controller):
+	def __init__(self):
 		'''
 		Constructor
 		'''
 		super(WaitForObjectConfirmationState, self).__init__(outcomes=['confirmed', 'rejected'],
 														input_keys=['object_id'])
 
-		self._action_topic = "PLACEHOLDER"
-		self._client = ProxyActionClient({self._action_topic: FollowJointTrajectoryAction})
+		self._action_topic = "supervision_ui_core/execute_event_visualization"
+		self._client = ProxyActionClient({self._action_topic: WorldModelEventAction})
 
 		self._confirmed = False
 		self._rejected = False
@@ -49,10 +49,10 @@ class WaitForObjectConfirmationState(EventState):
 
 		if self._client.has_result(self._action_topic):
 			result = self._client.get_result(self._action_topic)
-                            if result == True:
-                                    return 'confirmed'
-                            else:
-                                    return 'rejected'
+                        if result == True:
+                            return 'confirmed'
+                        else:
+                            return 'rejected'
 
 
 	def on_enter(self, userdata):
@@ -60,13 +60,14 @@ class WaitForObjectConfirmationState(EventState):
 		self._rejected = False
 
 		# create goal
-		goal = FollowJointTrajectoryGoal()
+		goal = WorldModelEventGoal()
+		goal.object_id = userdata.object_id
 
 		# execute the motion
 		try: 
 			self._client.send_goal(self._action_topic, goal)
 		except Exception as e:
-			Logger.logwarn('Was unable to execute joint trajectory:\n%s' % str(e))
+			Logger.logwarn('Failed to send object confirmation:\n%s' % str(e))
 			self._failed = True
 
 
