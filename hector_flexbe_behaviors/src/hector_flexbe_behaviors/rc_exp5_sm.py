@@ -32,7 +32,7 @@ class rc_exp5SM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.2)
-		self.add_parameter('reexplore_time', 3)
+		self.add_parameter('reexplore_time', 1)
 
 		# references to used behaviors
 
