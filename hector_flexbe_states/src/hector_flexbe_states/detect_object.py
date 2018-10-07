@@ -45,7 +45,7 @@ class DetectObject(EventState):
 					'x': current_obj.info.object_id
 				})
 				return 'found'
-			else if current_obj.info.class_id == 'flammable_liquid' and current_obj.state.state == 0:
+			if current_obj.info.class_id == 'flammable_liquid' and current_obj.state.state == 0:
 				self._pose.pose = current_obj.pose.pose
 				self._pose.header.stamp = Time.now()
 				self._pose.header.frame_id = 'world'
