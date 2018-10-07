@@ -49,7 +49,7 @@ class WaitForObjectConfirmationState(EventState):
 
 		if self._client.has_result(self._action_topic):
 			result = self._client.get_result(self._action_topic)
-                        if result == True:
+                        if result.accepted == True:
                             return 'confirmed'
                         else:
                             return 'rejected'
