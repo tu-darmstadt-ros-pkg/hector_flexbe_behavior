@@ -24,7 +24,7 @@ class DetectObject(EventState):
 
 	def __init__(self):
 		
-		super(DetectObject, self).__init__(outcomes = [ 'found'], output_keys = ['pose', 'victim'])
+		super(DetectObject, self).__init__(outcomes = ['found','hazmat'], output_keys = ['pose', 'victim'])
 
 		self._objectTopic = '/worldmodel/object'
 		self._sub = ProxySubscriberCached({self._objectTopic: Object})
@@ -35,7 +35,7 @@ class DetectObject(EventState):
 
 		current_obj = self._sub.get_last_msg(self._objectTopic)
 		if current_obj:
-			if (current_obj.info.class_id == 'heat_source' and current_obj.state.state == 2) or (current_obj.info.class_id == 'flammable_liquid' and current_obj.state.state == 0): 
+			if current_obj.info.class_id == 'heat_source' and current_obj.state.state == 2: 
 				self._pose.pose = current_obj.pose.pose
 				self._pose.header.stamp = Time.now()
 				self._pose.header.frame_id = 'world'
@@ -45,6 +45,16 @@ class DetectObject(EventState):
 					'x': current_obj.info.object_id
 				})
 				return 'found'
+			else if current_obj.info.class_id == 'flammable_liquid' and current_obj.state.state == 0:
+				self._pose.pose = current_obj.pose.pose
+				self._pose.header.stamp = Time.now()
+				self._pose.header.frame_id = 'world'
+				userdata.pose = self._pose
+				userdata.victim = current_obj.info.object_id
+				Logger.loginfo('detected %(x)s' % {
+					'x': current_obj.info.object_id
+				})
+				return 'hazmat'
 			
 		
 
