@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Generic Static Test Method">
+
+	<executable package_path="hector_flexbe_behaviors.generic_static_test_method_sm" class="GenericStaticTestMethodSM" />
+	<tagstring>robocup, rc19</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Tue Jan 15 2019</date>
+	<description>
+		Behavior for executing a generic test method on a known map
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
