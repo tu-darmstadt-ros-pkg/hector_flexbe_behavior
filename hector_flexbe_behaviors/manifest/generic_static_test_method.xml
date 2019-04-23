@@ -12,7 +12,27 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="Explore Mission Robocup" />
+	<contains name="Waypoint mission" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="hazmatEnabled" default="False" label="hazmatEnabled" hint="Sets the hazmatEnabled" />
+
+		<param type="boolean" name="traversabilityMap" default="False" label="traversabilityMap" hint="Sets the traversabilityMap" />
+
+		<param type="boolean" name="waypointFollowing" default="False" label="waypointFollowing" hint="Sets the waypointFollowing" />
+
+		<param type="boolean" name="exploration" default="False" label="exploration" hint="Sets the exploration" />
+
+		<param type="boolean" name="roughTerrain" default="False" label="roughTerrain" hint="Sets the roughTerrain" />
+
+		<param type="boolean" name="repeat" default="True" label="repeat" hint="Sets the repeat" />
+
+		<param type="text" name="specialFunctionality" default="" label="specialFunctionality" hint="Sets the specialFunctionality" />
+
+	</params>
+
 
 </behavior>

@@ -8,7 +8,12 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from hector_flexbe_states.mission_initialisation_state import MissionInitialisationState
+from hector_flexbe_behaviors.explore_mission_robocup_sm import ExploreMissionRobocupSM
 from flexbe_states.wait_state import WaitState
+from hector_flexbe_behaviors.waypoint_mission_sm import WaypointmissionSM
+from flexbe_states.decision_state import DecisionState
+from hector_flexbe_states.mission_decision_state import MissionDecisionState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -30,8 +35,17 @@ class GenericStaticTestMethodSM(Behavior):
 		self.name = 'Generic Static Test Method'
 
 		# parameters of this behavior
+		self.add_parameter('hazmatEnabled', False)
+		self.add_parameter('traversabilityMap', False)
+		self.add_parameter('waypointFollowing', False)
+		self.add_parameter('exploration', False)
+		self.add_parameter('roughTerrain', False)
+		self.add_parameter('repeat', True)
+		self.add_parameter('specialFunctionality', '')
 
 		# references to used behaviors
+		self.add_behavior(ExploreMissionRobocupSM, 'Explore Mission Robocup')
+		self.add_behavior(WaypointmissionSM, 'Waypoint mission')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -45,99 +59,23 @@ class GenericStaticTestMethodSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine.userdata.hazmatEnabled = self.hazmatEnabled
+		_state_machine.userdata.traversabilityMap = self.traversabilityMap
+		_state_machine.userdata.waypointFollowing = self.waypointFollowing
+		_state_machine.userdata.exploration = self.exploration
+		_state_machine.userdata.roughTerrain = self.roughTerrain
+		_state_machine.userdata.specialFunctionality = self.specialFunctionality
+		_state_machine.userdata.repeat = self.repeat
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:305 y:367, x:154 y:364, x:230 y:365, x:72 y:363, x:430 y:365
-		_sm_find_end_point_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], conditions=[
-										('failed', [('explore', 'done')]),
-										('finished', [('find_end_point', 'done')]),
-										('failed', [('timeout', 'done')])
-										])
-
-		with _sm_find_end_point_0:
-			# x:53 y:43
-			OperatableStateMachine.add('explore',
-										WaitState(wait_time=1),
-										transitions={'done': 'failed'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:179 y:38
-			OperatableStateMachine.add('find_end_point',
-										WaitState(wait_time=1),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:342 y:41
-			OperatableStateMachine.add('timeout',
-										WaitState(wait_time=60),
-										transitions={'done': 'failed'},
-										autonomy={'done': Autonomy.Off})
-
-
-		# x:564 y:329
-		_sm_find_start_end_point_1 = OperatableStateMachine(outcomes=['finished'])
-
-		with _sm_find_start_end_point_1:
-			# x:30 y:40
-			OperatableStateMachine.add('set_start_point',
-										WaitState(wait_time=1),
-										transitions={'done': 'find_end_point'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:183 y:57
-			OperatableStateMachine.add('find_end_point',
-										_sm_find_end_point_0,
-										transitions={'finished': 'drive_to_end_point', 'failed': 'manually_set_end_point'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:371 y:54
-			OperatableStateMachine.add('drive_to_end_point',
-										WaitState(wait_time=1),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:173 y:222
-			OperatableStateMachine.add('manually_set_end_point',
-										WaitState(wait_time=1),
-										transitions={'done': 'drive_to_end_point'},
-										autonomy={'done': Autonomy.Off})
-
-
-		# x:30 y:365, x:130 y:365, x:230 y:365, x:330 y:365, x:430 y:365, x:530 y:365
-		_sm_map_exploration_2 = ConcurrencyContainer(outcomes=['finished', 'failed'], conditions=[
-										('finished', [('find_start_end_point', 'finished')]),
-										('failed', [('find_inspection_points', 'done')]),
-										('failed', [('find_manipulation_points', 'done')])
-										])
-
-		with _sm_map_exploration_2:
-			# x:30 y:40
-			OperatableStateMachine.add('find_start_end_point',
-										_sm_find_start_end_point_1,
-										transitions={'finished': 'finished'},
-										autonomy={'finished': Autonomy.Inherit})
-
-			# x:211 y:38
-			OperatableStateMachine.add('find_inspection_points',
-										WaitState(wait_time=1),
-										transitions={'done': 'failed'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:398 y:31
-			OperatableStateMachine.add('find_manipulation_points',
-										WaitState(wait_time=1),
-										transitions={'done': 'failed'},
-										autonomy={'done': Autonomy.Off})
-
-
 		# x:30 y:365, x:130 y:365
-		_sm_report_results_3 = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_sm_report_results_0 = OperatableStateMachine(outcomes=['finished', 'failed'])
 
-		with _sm_report_results_3:
+		with _sm_report_results_0:
 			# x:51 y:51
 			OperatableStateMachine.add('export_mission_results',
 										WaitState(wait_time=1),
@@ -159,41 +97,69 @@ class GenericStaticTestMethodSM(Behavior):
 
 
 		with _state_machine:
-			# x:30 y:40
-			OperatableStateMachine.add('PLACEHOLDER',
+			# x:87 y:53
+			OperatableStateMachine.add('initalise_parameter',
+										MissionInitialisationState(),
+										transitions={'done': 'select_mission', 'failed': 'failed'},
+										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'hazmatEnabled': 'hazmatEnabled', 'traversabilityMap': 'traversabilityMap', 'roughTerrain': 'roughTerrain'})
+
+			# x:552 y:365
+			OperatableStateMachine.add('Explore Mission Robocup',
+										self.use_behavior(ExploreMissionRobocupSM, 'Explore Mission Robocup'),
+										transitions={'finished': 'WRITE_RESULTS_DUMMY2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:733 y:620
+			OperatableStateMachine.add('report_results',
+										_sm_report_results_0,
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:667 y:42
+			OperatableStateMachine.add('COMBINED_MISSION_DUMMY',
 										WaitState(wait_time=1),
 										transitions={'done': 'finished'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:596 y:55
-			OperatableStateMachine.add('load_mission',
-										WaitState(wait_time=1),
-										transitions={'done': 'check_missing_points'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:603 y:476
-			OperatableStateMachine.add('execute_mission',
-										WaitState(wait_time=1),
-										transitions={'done': 'report_results'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:289 y:474
-			OperatableStateMachine.add('report_results',
-										_sm_report_results_3,
-										transitions={'finished': 'finished', 'failed': 'failed'},
+			# x:547 y:169
+			OperatableStateMachine.add('Waypoint mission',
+										self.use_behavior(WaypointmissionSM, 'Waypoint mission'),
+										transitions={'finished': 'WRITE_RESULTS_DUMMY', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:243 y:53
-			OperatableStateMachine.add('Map exploration',
-										_sm_map_exploration_2,
-										transitions={'finished': 'load_mission', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:964 y:170
+			OperatableStateMachine.add('decide_repeat_waypoint',
+										DecisionState(outcomes=['repeat', 'done'], conditions=lambda x: return 'repeat' if x==True else 'done'),
+										transitions={'repeat': 'Waypoint mission', 'done': 'report_results'},
+										autonomy={'repeat': Autonomy.Off, 'done': Autonomy.Off},
+										remapping={'input_value': 'repeat'})
 
-			# x:579 y:241
-			OperatableStateMachine.add('check_missing_points',
+			# x:760 y:262
+			OperatableStateMachine.add('WRITE_RESULTS_DUMMY',
 										WaitState(wait_time=1),
-										transitions={'done': 'execute_mission'},
+										transitions={'done': 'decide_repeat_waypoint'},
 										autonomy={'done': Autonomy.Off})
+
+			# x:996 y:361
+			OperatableStateMachine.add('decide_repeat_explore',
+										DecisionState(outcomes=['repeat', 'done'], conditions=lambda x: return 'repeat' if x==True else 'done'),
+										transitions={'repeat': 'Explore Mission Robocup', 'done': 'report_results'},
+										autonomy={'repeat': Autonomy.Off, 'done': Autonomy.Off},
+										remapping={'input_value': 'repeat'})
+
+			# x:690 y:490
+			OperatableStateMachine.add('WRITE_RESULTS_DUMMY2',
+										WaitState(wait_time=1),
+										transitions={'done': 'decide_repeat_explore'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:305 y:90
+			OperatableStateMachine.add('select_mission',
+										MissionDecisionState(),
+										transitions={'followMission': 'Waypoint mission', 'exploreMission': 'Explore Mission Robocup', 'combinedMission': 'COMBINED_MISSION_DUMMY', 'failed': 'failed'},
+										autonomy={'followMission': Autonomy.Off, 'exploreMission': Autonomy.Off, 'combinedMission': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'exploration': 'exploration', 'waypointFollowing': 'waypointFollowing'})
 
 
 		return _state_machine

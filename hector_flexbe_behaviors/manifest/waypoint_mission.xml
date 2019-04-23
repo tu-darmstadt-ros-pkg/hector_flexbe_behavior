@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Waypoint mission">
+
+	<executable package_path="hector_flexbe_behaviors.waypoint_mission_sm" class="WaypointmissionSM" />
+	<tagstring>rc,waypoint</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Thu Apr 11 2019</date>
+	<description>
+		Follow a path of waypoints
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the desired speed in m/s">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+	</params>
+
+
+</behavior>

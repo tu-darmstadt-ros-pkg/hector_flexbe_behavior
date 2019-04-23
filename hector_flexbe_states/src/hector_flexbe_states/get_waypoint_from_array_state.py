@@ -31,30 +31,24 @@ class GetWaypointFromArrayState(EventState):
 		'''
 		Constructor
 		'''
-		super(GetWaypointFromArrayState, self).__init__(outcomes=['reached', 'failed'], input_keys=['waypoints'], output_keys=['waypoint'])
-		
-		self._failed = False
-		self._reached = False
+		super(GetWaypointFromArrayState, self).__init__(outcomes=['succeeded', 'empty'], input_keys=['waypoints'], output_keys=['waypoint', 'waypoints'])
+
 		self._position = position
 
 		
 		
 	def execute(self, userdata):
-		'''
-		Execute this state
-		'''
-		if self._failed:
-			return 'failed'
-		if self._reached:
-			return 'reached'
                
 		
 
 			
 	def on_enter(self, userdata):
-		self._failed = False
-		self._reached = True
-                userdata.waypoint = userdata.waypoints[self._position]
+		if userdata.waypoints not empty:
+                	userdata.waypoint = userdata.waypoints[self._position]
+			userdata.waypoints.pop(self._position)
+			return 'succeeded'
+		else
+			return 'failed'
 			
 
 	def on_stop(self):
