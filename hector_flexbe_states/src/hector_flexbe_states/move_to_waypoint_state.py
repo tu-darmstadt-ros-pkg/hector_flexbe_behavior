@@ -9,11 +9,10 @@ from move_base_lite_msgs.msg import MoveBaseAction, MoveBaseGoal, ErrorCodes, Pl
 
 from geometry_msgs.msg import PoseStamped
 
-from copy import deepcopy
 '''
-Created on 15.06.2015
+Created on 26.04.2019
 
-@author: Philipp Schillinger
+@author: Gabriel Huettenberger
 '''
 
 class MoveToWaypointState(EventState):
@@ -28,10 +27,17 @@ class MoveToWaypointState(EventState):
 
 	-- rotate_to_goal         bool                 Align to goal.
 
+	-- reexplore_time         int		       Frequency at which the path is replanned.
+
+	-- reverse_allowed	  bool		       If the robot is allowed to drive backwards.
+
+	-- use_planning		  bool		       If the ignores obstacles or uses planning.
+
 	># waypoints		PoseStamped[]		Specifies the waypoints to which the robot should move.
 
 	<= reached 						Robot is now located at the last waypoint.
 	<= failed 						Failed to send a motion request to the action server.
+	<= stuck 						Robot is stuck
 
 	'''
 
@@ -77,34 +83,23 @@ class MoveToWaypointState(EventState):
 				self._reached = True
 				return 'reached'
 			if result.result.val == ErrorCodes.STUCK_DETECTED:
-				userdata.waypoints = self._waypoints
-				userdata.waypoints2 = self._waypoints2
 				return 'stuck'			
 			else:
 				self._failed = True
 				Logger.logwarn(result.result.val)
 				return 'failed'
-		temp_time = rospy.get_rostime() - self._start_time;
+		temp_time = rospy.get_rostime() - self._start_time
  		if (temp_time.to_sec() > self._reexplore_time):
-		#	self._client.send_goal(self._action_topic, self._action_goal)
+			self._client.send_goal(self._action_topic, self._action_goal)
 			self._start_time = rospy.get_rostime()
 
 			
 	def on_enter(self, userdata):
 		self._failed = False
 		self._reached = False
-		self._reverse = False
-		self._waypoints = deepcopy(userdata.waypoints)
-		self._waypoints2 = deepcopy(userdata.waypoints2) 
 
 		self._start_time = rospy.get_rostime()
-		self._action_goal = MoveBaseGoal()
-		Logger.loginfo(len(userdata.waypoints))
-		if (len(userdata.waypoints) < 1):
-			self._reverse = True
-			return
-		self._action_goal.target_pose = userdata.waypoints.pop()
-		userdata.waypoints2.append(deepcopy(self._action_goal.target_pose))
+		self._action_goal.target_pose = userdata.waypoint
 		self._action_goal.follow_path_options.desired_speed = self._desired_speed
 		self._action_goal.follow_path_options.goal_pose_position_tolerance = self._position_tolerance
 		self._action_goal.follow_path_options.goal_pose_angle_tolerance = self._angle_tolerance

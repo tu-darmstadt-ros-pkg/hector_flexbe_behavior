@@ -22,24 +22,28 @@ class MissionInitialisationState(EventState):
 		'''
 		super(MissionInitialisationState, self).__init__(outcomes=['done', 'failed'], input_keys=['hazmatEnabled', 'traversabilityMap', 'roughTerrain'])
 
-		client = dynamic_reconfigure.client.Client("vehicle_controller", timeout=10)
+		self.vehicle_controller_client = dynamic_reconfigure.client.Client("vehicle_controller", timeout=10)
+		self.move_base_client = dynamic_reconfigure.client.Client("move_base_lite_node", timeout=10)
 
 		
 		
 	def execute(self, userdata):
 
-		continue
+		return 'done'
 
 			
 	def on_enter(self, userdata):
 		
-		if userdata.hazmatEnabled
-			continue
-		if userdata.traversabilityMap
-			 client.update_configuration({"lethal_dist":x, "double_param":(1/(x+1)), "str_param":str(rospy.get_rostime()), "bool_param":b, "size":1})
-		if userdata.roughTerrain
-			 client.update_configuration({"int_param":x, "double_param":(1/(x+1)), "str_param":str(rospy.get_rostime()), "bool_param":b, "size":1})
-		return 'done'
+		if userdata.hazmatEnabled:
+			pass
+		if userdata.traversabilityMap:
+			self.move_base_client.update_configuration({"lethal_dist":2})
+		else:
+			self.move_base_client.update_configuration({"lethal_dist":0.5})		
+		if userdata.roughTerrain:
+			self.vehicle_controller_client.update_configuration({"angle_p_gain":3})
+		else:
+			self.vehicle_controller_client.update_configuration({"angle_p_gain":8})
 		
 			
 

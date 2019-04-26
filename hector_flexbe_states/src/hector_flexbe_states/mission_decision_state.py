@@ -24,18 +24,18 @@ class MissionDecisionState(EventState):
 		
 	def execute(self, userdata):
 
-		continue
+		pass
 
 			
 	def on_enter(self, userdata):
 		
-		if userdata.followMission and userdata.waypointFollowing
+		if userdata.exploration and userdata.waypointFollowing:
 			return 'combinedMission'
-		else if userdata.followMission
+		elif userdata.waypointFollowing:
 			return 'followMission'
-		else if userdata.exploreMission
+		elif userdata.exploration:
 			return 'exploreMission'
-		else
+		else:
 			return 'failed'
 		
 			

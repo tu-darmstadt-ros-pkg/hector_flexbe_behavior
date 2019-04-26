@@ -11,7 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from flexbe_argos_states.explore import Explore
 from flexbe_states.wait_state import WaitState
 from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
-from flexbe_argos_states.move_to_waypoint_state import MoveToWaypointState
+from flexbe_argos_states.move_to_waypoint_state import MoveToWaypointState as flexbe_argos_states__MoveToWaypointState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -33,7 +33,6 @@ class ExploreMissionRobocupSM(Behavior):
 		self.name = 'Explore Mission Robocup'
 
 		# parameters of this behavior
-		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
 
@@ -48,8 +47,8 @@ class ExploreMissionRobocupSM(Behavior):
 
 	def create(self):
 		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
-		_state_machine.userdata.speed = self.speed
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['reexplore_time', 'speed'])
+		_state_machine.userdata.speed = 0.2
 		_state_machine.userdata.reexplore_time = 5
 
 		# Additional creation code can be added inside the following tags
@@ -81,7 +80,7 @@ class ExploreMissionRobocupSM(Behavior):
 
 			# x:548 y:243
 			OperatableStateMachine.add('stuck_behavior',
-										MoveToWaypointState(desired_speed=self.speed, position_tolerance=0, angle_tolerance=3, rotate_to_goal=False, reverse_allowed=True),
+										flexbe_argos_states__MoveToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=3, rotate_to_goal=False, reverse_allowed=True),
 										transitions={'reached': 'Start Exploration', 'failed': 'Start Exploration'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'waypoint'})

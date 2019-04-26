@@ -33,7 +33,6 @@ class WaypointmissionSM(Behavior):
 		self.name = 'Waypoint mission'
 
 		# parameters of this behavior
-		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
 
@@ -48,10 +47,9 @@ class WaypointmissionSM(Behavior):
 
 	def create(self):
 		# x:226 y:244, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
-		_state_machine.userdata.speed = self.speed
-		_state_machine.userdata.current_waypoint = PointStamped()
-		_state_machine.userdata.remaining_waypoints = PointStamped()
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed', 'reexplore_time'])
+		_state_machine.userdata.speed = 0.2
+		_state_machine.userdata.reexplore_time = 5
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -83,14 +81,14 @@ class WaypointmissionSM(Behavior):
 
 			# x:573 y:74
 			OperatableStateMachine.add('move_to_next_waypoint',
-										hector_flexbe_states__MoveToWaypointState(desired_speed=0, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										hector_flexbe_states__MoveToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
 										transitions={'reached': 'get_current_waypoint', 'failed': 'failed', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'current_waypoint'})
 
 			# x:794 y:165
 			OperatableStateMachine.add('move_to_recovery_point',
-										hector_flexbe_states__MoveToWaypointState(desired_speed=0, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										hector_flexbe_states__MoveToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
 										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'recovery_point'})
