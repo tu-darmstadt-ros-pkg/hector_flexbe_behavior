@@ -65,7 +65,7 @@ class LineFollowingSM(Behavior):
 		with _state_machine:
 			# x:759 y:191
 			OperatableStateMachine.add('LineFollower',
-										LineFollowerState(timeout_sec=15),
+										LineFollowerState(timeout_sec=120),
 										transitions={'reached': 'SwitchDirection', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'speed': 'speed', 'camera_topic': 'camera_topic', 'drive_backwards': 'drive_backwards'})
