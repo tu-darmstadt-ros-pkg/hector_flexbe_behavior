@@ -38,24 +38,24 @@ class GetWaypointFromArrayState(EventState):
 		
 		
 	def execute(self, userdata):
-               
+		return 'succeeded'
 		
 
 			
 	def on_enter(self, userdata):
-		if userdata.waypoints not empty:
-                	userdata.waypoint = userdata.waypoints[self._position]
+		if not userdata.waypoints:
+			return 'empty'
+		else:
+			userdata.waypoint = userdata.waypoints[self._position]
 			userdata.waypoints.pop(self._position)
 			return 'succeeded'
-		else
-			return 'failed'
 			
 
 	def on_stop(self):
-                pass
+		pass
             
 	def on_pause(self):
-                pass
+		pass
             
 	def on_resume(self, userdata):
-                pass
+		pass
