@@ -104,6 +104,7 @@ class MoveToWaypointState(EventState):
 		self._action_goal.follow_path_options.goal_pose_position_tolerance = self._position_tolerance
 		self._action_goal.follow_path_options.goal_pose_angle_tolerance = self._angle_tolerance
 		self._action_goal.follow_path_options.reverse_allowed = self._reverse_allowed
+		self._action_goal.follow_path_options.rotate_front_to_goal_pose_orientation = self._rotate_to_goal
 		if self._use_planning == False:
                         self._action_goal.plan_path_options.planning_approach = 1
 		if self._action_goal.target_pose.header.frame_id == "":
