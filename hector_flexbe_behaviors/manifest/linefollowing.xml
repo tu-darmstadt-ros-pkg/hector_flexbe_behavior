@@ -14,5 +14,24 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="timeout_sec" default="15" label="timeout_sec" hint="Timeout for LineFollower">
+			<min value="0" />
+			<max value="300" />
+		</param>
+
+		<param type="numeric" name="distance_to_line" default="1.4" label="distance_to_line" hint="Distance to drive straight to reach line">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+		<param type="numeric" name="speed" default="0.2" label="speed" hint="Desired speed">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+	</params>
+
 
 </behavior>
