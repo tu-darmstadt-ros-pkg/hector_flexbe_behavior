@@ -17,15 +17,16 @@ class FindLineState(EventState):
 	'''
 	The robot drives in a straight line until a line for line following is detected.
 
-	-- desired_speed          float64              Driving speed.
+	-- speed          float64              Driving speed.
+    -- distance       float64              Distance to drive.
         
     ># reverse                bool                 True if robot drives backwards
 
-	<= reached 			      Robot drove for the specified duration.
+	<= reached 			      Robot drove the specified distance.
 
 	'''
 
-	def __init__(self, desired_speed=0.2, duration=5, velocity_topic='/cmd_vel'):
+	def __init__(self, speed=0.2, distance=1, velocity_topic='/cmd_vel'):
 		'''
 		Constructor
 		'''
@@ -34,10 +35,11 @@ class FindLineState(EventState):
 		self._velocity_topic = velocity_topic
 		self._pub = ProxyPublisher({self._velocity_topic: Twist})
 		self._reached = False
-		self._desired_speed = desired_speed
+		self._speed = speed
+		self._distance = distance
 		self._msg = Twist()
 		self._start_time = rospy.Time.now()
-		self._duration = duration
+		
 
 
 		
@@ -50,7 +52,10 @@ class FindLineState(EventState):
 		if self._reached:
 			return 'reached'
 		temp_time = rospy.get_rostime() - self._start_time;
- 		if (temp_time.to_sec() > self._duration):
+
+		duration = self._distance / self._speed;
+
+ 		if (temp_time.to_sec() > duration):
 			self._start_time = rospy.get_rostime()
 			self._pub.publish(self._velocity_topic, Twist())
 			self._reached = True
@@ -60,7 +65,7 @@ class FindLineState(EventState):
 	def on_enter(self, userdata):
 		self._reached = False
 		self._start_time = rospy.Time.now()
-		self._msg.linear.x = self._desired_speed
+		self._msg.linear.x = self._speed
 		if (userdata.reverse):
 				self._msg.linear.x = self._msg.linear.x * -1
 		self._pub.publish(self._velocity_topic, self._msg)

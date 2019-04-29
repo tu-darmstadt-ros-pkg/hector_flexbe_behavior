@@ -22,31 +22,34 @@ class LineFollowerState(EventState):
     '''
     The robot follows a line on the ground.
 
-    ># speed			 Double 		Speed of the robot
-    ># camera_topic      String         Camera topic used for line following
-    ># drive_backwards   Bool           True if robot drives backwards
+    -- timeout_sec      float64         Timeout for LineFollower
+    -- speed            float64         Speed of the robot
 
-    #< drive_backwards   Bool           If robot droves backwards
+    ># camera_topic      string         Camera topic used for line following
+    ># drive_backwards   bool           True if robot drives backwards
+
+    #< drive_backwards   bool           If robot droves backwards
 
     <= reached 					Robot has reached the end of line
     <= failed                   Robot has lost line or an error occurred
     '''
 
-    def __init__(self, timeout_sec=10):
+    def __init__(self, timeout_sec=10, speed=0.2):
         '''
         Constructor
         '''
         super(LineFollowerState, self).__init__(outcomes=['reached','failed'],
-                                                  input_keys=['speed', 'camera_topic', 'drive_backwards'])
+                                                  input_keys=['camera_topic', 'drive_backwards'])
 
 
         self._action_topic = '/line_detector_noded/follow_line'
-        self._move_client = ProxyActionClient({self._action_topic: FollowLineAction})
+        self._action_client = ProxyActionClient({self._action_topic: FollowLineAction})
 
         #self._dynrec = Client("/line_follower_image_proc", timeout=10) # TODO correctly set up dynamic reconfigure
         #self._defaultspeed = 0.1
 
         self._timeout_sec = timeout_sec
+        self._speed = speed
 
         self._reached = False
         self._failed  = False
@@ -62,8 +65,8 @@ class LineFollowerState(EventState):
         if self._reached:
             return 'reached'
 
-        if self._move_client.has_result(self._action_topic):
-            result = self._move_client.get_result(self._action_topic)
+        if self._action_client.has_result(self._action_topic):
+            result = self._action_client.get_result(self._action_topic)
 
             #self._dynrec.update_configuration({'speed': self._defaultspeed}) # TODO correctly set up dynamic reconfigure
 
@@ -102,7 +105,7 @@ class LineFollowerState(EventState):
 
 
         action_goal = FollowLineGoal()
-        action_goal.options.desired_max_speed = userdata.speed
+        action_goal.options.desired_max_speed = self._speed
         action_goal.options.desired_max_yaw_rate = 0.9
         action_goal.options.timeout_sec = self._timeout_sec
 
@@ -111,7 +114,7 @@ class LineFollowerState(EventState):
 
 
         try:
-            self._move_client.send_goal(self._action_topic, action_goal)
+            self._action_client.send_goal(self._action_topic, action_goal)
         # resp = self.set_tolerance(goal_id, 0.2, 1.55)
         except Exception as e:
             Logger.logwarn('Failed to options:\n%(err)s' % {
@@ -122,24 +125,24 @@ class LineFollowerState(EventState):
 
     def on_stop(self):
         try:
-            if self._move_client.is_available(self._action_topic) \
-                    and not self._move_client.has_result(self._action_topic):
-                self._move_client.cancel(self._action_topic)
+            if self._action_client.is_available(self._action_topic) \
+                    and not self._action_client.has_result(self._action_topic):
+                self._action_client.cancel(self._action_topic)
         except:
             # client already closed
             pass
 
     def on_exit(self, userdata):
         try:
-            if self._move_client.is_available(self._action_topic) \
-                    and not self._move_client.has_result(self._action_topic):
-                self._move_client.cancel(self._action_topic)
+            if self._action_client.is_available(self._action_topic) \
+                    and not self._action_client.has_result(self._action_topic):
+                self._action_client.cancel(self._action_topic)
         except:
             # client already closed
             pass
 
     def on_pause(self):
-        self._move_client.cancel(self._action_topic)
+        self._action_client.cancel(self._action_topic)
 
     def on_resume(self, userdata):
         self.on_enter(userdata)
