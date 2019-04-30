@@ -119,12 +119,6 @@ class GenericStaticTestMethodSM(Behavior):
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:667 y:42
-			OperatableStateMachine.add('COMBINED_MISSION_DUMMY',
-										WaitState(wait_time=1),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Off})
-
 			# x:547 y:169
 			OperatableStateMachine.add('Waypoint mission',
 										self.use_behavior(WaypointmissionSM, 'Waypoint mission'),
@@ -147,7 +141,7 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:305 y:90
 			OperatableStateMachine.add('select_mission',
 										MissionDecisionState(),
-										transitions={'followMission': 'Waypoint mission', 'exploreMission': 'Explore Mission Robocup', 'combinedMission': 'COMBINED_MISSION_DUMMY', 'failed': 'failed'},
+										transitions={'followMission': 'Waypoint mission', 'exploreMission': 'Explore Mission Robocup', 'combinedMission': 'select_mission', 'failed': 'failed'},
 										autonomy={'followMission': Autonomy.Off, 'exploreMission': Autonomy.Off, 'combinedMission': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'exploration': 'exploration', 'waypointFollowing': 'waypointFollowing'})
 
