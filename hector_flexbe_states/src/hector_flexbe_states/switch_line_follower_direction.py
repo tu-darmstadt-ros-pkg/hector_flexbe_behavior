@@ -56,6 +56,9 @@ class SwitchLineFollowerDirectionState(EventState):
 		else:
 			userdata.camera_topic = self._camera_topic_forwards
 
+		Logger.loginfo('Swichted driving direction. New camera topic: %s' % userdata.camera_topic)
+
+
 		self._finished = True
 
 		
