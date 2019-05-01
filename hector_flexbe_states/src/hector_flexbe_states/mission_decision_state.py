@@ -18,7 +18,7 @@ class MissionDecisionState(EventState):
 		'''
 		Constructor
 		'''
-		super(MissionDecisionState, self).__init__(outcomes=['followMission', 'exploreMission', 'combinedMission', 'failed'], input_keys=['exploration', 'waypointFollowing'])
+		super(MissionDecisionState, self).__init__(outcomes=['followMission', 'exploreMission', 'combinedMission', 'followLineMission', 'failed'], input_keys=['exploration', 'waypointFollowing', 'specialFunctionality'])
 
 		
 		
@@ -29,6 +29,8 @@ class MissionDecisionState(EventState):
 			
 	def on_enter(self, userdata):
 		
+		if userdata.specialFunctionality == 'linefollowing':
+			return 'followLineMission'
 		if userdata.exploration and userdata.waypointFollowing:
 			return 'combinedMission'
 		elif userdata.waypointFollowing:

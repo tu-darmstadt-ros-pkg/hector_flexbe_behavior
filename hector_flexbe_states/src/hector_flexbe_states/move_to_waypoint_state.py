@@ -19,7 +19,6 @@ class MoveToWaypointState(EventState):
 	'''
 	Lets the robot move to a given waypoint.
 
-	-- desired_speed          float64              Driving speed.
 
 	-- position_tolerance     float64              Goal position tolerance.
 
@@ -41,12 +40,12 @@ class MoveToWaypointState(EventState):
 
 	'''
 
-	def __init__(self, desired_speed=0, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True):
+	def __init__(self, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True):
 		'''
 		Constructor
 		'''
 		super(MoveToWaypointState, self).__init__(outcomes=['reached', 'failed', 'stuck'],
-											input_keys=['waypoint'])
+											input_keys=['waypoint', 'speed'])
 		
 		self._action_topic = '/move_base'
 		self._client = ProxyActionClient({self._action_topic: MoveBaseAction})
@@ -55,7 +54,6 @@ class MoveToWaypointState(EventState):
 		self._failed = False
 		self._reached = False
 		self._reverse = False
-		self._desired_speed = desired_speed
 		self._position_tolerance = position_tolerance
 		self._angle_tolerance = angle_tolerance
 		self._rotate_to_goal = rotate_to_goal
@@ -100,7 +98,7 @@ class MoveToWaypointState(EventState):
 
 		self._start_time = rospy.get_rostime()
 		self._action_goal.target_pose = userdata.waypoint
-		self._action_goal.follow_path_options.desired_speed = self._desired_speed
+		self._action_goal.follow_path_options.desired_speed = userdata.speed
 		self._action_goal.follow_path_options.goal_pose_position_tolerance = self._position_tolerance
 		self._action_goal.follow_path_options.goal_pose_angle_tolerance = self._angle_tolerance
 		self._action_goal.follow_path_options.reverse_allowed = self._reverse_allowed
