@@ -23,10 +23,11 @@ class LineFollowerState(EventState):
     The robot follows a line on the ground.
 
     -- timeout_sec      float64         Timeout for LineFollower
-    -- speed            float64         Speed of the robot
+    
 
     ># camera_topic      string         Camera topic used for line following
     ># drive_backwards   bool           True if robot drives backwards
+	># speed            float64         Speed of the robot
 
     #< drive_backwards   bool           If robot droves backwards
 
@@ -34,12 +35,12 @@ class LineFollowerState(EventState):
     <= failed                   Robot has lost line or an error occurred
     '''
 
-    def __init__(self, timeout_sec=10, speed=0.2):
+    def __init__(self, timeout_sec=10):
         '''
         Constructor
         '''
         super(LineFollowerState, self).__init__(outcomes=['reached','failed'],
-                                                  input_keys=['camera_topic', 'drive_backwards'])
+                                                  input_keys=['camera_topic', 'drive_backwards', 'speed'])
 
 
         self._action_topic = '/line_detector_noded/follow_line'
@@ -49,7 +50,6 @@ class LineFollowerState(EventState):
         #self._defaultspeed = 0.1
 
         self._timeout_sec = timeout_sec
-        self._speed = speed
 
         self._reached = False
         self._failed  = False
@@ -105,7 +105,7 @@ class LineFollowerState(EventState):
 
 
         action_goal = FollowLineGoal()
-        action_goal.options.desired_max_speed = self._speed
+        action_goal.options.desired_max_speed = userdata.speed
         action_goal.options.desired_max_yaw_rate = 0.9
         action_goal.options.timeout_sec = self._timeout_sec
 
