@@ -43,7 +43,7 @@ class LineFollowerState(EventState):
                                                   input_keys=['camera_topic', 'drive_backwards', 'speed'])
 
 
-        self._action_topic = '/line_detector_noded/follow_line'
+        self._action_topic = '/line_detector_node/follow_line'
         self._action_client = ProxyActionClient({self._action_topic: FollowLineAction})
 
         #self._dynrec = Client("/line_follower_image_proc", timeout=10) # TODO correctly set up dynamic reconfigure
