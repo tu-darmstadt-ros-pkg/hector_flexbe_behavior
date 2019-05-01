@@ -19,26 +19,45 @@ class MissionDecisionState(EventState):
 		Constructor
 		'''
 		super(MissionDecisionState, self).__init__(outcomes=['followMission', 'exploreMission', 'combinedMission', 'followLineMission', 'failed'], input_keys=['exploration', 'waypointFollowing', 'specialFunctionality'])
+		self.followMission = False
+		self.exploreMission = False
+		self.combinedMission = False
+		self.followLineMission = False
+		self.failed = False
 
 		
 		
 	def execute(self, userdata):
 
-		pass
+		if self.followLineMission:
+			return 'followLineMission'
+		if self.exploreMission:
+			return 'exploreMission'
+		if self.combinedMission:
+			return 'combinedMission'
+		if self.followMission:
+			return 'followMission'
+		if self.failed:
+			return 'failed'
 
 			
 	def on_enter(self, userdata):
 		
+		self.followMission = False
+		self.exploreMission = False
+		self.combinedMission = False
+		self.followLineMission = False
+		self.failed = False
 		if userdata.specialFunctionality == 'linefollowing':
-			return 'followLineMission'
-		if userdata.exploration and userdata.waypointFollowing:
-			return 'combinedMission'
+			self.followLineMission = True
+		elif userdata.exploration and userdata.waypointFollowing:
+			self.exploreMission = True
 		elif userdata.waypointFollowing:
-			return 'followMission'
+			self.combinedMission = True
 		elif userdata.exploration:
-			return 'exploreMission'
+			self.followLineMission = True
 		else:
-			return 'failed'
+			self.failed = True
 		
 			
 
