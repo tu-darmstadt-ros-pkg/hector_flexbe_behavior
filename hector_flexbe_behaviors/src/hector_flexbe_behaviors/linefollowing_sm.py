@@ -8,11 +8,12 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.line_follower_state import LineFollowerState
+from flexbe_argos_states.get_path_state import GetPathState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 from hector_flexbe_states.switch_line_follower_direction import SwitchLineFollowerDirectionState
+from flexbe_states.decision_state import DecisionState
+from hector_flexbe_states.line_follower_state import LineFollowerState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
-from flexbe_argos_states.get_path_state import GetPathState
 from hector_flexbe_states.find_line_state import FindLineState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -51,7 +52,7 @@ class LineFollowingSM(Behavior):
 
 
 	def create(self):
-		# x:661 y:153, x:822 y:461
+		# x:1012 y:445, x:1213 y:260
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.speed = self.speed
 		_state_machine.userdata.camera_topic = '/front_rgbd_cam/color/image_rect_color'
@@ -64,49 +65,89 @@ class LineFollowingSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
+		# x:927 y:180, x:1039 y:369
+		_sm_followline_0 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['nextWaypoint', 'speed', 'drive_backwards', 'camera_topic'])
 
-		with _state_machine:
-			# x:84 y:26
-			OperatableStateMachine.add('getWaypoints',
-										GetPathState(pathTopic='/path_to_follow'),
-										transitions={'succeeded': 'getCurrentWaypoint', 'failed': 'failed'},
-										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'waypoints2': 'waypoints'})
+		with _sm_followline_0:
+			# x:90 y:29
+			OperatableStateMachine.add('hasWaypoint?',
+										DecisionState(outcomes=['waypoint', 'no_waypoint'], conditions=lambda x: 'waypoint' if x else 'no_waypoint'),
+										transitions={'waypoint': 'FindLine', 'no_waypoint': 'LineFollower'},
+										autonomy={'waypoint': Autonomy.Off, 'no_waypoint': Autonomy.Off},
+										remapping={'input_value': 'nextWaypoint'})
 
-			# x:311 y:30
-			OperatableStateMachine.add('getCurrentWaypoint',
-										GetWaypointFromArrayState(position=0),
-										transitions={'succeeded': 'FindLine', 'empty': 'finished'},
-										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
-										remapping={'waypoints': 'waypoints', 'waypoint': 'nextWaypoint'})
+			# x:537 y:153
+			OperatableStateMachine.add('LineFollower',
+										LineFollowerState(timeout_sec=self.timeout_sec),
+										transitions={'reached': 'hasWaypoint?_2', 'failed': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'camera_topic': 'camera_topic', 'drive_backwards': 'drive_backwards', 'speed': 'speed'})
 
-			# x:674 y:27
-			OperatableStateMachine.add('SwitchDirection',
-										SwitchLineFollowerDirectionState(camera_topic_forwards='/front_rgbd_cam/color/image_rect_color', camera_topic_backwards='/back_rgbd_cam/color/image_rect_color'),
-										transitions={'finished': 'getCurrentWaypoint'},
-										autonomy={'finished': Autonomy.Off},
-										remapping={'reverse': 'drive_backwards', 'camera_topic': 'camera_topic'})
+			# x:742 y:30
+			OperatableStateMachine.add('hasWaypoint?_2',
+										DecisionState(outcomes=['waypoint', 'no_waypoint'], conditions=lambda x: 'waypoint' if x else 'no_waypoint'),
+										transitions={'waypoint': 'MoveToWaypoint', 'no_waypoint': 'finished'},
+										autonomy={'waypoint': Autonomy.Off, 'no_waypoint': Autonomy.Off},
+										remapping={'input_value': 'nextWaypoint'})
 
-			# x:1038 y:27
+			# x:993 y:29
 			OperatableStateMachine.add('MoveToWaypoint',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.2, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=False),
-										transitions={'reached': 'SwitchDirection', 'failed': 'failed', 'stuck': 'MoveToWaypoint'},
+										transitions={'reached': 'finished', 'failed': 'failed', 'stuck': 'MoveToWaypoint'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'nextWaypoint', 'speed': 'speed'})
 
-			# x:550 y:217
+			# x:349 y:33
 			OperatableStateMachine.add('FindLine',
 										FindLineState(distance=self.distance_to_line, velocity_topic='/cmd_vel'),
 										transitions={'reached': 'LineFollower'},
 										autonomy={'reached': Autonomy.Off},
 										remapping={'reverse': 'drive_backwards', 'speed': 'speed'})
 
-			# x:759 y:191
-			OperatableStateMachine.add('LineFollower',
-										LineFollowerState(timeout_sec=self.timeout_sec),
-										transitions={'reached': 'MoveToWaypoint', 'failed': 'failed'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'camera_topic': 'camera_topic', 'drive_backwards': 'drive_backwards', 'speed': 'speed'})
+
+
+		with _state_machine:
+			# x:116 y:61
+			OperatableStateMachine.add('getWaypoints',
+										GetPathState(pathTopic='/path_to_follow'),
+										transitions={'succeeded': 'haveWaypoints?', 'failed': 'haveWaypoints?'},
+										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoints2': 'waypoints'})
+
+			# x:569 y:226
+			OperatableStateMachine.add('getCurrentWaypoint',
+										GetWaypointFromArrayState(position=0),
+										transitions={'succeeded': 'FollowLine', 'empty': 'finished'},
+										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
+										remapping={'waypoints': 'waypoints', 'waypoint': 'nextWaypoint'})
+
+			# x:1220 y:62
+			OperatableStateMachine.add('SwitchDirection',
+										SwitchLineFollowerDirectionState(camera_topic_forwards='/front_rgbd_cam/color/image_rect_color', camera_topic_backwards='/back_rgbd_cam/color/image_rect_color'),
+										transitions={'finished': 'reachedLower'},
+										autonomy={'finished': Autonomy.Off},
+										remapping={'reverse': 'drive_backwards', 'camera_topic': 'camera_topic'})
+
+			# x:369 y:58
+			OperatableStateMachine.add('haveWaypoints?',
+										DecisionState(outcomes=['waypoints', 'no_waypoints'], conditions=lambda x: 'waypoints' if x else 'no_waypoints'),
+										transitions={'waypoints': 'getCurrentWaypoint', 'no_waypoints': 'FollowLine'},
+										autonomy={'waypoints': Autonomy.Off, 'no_waypoints': Autonomy.Off},
+										remapping={'input_value': 'waypoints'})
+
+			# x:875 y:169
+			OperatableStateMachine.add('FollowLine',
+										_sm_followline_0,
+										transitions={'finished': 'SwitchDirection', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										remapping={'nextWaypoint': 'nextWaypoint', 'speed': 'speed', 'drive_backwards': 'drive_backwards', 'camera_topic': 'camera_topic'})
+
+			# x:974 y:64
+			OperatableStateMachine.add('reachedLower',
+										DecisionState(outcomes=['yes', 'no'], conditions=lambda x: 'no' if x else 'yes'),
+										transitions={'yes': 'finished', 'no': 'haveWaypoints?'},
+										autonomy={'yes': Autonomy.Off, 'no': Autonomy.Off},
+										remapping={'input_value': 'drive_backwards'})
 
 
 		return _state_machine
