@@ -10,9 +10,10 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.mission_initialisation_state import MissionInitialisationState
 from hector_flexbe_behaviors.explore_mission_robocup_sm import ExploreMissionRobocupSM
-from flexbe_states.wait_state import WaitState
 from hector_flexbe_behaviors.waypoint_mission_sm import WaypointmissionSM
+from flexbe_states.wait_state import WaitState
 from hector_flexbe_states.mission_decision_state import MissionDecisionState
+from hector_flexbe_behaviors.linefollowing_sm import LineFollowingSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -46,6 +47,7 @@ class GenericStaticTestMethodSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(ExploreMissionRobocupSM, 'Explore Mission Robocup')
 		self.add_behavior(WaypointmissionSM, 'Waypoint mission')
+		self.add_behavior(LineFollowingSM, 'LineFollowing')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -74,29 +76,6 @@ class GenericStaticTestMethodSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:30 y:365, x:130 y:365
-		_sm_report_results_0 = OperatableStateMachine(outcomes=['finished', 'failed'])
-
-		with _sm_report_results_0:
-			# x:51 y:51
-			OperatableStateMachine.add('export_mission_results',
-										WaitState(wait_time=1),
-										transitions={'done': 'export_map'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:372 y:186
-			OperatableStateMachine.add('export_state_transition_log',
-										WaitState(wait_time=1),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:252 y:49
-			OperatableStateMachine.add('export_map',
-										WaitState(wait_time=1),
-										transitions={'done': 'export_state_transition_log'},
-										autonomy={'done': Autonomy.Off})
-
-
 
 		with _state_machine:
 			# x:87 y:53
@@ -113,12 +92,6 @@ class GenericStaticTestMethodSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'reexplore_time': 'reexplore_time', 'speed': 'speed'})
 
-			# x:733 y:620
-			OperatableStateMachine.add('report_results',
-										_sm_report_results_0,
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
 			# x:547 y:169
 			OperatableStateMachine.add('Waypoint mission',
 										self.use_behavior(WaypointmissionSM, 'Waypoint mission'),
@@ -132,7 +105,7 @@ class GenericStaticTestMethodSM(Behavior):
 										transitions={'done': 'Waypoint mission'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:690 y:490
+			# x:755 y:444
 			OperatableStateMachine.add('WRITE_RESULTS_DUMMY2',
 										WaitState(wait_time=1),
 										transitions={'done': 'Explore Mission Robocup'},
@@ -141,9 +114,21 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:305 y:90
 			OperatableStateMachine.add('select_mission',
 										MissionDecisionState(),
-										transitions={'followMission': 'Waypoint mission', 'exploreMission': 'Explore Mission Robocup', 'combinedMission': 'select_mission', 'failed': 'failed'},
-										autonomy={'followMission': Autonomy.Off, 'exploreMission': Autonomy.Off, 'combinedMission': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'exploration': 'exploration', 'waypointFollowing': 'waypointFollowing'})
+										transitions={'followMission': 'Waypoint mission', 'exploreMission': 'Explore Mission Robocup', 'combinedMission': 'select_mission', 'followLineMission': 'LineFollowing', 'failed': 'failed'},
+										autonomy={'followMission': Autonomy.Off, 'exploreMission': Autonomy.Off, 'combinedMission': Autonomy.Off, 'followLineMission': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'exploration': 'exploration', 'waypointFollowing': 'waypointFollowing', 'specialFunctionality': 'specialFunctionality'})
+
+			# x:564 y:45
+			OperatableStateMachine.add('LineFollowing',
+										self.use_behavior(LineFollowingSM, 'LineFollowing'),
+										transitions={'finished': 'WRITE_RESULTS_DUMMY3', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:777 y:57
+			OperatableStateMachine.add('WRITE_RESULTS_DUMMY3',
+										WaitState(wait_time=1),
+										transitions={'done': 'LineFollowing'},
+										autonomy={'done': Autonomy.Off})
 
 
 		return _state_machine

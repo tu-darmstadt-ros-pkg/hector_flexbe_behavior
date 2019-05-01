@@ -81,17 +81,17 @@ class WaypointmissionSM(Behavior):
 
 			# x:573 y:74
 			OperatableStateMachine.add('move_to_next_waypoint',
-										hector_flexbe_states__MoveToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										hector_flexbe_states__MoveToWaypointState(position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
 										transitions={'reached': 'get_current_waypoint', 'failed': 'failed', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'current_waypoint'})
+										remapping={'waypoint': 'current_waypoint', 'speed': 'speed'})
 
 			# x:794 y:165
 			OperatableStateMachine.add('move_to_recovery_point',
-										hector_flexbe_states__MoveToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										hector_flexbe_states__MoveToWaypointState(position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
 										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'recovery_point'})
+										remapping={'waypoint': 'recovery_point', 'speed': 'speed'})
 
 
 		return _state_machine
