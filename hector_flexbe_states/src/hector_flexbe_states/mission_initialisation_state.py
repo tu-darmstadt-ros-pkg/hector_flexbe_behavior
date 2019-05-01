@@ -20,10 +20,11 @@ class MissionInitialisationState(EventState):
 		'''
 		Constructor
 		'''
-		super(MissionInitialisationState, self).__init__(outcomes=['done', 'failed'], input_keys=['hazmatEnabled', 'traversabilityMap', 'roughTerrain'])
+		super(MissionInitialisationState, self).__init__(outcomes=['done', 'failed'], input_keys=['hazmatEnabled', 'traversabilityMap', 'roughTerrain', 'exploration'])
 
 		self.vehicle_controller_client = dynamic_reconfigure.client.Client("vehicle_controller", timeout=10)
 		self.move_base_client = dynamic_reconfigure.client.Client("move_base_lite_node", timeout=10)
+		self.grid_map_proc_client = dynamic_reconfigure.client.Client("ethz_grid_map_proc", timeout=10)
 
 		
 		
@@ -34,16 +35,22 @@ class MissionInitialisationState(EventState):
 			
 	def on_enter(self, userdata):
 		
-		if userdata.hazmatEnabled:
-			pass
+#		if userdata.hazmatEnabled:
+#			pass
+		if userdata.exploration:
+			self.grid_map_proc_client.update_configuration({"unknown_space_to_free":False})
+		else:
+			self.grid_map_proc_client.update_configuration({"unknown_space_to_free":True})
 		if userdata.traversabilityMap:
-			self.move_base_client.update_configuration({"lethal_dist":2})
+			#self.move_base_client.update_configuration({"lethal_dist":2})
+			self.grid_map_proc_client.update_configuration({"enable_traversability_map":True})
 		else:
-			self.move_base_client.update_configuration({"lethal_dist":0.5})		
+			self.grid_map_proc_client.update_configuration({"enable_traversability_map":False})
+			#self.move_base_client.update_configuration({"lethal_dist":0.5})		
 		if userdata.roughTerrain:
-			self.vehicle_controller_client.update_configuration({"angle_p_gain":3})
+			#self.vehicle_controller_client.update_configuration({"angle_p_gain":3})
 		else:
-			self.vehicle_controller_client.update_configuration({"angle_p_gain":8})
+			#self.vehicle_controller_client.update_configuration({"angle_p_gain":8})
 		
 			
 
