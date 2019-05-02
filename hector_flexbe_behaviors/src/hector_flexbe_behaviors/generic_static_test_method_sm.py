@@ -11,9 +11,10 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from hector_flexbe_states.mission_initialisation_state import MissionInitialisationState
 from hector_flexbe_behaviors.explore_mission_robocup_sm import ExploreMissionRobocupSM
 from hector_flexbe_behaviors.waypoint_mission_sm import WaypointmissionSM
-from flexbe_states.wait_state import WaitState
 from hector_flexbe_states.mission_decision_state import MissionDecisionState
 from hector_flexbe_behaviors.linefollowing_sm import LineFollowingSM
+from hector_flexbe_states.write_3d_map_state import Write3dMapState
+from hector_flexbe_states.write_2d_map_state import Write2dMapState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -59,7 +60,7 @@ class GenericStaticTestMethodSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
+		# x:30 y:365, x:130 y:309
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.hazmatEnabled = self.hazmatEnabled
 		_state_machine.userdata.traversabilityMap = self.traversabilityMap
@@ -83,33 +84,21 @@ class GenericStaticTestMethodSM(Behavior):
 										MissionInitialisationState(),
 										transitions={'done': 'select_mission', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'hazmatEnabled': 'hazmatEnabled', 'traversabilityMap': 'traversabilityMap', 'roughTerrain': 'roughTerrain'})
+										remapping={'hazmatEnabled': 'hazmatEnabled', 'traversabilityMap': 'traversabilityMap', 'roughTerrain': 'roughTerrain', 'exploration': 'exploration'})
 
 			# x:552 y:365
 			OperatableStateMachine.add('Explore Mission Robocup',
 										self.use_behavior(ExploreMissionRobocupSM, 'Explore Mission Robocup'),
-										transitions={'finished': 'WRITE_RESULTS_DUMMY2', 'failed': 'failed'},
+										transitions={'finished': 'write_3d_map_3', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'reexplore_time': 'reexplore_time', 'speed': 'speed'})
 
-			# x:547 y:169
+			# x:557 y:198
 			OperatableStateMachine.add('Waypoint mission',
 										self.use_behavior(WaypointmissionSM, 'Waypoint mission'),
-										transitions={'finished': 'WRITE_RESULTS_DUMMY', 'failed': 'failed'},
+										transitions={'finished': 'write_3d_map_2', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'speed': 'speed', 'reexplore_time': 'reexplore_time'})
-
-			# x:760 y:262
-			OperatableStateMachine.add('WRITE_RESULTS_DUMMY',
-										WaitState(wait_time=1),
-										transitions={'done': 'Waypoint mission'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:755 y:444
-			OperatableStateMachine.add('WRITE_RESULTS_DUMMY2',
-										WaitState(wait_time=1),
-										transitions={'done': 'Explore Mission Robocup'},
-										autonomy={'done': Autonomy.Off})
 
 			# x:305 y:90
 			OperatableStateMachine.add('select_mission',
@@ -121,14 +110,44 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:564 y:45
 			OperatableStateMachine.add('LineFollowing',
 										self.use_behavior(LineFollowingSM, 'LineFollowing'),
-										transitions={'finished': 'WRITE_RESULTS_DUMMY3', 'failed': 'failed'},
+										transitions={'finished': 'write_3d_map', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:777 y:57
-			OperatableStateMachine.add('WRITE_RESULTS_DUMMY3',
-										WaitState(wait_time=1),
-										transitions={'done': 'LineFollowing'},
-										autonomy={'done': Autonomy.Off})
+			# x:857 y:11
+			OperatableStateMachine.add('write_3d_map',
+										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/linefollowing'),
+										transitions={'success': 'write_2d_map', 'failed': 'write_2d_map'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:862 y:162
+			OperatableStateMachine.add('write_3d_map_2',
+										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/waypoints'),
+										transitions={'success': 'write_2d_map_2', 'failed': 'write_2d_map_2'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:864 y:319
+			OperatableStateMachine.add('write_3d_map_3',
+										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/explore'),
+										transitions={'success': 'write_2d_map_3', 'failed': 'write_2d_map_3'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:860 y:79
+			OperatableStateMachine.add('write_2d_map',
+										Write2dMapState(writer_topic='/syscommand'),
+										transitions={'success': 'LineFollowing', 'failed': 'LineFollowing'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:860 y:234
+			OperatableStateMachine.add('write_2d_map_2',
+										Write2dMapState(writer_topic='/syscommand'),
+										transitions={'success': 'Waypoint mission', 'failed': 'Waypoint mission'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:864 y:381
+			OperatableStateMachine.add('write_2d_map_3',
+										Write2dMapState(writer_topic='/syscommand'),
+										transitions={'success': 'Explore Mission Robocup', 'failed': 'Explore Mission Robocup'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine
