@@ -96,7 +96,7 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:557 y:198
 			OperatableStateMachine.add('Waypoint mission',
 										self.use_behavior(WaypointmissionSM, 'Waypoint mission'),
-										transitions={'finished': 'write_3d_map_2', 'failed': 'failed'},
+										transitions={'finished': 'Waypoint mission', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'speed': 'speed', 'reexplore_time': 'reexplore_time'})
 
@@ -110,37 +110,13 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:564 y:45
 			OperatableStateMachine.add('LineFollowing',
 										self.use_behavior(LineFollowingSM, 'LineFollowing'),
-										transitions={'finished': 'write_3d_map', 'failed': 'failed'},
+										transitions={'finished': 'LineFollowing', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:857 y:11
-			OperatableStateMachine.add('write_3d_map',
-										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/linefollowing'),
-										transitions={'success': 'write_2d_map', 'failed': 'write_2d_map'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:862 y:162
-			OperatableStateMachine.add('write_3d_map_2',
-										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/waypoints'),
-										transitions={'success': 'write_2d_map_2', 'failed': 'write_2d_map_2'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:864 y:319
 			OperatableStateMachine.add('write_3d_map_3',
 										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/explore'),
 										transitions={'success': 'write_2d_map_3', 'failed': 'write_2d_map_3'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:860 y:79
-			OperatableStateMachine.add('write_2d_map',
-										Write2dMapState(writer_topic='/syscommand'),
-										transitions={'success': 'LineFollowing', 'failed': 'LineFollowing'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:860 y:234
-			OperatableStateMachine.add('write_2d_map_2',
-										Write2dMapState(writer_topic='/syscommand'),
-										transitions={'success': 'Waypoint mission', 'failed': 'Waypoint mission'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:864 y:381

@@ -15,6 +15,8 @@ from flexbe_states.decision_state import DecisionState
 from hector_flexbe_states.line_follower_state import LineFollowerState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.find_line_state import FindLineState
+from hector_flexbe_states.write_3d_map_state import Write3dMapState
+from hector_flexbe_states.write_2d_map_state import Write2dMapState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -52,7 +54,7 @@ class LineFollowingSM(Behavior):
 
 
 	def create(self):
-		# x:1012 y:445, x:1213 y:260
+		# x:1012 y:445, x:1229 y:485
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.speed = self.speed
 		_state_machine.userdata.camera_topic = '/front_rgbd_cam/color/image_rect_color'
@@ -65,7 +67,7 @@ class LineFollowingSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:927 y:180, x:1039 y:369
+		# x:927 y:180, x:1031 y:322
 		_sm_followline_0 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['nextWaypoint', 'speed', 'drive_backwards', 'camera_topic'])
 
 		with _sm_followline_0:
@@ -79,7 +81,7 @@ class LineFollowingSM(Behavior):
 			# x:537 y:153
 			OperatableStateMachine.add('LineFollower',
 										LineFollowerState(timeout_sec=self.timeout_sec),
-										transitions={'reached': 'hasWaypoint?_2', 'failed': 'failed'},
+										transitions={'reached': 'hasWaypoint?_2', 'failed': 'hasWaypoint?_2'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'camera_topic': 'camera_topic', 'drive_backwards': 'drive_backwards', 'speed': 'speed'})
 
@@ -93,7 +95,7 @@ class LineFollowingSM(Behavior):
 			# x:993 y:29
 			OperatableStateMachine.add('MoveToWaypoint',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.2, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=False),
-										transitions={'reached': 'finished', 'failed': 'failed', 'stuck': 'MoveToWaypoint'},
+										transitions={'reached': 'finished', 'failed': 'MoveToWaypoint', 'stuck': 'MoveToWaypoint'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'nextWaypoint', 'speed': 'speed'})
 
@@ -121,7 +123,7 @@ class LineFollowingSM(Behavior):
 										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
 										remapping={'waypoints': 'waypoints', 'waypoint': 'nextWaypoint'})
 
-			# x:1220 y:62
+			# x:1342 y:62
 			OperatableStateMachine.add('SwitchDirection',
 										SwitchLineFollowerDirectionState(camera_topic_forwards='/front_rgbd_cam/color/image_rect_color', camera_topic_backwards='/back_rgbd_cam/color/image_rect_color'),
 										transitions={'finished': 'reachedLower'},
@@ -138,7 +140,7 @@ class LineFollowingSM(Behavior):
 			# x:875 y:169
 			OperatableStateMachine.add('FollowLine',
 										_sm_followline_0,
-										transitions={'finished': 'SwitchDirection', 'failed': 'failed'},
+										transitions={'finished': 'write_3d_map', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'nextWaypoint': 'nextWaypoint', 'speed': 'speed', 'drive_backwards': 'drive_backwards', 'camera_topic': 'camera_topic'})
 
@@ -148,6 +150,18 @@ class LineFollowingSM(Behavior):
 										transitions={'yes': 'finished', 'no': 'haveWaypoints?'},
 										autonomy={'yes': Autonomy.Off, 'no': Autonomy.Off},
 										remapping={'input_value': 'drive_backwards'})
+
+			# x:1152 y:173
+			OperatableStateMachine.add('write_3d_map',
+										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/linefollowing'),
+										transitions={'success': 'write_2d_map', 'failed': 'write_2d_map'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:1376 y:174
+			OperatableStateMachine.add('write_2d_map',
+										Write2dMapState(writer_topic='/syscommand'),
+										transitions={'success': 'SwitchDirection', 'failed': 'SwitchDirection'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine
