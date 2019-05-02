@@ -47,9 +47,9 @@ class MissionInitialisationState(EventState):
 		else:
 			self.grid_map_proc_client.update_configuration({"enable_traversability_map":False})
 			#self.move_base_client.update_configuration({"lethal_dist":0.5})		
-		if userdata.roughTerrain:
+		#if userdata.roughTerrain:
 			#self.vehicle_controller_client.update_configuration({"angle_p_gain":3})
-		else:
+		#else:
 			#self.vehicle_controller_client.update_configuration({"angle_p_gain":8})
 		
 			
