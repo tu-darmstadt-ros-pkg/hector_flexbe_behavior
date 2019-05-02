@@ -35,6 +35,7 @@ class WaypointmissionSM(Behavior):
 		self.name = 'Waypoint mission'
 
 		# parameters of this behavior
+		self.add_parameter('usePlanning', True)
 
 		# references to used behaviors
 
@@ -76,7 +77,7 @@ class WaypointmissionSM(Behavior):
 
 			# x:580 y:152
 			OperatableStateMachine.add('move_to_next_waypoint',
-										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=self.usePlanning),
 										transitions={'reached': 'write_3d_map', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'current_waypoint', 'speed': 'speed'})

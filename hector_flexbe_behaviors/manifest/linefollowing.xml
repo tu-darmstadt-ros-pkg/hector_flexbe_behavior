@@ -21,7 +21,7 @@
 			<max value="300" />
 		</param>
 
-		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the speed">
+		<param type="numeric" name="speed" default="0.5" label="speed" hint="Sets the speed">
 			<min value="0" />
 			<max value="1" />
 		</param>

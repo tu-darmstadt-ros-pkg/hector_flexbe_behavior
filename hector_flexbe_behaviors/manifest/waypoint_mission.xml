@@ -14,5 +14,11 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="usePlanning" default="True" label="usePlanning" hint="Sets the usePlanning" />
+
+	</params>
+
 
 </behavior>

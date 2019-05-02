@@ -8,14 +8,14 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
+from flexbe_argos_states.get_path_from_service_state import GetPathFromServiceState
 from hector_flexbe_states.switch_line_follower_direction import SwitchLineFollowerDirectionState
 from flexbe_states.decision_state import DecisionState
 from hector_flexbe_states.line_follower_state import LineFollowerState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
-from flexbe_argos_states.get_path_from_service_state import GetPathFromServiceState
+from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -38,7 +38,7 @@ class LineFollowingSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('timeout_sec', 15)
-		self.add_parameter('speed', 0.2)
+		self.add_parameter('speed', 0.5)
 
 		# references to used behaviors
 
@@ -55,8 +55,8 @@ class LineFollowingSM(Behavior):
 		# x:1012 y:445, x:1229 y:485
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.speed = self.speed
-		_state_machine.userdata.camera_topic = '/front_rgbd_cam/color/image_rect_color'
-		_state_machine.userdata.drive_backwards = False
+		_state_machine.userdata.camera_topic = '/back_rgbd_cam/color/image_rect_color'
+		_state_machine.userdata.drive_backwards = True
 		_state_machine.userdata.nextWaypoint = ''
 		_state_machine.userdata.waypoints = []
 
