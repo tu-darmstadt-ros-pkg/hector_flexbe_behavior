@@ -42,15 +42,16 @@ class MissionInitialisationState(EventState):
 		else:
 			self.grid_map_proc_client.update_configuration({"unknown_space_to_free":True})
 		if userdata.traversabilityMap:
-			#self.move_base_client.update_configuration({"lethal_dist":2})
+			self.move_base_client.update_configuration({"lethal_dist":1})
 			self.grid_map_proc_client.update_configuration({"enable_traversability_map":True})
 		else:
+
 			self.grid_map_proc_client.update_configuration({"enable_traversability_map":False})
-			#self.move_base_client.update_configuration({"lethal_dist":0.5})		
-		#if userdata.roughTerrain:
-			#self.vehicle_controller_client.update_configuration({"angle_p_gain":3})
-		#else:
-			#self.vehicle_controller_client.update_configuration({"angle_p_gain":8})
+			self.move_base_client.update_configuration({"lethal_dist":2})		
+		if userdata.roughTerrain:
+			self.vehicle_controller_client.update_configuration({"angle_p_gain":1})
+		else:
+			self.vehicle_controller_client.update_configuration({"angle_p_gain":2})
 		
 			
 
