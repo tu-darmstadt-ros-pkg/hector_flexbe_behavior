@@ -8,12 +8,12 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_argos_states.get_path_state import GetPathState
-from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
+from flexbe_argos_states.get_path_from_service_state import GetPathFromServiceState
 from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
+from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -60,19 +60,12 @@ class WaypointmissionSM(Behavior):
 
 
 		with _state_machine:
-			# x:90 y:150
+			# x:30 y:40
 			OperatableStateMachine.add('get_path',
-										GetPathState(pathTopic='/path_to_follow'),
+										GetPathFromServiceState(service_topic='/path_to_follow'),
 										transitions={'succeeded': 'get_current_waypoint', 'failed': 'failed'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints2': 'remaining_waypoints'})
-
-			# x:307 y:149
-			OperatableStateMachine.add('get_current_waypoint',
-										GetWaypointFromArrayState(position=0),
-										transitions={'succeeded': 'move_to_next_waypoint', 'empty': 'finished'},
-										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
-										remapping={'waypoints': 'remaining_waypoints', 'waypoint': 'current_waypoint'})
 
 			# x:589 y:320
 			OperatableStateMachine.add('get_recovery_point',
@@ -106,6 +99,13 @@ class WaypointmissionSM(Behavior):
 										Write2dMapState(writer_topic='/syscommand'),
 										transitions={'success': 'get_current_waypoint', 'failed': 'get_current_waypoint'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:307 y:149
+			OperatableStateMachine.add('get_current_waypoint',
+										GetWaypointFromArrayState(position=0),
+										transitions={'succeeded': 'move_to_next_waypoint', 'empty': 'finished'},
+										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
+										remapping={'waypoints': 'remaining_waypoints', 'waypoint': 'current_waypoint'})
 
 
 		return _state_machine

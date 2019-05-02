@@ -50,8 +50,6 @@ class MissionDecisionState(EventState):
 		self.failed = False
 		if userdata.specialFunctionality == 'linefollowing':
 			self.followLineMission = True
-		elif userdata.exploration and userdata.waypointFollowing:
-			self.followMission = True
 		elif userdata.waypointFollowing:
 			self.followMission = True
 		elif userdata.exploration:

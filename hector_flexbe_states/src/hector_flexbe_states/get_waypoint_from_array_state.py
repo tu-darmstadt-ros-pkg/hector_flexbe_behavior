@@ -54,11 +54,15 @@ class GetWaypointFromArrayState(EventState):
 		self._succeeded = False
 		self._empty = False
 
-		if not userdata.waypoints:
+		temp_waypoint = PoseStamped()
+		temp_waypoint.header = userdata.waypoints.value.header
+
+		if not userdata.waypoints.value.poses:
 			self._empty = True
 		else:
-			userdata.waypoint = userdata.waypoints[self._position]
-			userdata.waypoints.pop(self._position)
+			temp_waypoint.pose = userdata.waypoints.value.poses[self._position]
+			userdata.waypoints.value.poses.pop(self._position)
+			userdata.waypoint = temp_waypoint
 			self._succeeded = True
 			
 

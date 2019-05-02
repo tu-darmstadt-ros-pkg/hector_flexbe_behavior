@@ -22,9 +22,12 @@ class MissionInitialisationState(EventState):
 		'''
 		super(MissionInitialisationState, self).__init__(outcomes=['done', 'failed'], input_keys=['hazmatEnabled', 'traversabilityMap', 'roughTerrain', 'exploration'])
 
-		self.vehicle_controller_client = dynamic_reconfigure.client.Client("vehicle_controller", timeout=10)
-		self.move_base_client = dynamic_reconfigure.client.Client("move_base_lite_node", timeout=10)
-		self.grid_map_proc_client = dynamic_reconfigure.client.Client("ethz_grid_map_proc", timeout=10)
+		try:
+			self.vehicle_controller_client = dynamic_reconfigure.client.Client("vehicle_controller", timeout=10)
+			self.move_base_client = dynamic_reconfigure.client.Client("move_base_lite_node", timeout=10)
+			self.grid_map_proc_client = dynamic_reconfigure.client.Client("ethz_grid_map_proc", timeout=10)
+		except:
+			pass
 
 		
 		
