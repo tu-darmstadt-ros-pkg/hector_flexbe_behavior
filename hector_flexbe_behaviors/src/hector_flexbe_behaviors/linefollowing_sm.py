@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_argos_states.get_path_state import GetPathState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 from hector_flexbe_states.switch_line_follower_direction import SwitchLineFollowerDirectionState
 from flexbe_states.decision_state import DecisionState
@@ -16,6 +15,7 @@ from hector_flexbe_states.line_follower_state import LineFollowerState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
+from flexbe_argos_states.get_path_from_service_state import GetPathFromServiceState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -93,19 +93,12 @@ class LineFollowingSM(Behavior):
 
 
 		with _state_machine:
-			# x:116 y:61
+			# x:114 y:44
 			OperatableStateMachine.add('getWaypoints',
-										GetPathState(pathTopic='/path_to_follow'),
+										GetPathFromServiceState(service_topic='/path_to_follow'),
 										transitions={'succeeded': 'haveWaypoints?', 'failed': 'haveWaypoints?'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints2': 'waypoints'})
-
-			# x:569 y:226
-			OperatableStateMachine.add('getCurrentWaypoint',
-										GetWaypointFromArrayState(position=0),
-										transitions={'succeeded': 'FollowLine', 'empty': 'finished'},
-										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
-										remapping={'waypoints': 'waypoints', 'waypoint': 'nextWaypoint'})
 
 			# x:1342 y:62
 			OperatableStateMachine.add('SwitchDirection',
@@ -116,7 +109,7 @@ class LineFollowingSM(Behavior):
 
 			# x:369 y:58
 			OperatableStateMachine.add('haveWaypoints?',
-										DecisionState(outcomes=['waypoints', 'no_waypoints'], conditions=lambda x: 'waypoints' if x else 'no_waypoints'),
+										DecisionState(outcomes=['waypoints', 'no_waypoints'], conditions=lambda x: 'waypoints' if x.value.poses else 'no_waypoints'),
 										transitions={'waypoints': 'getCurrentWaypoint', 'no_waypoints': 'FollowLine'},
 										autonomy={'waypoints': Autonomy.Off, 'no_waypoints': Autonomy.Off},
 										remapping={'input_value': 'waypoints'})
@@ -146,6 +139,13 @@ class LineFollowingSM(Behavior):
 										Write2dMapState(writer_topic='/syscommand'),
 										transitions={'success': 'SwitchDirection', 'failed': 'SwitchDirection'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:569 y:226
+			OperatableStateMachine.add('getCurrentWaypoint',
+										GetWaypointFromArrayState(position=0),
+										transitions={'succeeded': 'FollowLine', 'empty': 'finished'},
+										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
+										remapping={'waypoints': 'waypoints', 'waypoint': 'nextWaypoint'})
 
 
 		return _state_machine
