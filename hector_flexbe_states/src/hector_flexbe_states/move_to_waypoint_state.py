@@ -54,6 +54,7 @@ class MoveToWaypointState(EventState):
 		self._failed = False
 		self._reached = False
 		self._reverse = False
+		self._stuck = False
 		self._position_tolerance = position_tolerance
 		self._angle_tolerance = angle_tolerance
 		self._rotate_to_goal = rotate_to_goal
@@ -73,6 +74,8 @@ class MoveToWaypointState(EventState):
 			return 'failed'
 		if self._reached:
 			return 'reached'
+		if self._stuck:
+			return 'stuck'
 		
 
 		if self._client.has_result(self._action_topic):
@@ -81,6 +84,7 @@ class MoveToWaypointState(EventState):
 				self._reached = True
 				return 'reached'
 			if result.result.val == ErrorCodes.STUCK_DETECTED:
+				self._stuck = True
 				return 'stuck'			
 			else:
 				self._failed = True
@@ -95,6 +99,8 @@ class MoveToWaypointState(EventState):
 	def on_enter(self, userdata):
 		self._failed = False
 		self._reached = False
+		self._reverse = False
+		self._stuck = False
 
 		self._start_time = rospy.get_rostime()
 		self._action_goal.target_pose = userdata.waypoint
