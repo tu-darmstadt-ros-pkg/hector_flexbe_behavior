@@ -14,7 +14,6 @@ from hector_flexbe_states.switch_line_follower_direction import SwitchLineFollow
 from flexbe_states.decision_state import DecisionState
 from hector_flexbe_states.line_follower_state import LineFollowerState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
-from hector_flexbe_states.find_line_state import FindLineState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
 # Additional imports can be added inside the following tags
@@ -39,7 +38,6 @@ class LineFollowingSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('timeout_sec', 15)
-		self.add_parameter('distance_to_line', 1.4)
 		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
@@ -67,44 +65,30 @@ class LineFollowingSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:927 y:180, x:1031 y:322
+		# x:990 y:286, x:1149 y:264
 		_sm_followline_0 = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['nextWaypoint', 'speed', 'drive_backwards', 'camera_topic'])
 
 		with _sm_followline_0:
-			# x:90 y:29
-			OperatableStateMachine.add('hasWaypoint?',
-										DecisionState(outcomes=['waypoint', 'no_waypoint'], conditions=lambda x: 'waypoint' if x else 'no_waypoint'),
-										transitions={'waypoint': 'FindLine', 'no_waypoint': 'LineFollower'},
-										autonomy={'waypoint': Autonomy.Off, 'no_waypoint': Autonomy.Off},
-										remapping={'input_value': 'nextWaypoint'})
-
-			# x:537 y:153
+			# x:230 y:85
 			OperatableStateMachine.add('LineFollower',
 										LineFollowerState(timeout_sec=self.timeout_sec),
-										transitions={'reached': 'hasWaypoint?_2', 'failed': 'hasWaypoint?_2'},
+										transitions={'reached': 'hasWaypoint?', 'failed': 'hasWaypoint?'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'camera_topic': 'camera_topic', 'drive_backwards': 'drive_backwards', 'speed': 'speed'})
 
-			# x:742 y:30
-			OperatableStateMachine.add('hasWaypoint?_2',
+			# x:550 y:87
+			OperatableStateMachine.add('hasWaypoint?',
 										DecisionState(outcomes=['waypoint', 'no_waypoint'], conditions=lambda x: 'waypoint' if x else 'no_waypoint'),
 										transitions={'waypoint': 'MoveToWaypoint', 'no_waypoint': 'finished'},
 										autonomy={'waypoint': Autonomy.Off, 'no_waypoint': Autonomy.Off},
 										remapping={'input_value': 'nextWaypoint'})
 
-			# x:993 y:29
+			# x:899 y:96
 			OperatableStateMachine.add('MoveToWaypoint',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.2, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=False),
 										transitions={'reached': 'finished', 'failed': 'MoveToWaypoint', 'stuck': 'MoveToWaypoint'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'nextWaypoint', 'speed': 'speed'})
-
-			# x:349 y:33
-			OperatableStateMachine.add('FindLine',
-										FindLineState(distance=self.distance_to_line, velocity_topic='/cmd_vel'),
-										transitions={'reached': 'LineFollower'},
-										autonomy={'reached': Autonomy.Off},
-										remapping={'reverse': 'drive_backwards', 'speed': 'speed'})
 
 
 

@@ -21,11 +21,6 @@
 			<max value="300" />
 		</param>
 
-		<param type="numeric" name="distance_to_line" default="1.4" label="distance_to_line" hint="Distance to drive straight to reach line">
-			<min value="0" />
-			<max value="5" />
-		</param>
-
 		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the speed">
 			<min value="0" />
 			<max value="1" />
