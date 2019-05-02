@@ -33,7 +33,7 @@
 
 		<param type="text" name="specialFunctionality" default="" label="specialFunctionality" hint="Sets the specialFunctionality" />
 
-		<param type="numeric" name="speed" default="0.2" label="speed" hint="Sets the speed">
+		<param type="numeric" name="speed" default="0.3" label="speed" hint="Sets the speed">
 			<min value="0" />
 			<max value="2" />
 		</param>

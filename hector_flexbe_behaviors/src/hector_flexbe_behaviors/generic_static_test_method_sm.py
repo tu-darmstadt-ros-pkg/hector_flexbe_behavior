@@ -43,7 +43,7 @@ class GenericStaticTestMethodSM(Behavior):
 		self.add_parameter('roughTerrain', False)
 		self.add_parameter('repeat', True)
 		self.add_parameter('specialFunctionality', '')
-		self.add_parameter('speed', 0.2)
+		self.add_parameter('speed', 0.3)
 
 		# references to used behaviors
 		self.add_behavior(ExploreMissionRobocupSM, 'Explore Mission Robocup')
