@@ -55,8 +55,8 @@ class LineFollowingSM(Behavior):
 		# x:1012 y:445, x:1229 y:485
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.speed = self.speed
-		_state_machine.userdata.camera_topic = '/back_rgbd_cam/color/image_rect_color'
-		_state_machine.userdata.drive_backwards = True
+		_state_machine.userdata.camera_topic = '/front_rgbd_cam/color/image_rect_color'
+		_state_machine.userdata.drive_backwards = False
 		_state_machine.userdata.nextWaypoint = ''
 		_state_machine.userdata.waypoints = []
 
