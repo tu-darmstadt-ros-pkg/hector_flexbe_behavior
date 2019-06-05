@@ -8,10 +8,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_argos_states.get_joint_values_state import GetJointValuesState
+from flexbe_manipulation_states.get_joint_values_state import GetJointValuesState as flexbe_manipulation_states__GetJointValuesState
 from hector_flexbe_states.direct_joint_control_state import DirectJointControlState
 from hector_flexbe_states.service_caller_state import ServiceCallerState
 from hector_flexbe_states.check_joints_state import CheckJointsState
+from hector_flexbe_states.switch_controller_state import SwitchControllerState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -76,8 +77,8 @@ class MovearmtoparkSM(Behavior):
 		with _state_machine:
 			# x:30 y:44
 			OperatableStateMachine.add('get_initial_position',
-										GetJointValuesState(joints=['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']),
-										transitions={'retrieved': 'set_high_threshold'},
+										flexbe_manipulation_states__GetJointValuesState(joints=['gripper_servo_joint', 'arm_yaw_joint', 'arm_pitch_joint_0', 'arm_pitch_joint_1', 'arm_pitch_joint_2', 'arm_roll_joint']),
+										transitions={'retrieved': 'activate_trajectory'},
 										autonomy={'retrieved': Autonomy.Off},
 										remapping={'joint_values': 'joint_positions_initial'})
 
@@ -109,17 +110,17 @@ class MovearmtoparkSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions5', 'joint_names': 'joint_names5'})
 
-			# x:186 y:549
+			# x:236 y:507
 			OperatableStateMachine.add('move_gripper',
 										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
 										transitions={'reached': 'set_low_threshold', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions6', 'joint_names': 'joint_names6'})
 
-			# x:12 y:545
+			# x:0 y:602
 			OperatableStateMachine.add('set_low_threshold',
 										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
-										transitions={'success': 'finished', 'failed': 'failed'},
+										transitions={'success': 'activate_joystick', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'value': 'low_value'})
 
@@ -150,6 +151,18 @@ class MovearmtoparkSM(Behavior):
 										transitions={'success': 'move_pitch0', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'value': 'high_value'})
+
+			# x:203 y:132
+			OperatableStateMachine.add('activate_trajectory',
+										SwitchControllerState(service_topic='/manipulator_arm_control/controller_manager/switch_controller', trajectory=True),
+										transitions={'success': 'set_high_threshold', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:34 y:511
+			OperatableStateMachine.add('activate_joystick',
+										SwitchControllerState(service_topic='/manipulator_arm_control/controller_manager/switch_controller', trajectory=False),
+										transitions={'success': 'finished', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine

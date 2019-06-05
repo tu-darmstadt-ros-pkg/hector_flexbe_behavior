@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.service_caller_state import ServiceCallerState
 from hector_flexbe_states.direct_joint_control_state import DirectJointControlState
+from hector_flexbe_states.switch_controller_state import SwitchControllerState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -58,17 +59,16 @@ class MovearmtoinitialSM(Behavior):
 
 
 		with _state_machine:
-			# x:74 y:85
-			OperatableStateMachine.add('set_high_threshold',
-										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
-										transitions={'success': 'move_multiple', 'failed': 'failed'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'value': 'high_threshold'})
+			# x:30 y:147
+			OperatableStateMachine.add('activate_trajectory',
+										SwitchControllerState(service_topic='/manipulator_arm_control/controller_manager/switch_controller', trajectory=True),
+										transitions={'success': 'set_high_threshold', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:341 y:223
 			OperatableStateMachine.add('set_low_threshold',
 										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
-										transitions={'success': 'finished', 'failed': 'failed'},
+										transitions={'success': 'activate_joystick', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'value': 'low_threshold'})
 
@@ -78,6 +78,19 @@ class MovearmtoinitialSM(Behavior):
 										transitions={'reached': 'set_low_threshold', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
+
+			# x:152 y:441
+			OperatableStateMachine.add('activate_joystick',
+										SwitchControllerState(service_topic='/manipulator_arm_control/controller_manager/switch_controller', trajectory=False),
+										transitions={'success': 'finished', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:74 y:85
+			OperatableStateMachine.add('set_high_threshold',
+										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
+										transitions={'success': 'move_multiple', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'value': 'high_threshold'})
 
 
 		return _state_machine
