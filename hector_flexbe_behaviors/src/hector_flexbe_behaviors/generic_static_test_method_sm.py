@@ -81,7 +81,7 @@ class GenericStaticTestMethodSM(Behavior):
 		with _state_machine:
 			# x:87 y:53
 			OperatableStateMachine.add('initalise_parameter',
-										MissionInitialisationState(),
+										MissionInitialisationState(waitTime=1),
 										transitions={'done': 'select_mission', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'hazmatEnabled': 'hazmatEnabled', 'traversabilityMap': 'traversabilityMap', 'roughTerrain': 'roughTerrain', 'exploration': 'exploration'})

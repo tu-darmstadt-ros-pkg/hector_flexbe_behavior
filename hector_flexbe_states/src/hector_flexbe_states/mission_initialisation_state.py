@@ -16,11 +16,13 @@ class MissionInitialisationState(EventState):
 
 	'''
 
-	def __init__(self):
+	def __init__(self, waitTime):
 		'''
 		Constructor
 		'''
 		super(MissionInitialisationState, self).__init__(outcomes=['done', 'failed'], input_keys=['hazmatEnabled', 'traversabilityMap', 'roughTerrain', 'exploration'])
+
+		self.waitTime = waitTime
 
 		try:
 			self.vehicle_controller_client = dynamic_reconfigure.client.Client("vehicle_controller", timeout=10)
@@ -33,7 +35,10 @@ class MissionInitialisationState(EventState):
 		
 	def execute(self, userdata):
 
-		return 'done'
+		temp_time = rospy.get_rostime() - self._start_time
+ 		if (temp_time.to_sec() > self.waitTime):
+			return 'done'
+
 
 			
 	def on_enter(self, userdata):
@@ -55,6 +60,7 @@ class MissionInitialisationState(EventState):
 			self.vehicle_controller_client.update_configuration({"angle_p_gain":1})
 		else:
 			self.vehicle_controller_client.update_configuration({"angle_p_gain":2})
+		self._start_time = rospy.get_rostime()
 		
 			
 
