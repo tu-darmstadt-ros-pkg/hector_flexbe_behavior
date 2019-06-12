@@ -84,7 +84,7 @@ class MovearmtoparkSM(Behavior):
 
 			# x:602 y:135
 			OperatableStateMachine.add('move_multiple',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=3),
 										transitions={'reached': 'move_yaw', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions2', 'joint_names': 'joint_names2'})
@@ -98,7 +98,7 @@ class MovearmtoparkSM(Behavior):
 
 			# x:601 y:378
 			OperatableStateMachine.add('move_pitch_1_2',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
 										transitions={'reached': 'move_roll', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions4', 'joint_names': 'joint_names4'})
@@ -126,7 +126,7 @@ class MovearmtoparkSM(Behavior):
 
 			# x:487 y:43
 			OperatableStateMachine.add('move_pitch0',
-										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=1),
+										DirectJointControlState(action_topic='/execute_trajectory', time_to_pose=2),
 										transitions={'reached': 'move_multiple', 'control_failed': 'failed', 'failed': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'control_failed': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_positions': 'joint_positions', 'joint_names': 'joint_names'})
