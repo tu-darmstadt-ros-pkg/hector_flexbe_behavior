@@ -52,7 +52,7 @@ class MovearmtoparkSM(Behavior):
 		_state_machine.userdata.joint_names = ['arm_pitch_joint_0']
 		_state_machine.userdata.joint_positions = [0]
 		_state_machine.userdata.joint_names2 = ['arm_pitch_joint_1','arm_pitch_joint_2','arm_roll_joint','gripper_servo_joint']
-		_state_machine.userdata.joint_positions2 = [1.57,0,-1.57,1.55]
+		_state_machine.userdata.joint_positions2 = [1.57,0.13,-1.57,1.55]
 		_state_machine.userdata.joint_names3 = ['arm_yaw_joint']
 		_state_machine.userdata.joint_positions3 = [1.57]
 		_state_machine.userdata.joint_names4 = ['arm_pitch_joint_1','arm_pitch_joint_0']
@@ -64,7 +64,7 @@ class MovearmtoparkSM(Behavior):
 		_state_machine.userdata.high_value = 99
 		_state_machine.userdata.low_value = 0
 		_state_machine.userdata.joint_names7 = ['arm_pitch_joint_1']
-		_state_machine.userdata.joint_positions7 = [-1.57]
+		_state_machine.userdata.joint_positions7 = [-1.52]
 		_state_machine.userdata.joint_positions_park = [-0.5,0,0,0,0,-3.13]
 		_state_machine.userdata.thresholds = [5,0.75,1.2,1,1.5,10]
 
