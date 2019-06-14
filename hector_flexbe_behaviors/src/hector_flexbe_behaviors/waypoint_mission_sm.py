@@ -14,6 +14,7 @@ from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as h
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
+from hector_flexbe_states.switch_mapping import SwitchMapping
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -53,6 +54,7 @@ class WaypointmissionSM(Behavior):
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed', 'reexplore_time'])
 		_state_machine.userdata.speed = 0.2
 		_state_machine.userdata.reexplore_time = 5
+		_state_machine.userdata.counter = 0
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -64,7 +66,7 @@ class WaypointmissionSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('get_path',
 										GetPathFromServiceState(service_topic='/path_to_follow'),
-										transitions={'succeeded': 'get_current_waypoint', 'failed': 'failed'},
+										transitions={'succeeded': 'switch_mapping_on', 'failed': 'failed'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints2': 'remaining_waypoints'})
 
@@ -98,7 +100,7 @@ class WaypointmissionSM(Behavior):
 			# x:322 y:20
 			OperatableStateMachine.add('write_2d_map',
 										Write2dMapState(writer_topic='/syscommand'),
-										transitions={'success': 'get_current_waypoint', 'failed': 'get_current_waypoint'},
+										transitions={'success': 'switch_mapping_off', 'failed': 'switch_mapping_off'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:307 y:149
@@ -107,6 +109,18 @@ class WaypointmissionSM(Behavior):
 										transitions={'succeeded': 'move_to_next_waypoint', 'empty': 'finished'},
 										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
 										remapping={'waypoints': 'remaining_waypoints', 'waypoint': 'current_waypoint'})
+
+			# x:436 y:82
+			OperatableStateMachine.add('switch_mapping_off',
+										SwitchMapping(enable=False),
+										transitions={'succeeded': 'get_current_waypoint'},
+										autonomy={'succeeded': Autonomy.Off})
+
+			# x:187 y:69
+			OperatableStateMachine.add('switch_mapping_on',
+										SwitchMapping(enable=True),
+										transitions={'succeeded': 'get_current_waypoint'},
+										autonomy={'succeeded': Autonomy.Off})
 
 
 		return _state_machine

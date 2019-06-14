@@ -4,7 +4,7 @@ import rospy
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyPublisher
 from flexbe_core.proxy import ProxyServiceCaller
-from ethzasl_icp_mapper.srv import SetMode, GetMode
+
 
 
 from smach import CBState
@@ -21,23 +21,31 @@ class SwitchMapping(EventState):
 
 	'''
 
-	def __init__(self):
-		super(SwitchMapping, self).__init__(outcomes = ['succeeded'], input_keys = ['switch'])
+	def __init__(self, enable=True):
+		super(SwitchMapping, self).__init__(outcomes = ['succeeded'])
+		self._enable = enable
+		self._enable_mapping = None
+		try:
+			rospy.wait_for_service('/enable_map_update', timeout=2)
+        		self._enable_mapping = rospy.ServiceProxy('/enable_map_update', bool)
+		except:
+			Logger.logwarn('Enable map service not available')
 
-        	self.set_mapper_mode = rospy.ServiceProxy('/mapper/set_mode', SetMode)
 
 		self._succeeded = False
 
 	def execute(self, userdata):
 
-		if self._succeeded = True		
+		if self._succeeded == True:		
 			return 'succeeded'
 		
 
 	def on_enter(self, userdata):
 	
-		map_state = userdata.switch
-	  	resp = self.set_mapper_mode(True, map_state, True)
+		if self._enable_mapping == None:
+			Logger.logwarn('Enable map service not available')
+		else:
+	  		resp = self._enable_mapping(self._enable)
 		self._succeeded = True
       		
 	def on_exit(self, userdata):
