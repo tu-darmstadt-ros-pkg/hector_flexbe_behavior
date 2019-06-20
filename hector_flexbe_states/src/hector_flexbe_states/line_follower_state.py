@@ -23,23 +23,24 @@ class LineFollowerState(EventState):
     The robot follows a line on the ground.
 
     -- timeout_sec      float64         Timeout for LineFollower
+    -- search_line      bool            True if line is searched, false if following the line is required
     
 
     ># camera_topic      string         Camera topic used for line following
     ># drive_backwards   bool           True if robot drives backwards
-	># speed            float64         Speed of the robot
+	># speed             float64        Speed of the robot
 
     #< drive_backwards   bool           If robot droves backwards
 
-    <= reached 					Robot has reached the end of line
-    <= failed                   Robot has lost line or an error occurred
+    <= reached 					Robot has found the line (search_line=true) or has reached the end of line (search_line=false)
+    <= failed                   An error occurred or timed out
     '''
 
-    def __init__(self, timeout_sec=10):
+    def __init__(self, timeout_sec=10, search_line=False):
         '''
         Constructor
         '''
-        super(LineFollowerState, self).__init__(outcomes=['reached','failed'],
+        super(LineFollowerState, self).__init__(outcomes=['failed','reached'],
                                                   input_keys=['camera_topic', 'drive_backwards', 'speed'])
 
 
@@ -50,9 +51,15 @@ class LineFollowerState(EventState):
         #self._defaultspeed = 0.1
 
         self._timeout_sec = timeout_sec
+        self._search_line = search_line
 
-        self._reached = False
-        self._failed  = False
+
+        self._line_cntr = 0
+        
+        self._line_threshold = 3
+
+        self._failed      = False
+        self._reached     = False
 
 
     def execute(self, userdata):
@@ -65,28 +72,44 @@ class LineFollowerState(EventState):
         if self._reached:
             return 'reached'
 
+        
+
+        #self._dynrec.update_configuration({'speed': self._defaultspeed}) # TODO correctly set up dynamic reconfigure
+
+        
+        
+        if self._action_client.has_feedback(self._action_topic):
+            feedback = self._action_client.get_feedback(self._action_topic)
+            
+            if self._search_line and feedback.feedback.tracking_ok:
+                if self._line_cntr >= self._line_threshold:
+                    self._reached = True
+                else:
+                    self._line_cntr = self._line_cntr + 1
+                    
+            elif not self._search_line and not feedback.feedback.tracking_ok:
+                if self._line_cntr >= self._line_threshold:
+                    self._reached = True
+                else:
+                    self._line_cntr = self._line_cntr + 1
+                    
+            else:
+                if self._line_cntr > 0:
+                    self._line_cntr = self._line_cntr - 1
+                    
+                    
+
         if self._action_client.has_result(self._action_topic):
             result = self._action_client.get_result(self._action_topic)
+            self._failed = True
 
-            #self._dynrec.update_configuration({'speed': self._defaultspeed}) # TODO correctly set up dynamic reconfigure
-
-            if result.result.val == ErrorCodes.SUCCESS or result.result.val == ErrorCodes.LINE_ENDED:
-                self._reached = True
-                return 'reached'
+            if result.result.val == 5:
+                Logger.logwarn('Timed out!')
             else:
-                self._failed = True
+                Logger.logwarn('Finished with result %(err)' % {'err': str(result.result.val)})
 
-                if result.result.val == 1:
-                    Logger.logwarn('Line lost!')
-                elif result.result.val == 3:
-                    Logger.logwarn('Control failure!')
-                elif result.result.val == 4:
-                    Logger.logwarn('Preempted!')
-                else:
-                    Logger.logwarn('Timed out!')
-
-                Logger.logwarn('LineFollowing failed!')
-                return 'failed'
+            Logger.logwarn('LineFollowing failed!')
+            return 'failed'
 
 
     def on_enter(self, userdata):
@@ -99,6 +122,8 @@ class LineFollowerState(EventState):
         #self._dynrec.update_configuration({'speed': userdata.max_speed})
 
         self._startTime = Time.now()
+
+        self._line_cntr = 0
 
         self._failed = False
         self._reached = False
