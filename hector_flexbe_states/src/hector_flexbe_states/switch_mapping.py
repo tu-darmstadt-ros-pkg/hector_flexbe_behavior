@@ -4,6 +4,7 @@ import rospy
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyPublisher
 from flexbe_core.proxy import ProxyServiceCaller
+from std_srvs.srv import SetBool
 
 
 
@@ -27,7 +28,7 @@ class SwitchMapping(EventState):
 		self._enable_mapping = None
 		try:
 			rospy.wait_for_service('/enable_map_update', timeout=2)
-        		self._enable_mapping = rospy.ServiceProxy('/enable_map_update', bool)
+        		self._enable_mapping = rospy.ServiceProxy('/enable_map_update', SetBool)
 		except:
 			Logger.logwarn('Enable map service not available')
 
