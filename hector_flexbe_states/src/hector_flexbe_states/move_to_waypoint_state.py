@@ -128,9 +128,18 @@ class MoveToWaypointState(EventState):
 			
 
 	def on_stop(self):
+		Logger.logwarn("In on_stop of move_to_waypoint")
 		try:
-			if self._client.is_available(self._action_topic) \
-			and not self._client.has_result(self._action_topic):
+			if self._client.is_available(self._action_topic):
+				self._client.cancel(self._action_topic)
+		except:
+			# client already closed
+			pass
+	
+	def on_exit(self, userdata):
+		Logger.logwarn("In on_exit of move_to_waypoint")
+		try:
+			if self._client.is_available(self._action_topic):
 				self._client.cancel(self._action_topic)
 		except:
 			# client already closed
