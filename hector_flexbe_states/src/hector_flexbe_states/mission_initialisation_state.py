@@ -45,6 +45,7 @@ class MissionInitialisationState(EventState):
 		
 #		if userdata.hazmatEnabled:
 #			pass
+		self._start_time = rospy.get_rostime()
 		try:
 			if userdata.exploration:
 				self.grid_map_proc_client.update_configuration({"unknown_space_to_free":False})
@@ -61,7 +62,6 @@ class MissionInitialisationState(EventState):
 				self.vehicle_controller_client.update_configuration({"angle_p_gain":1})
 			else:
 				self.vehicle_controller_client.update_configuration({"angle_p_gain":2})
-			self._start_time = rospy.get_rostime()
 		except:
 			pass
 		
