@@ -69,10 +69,10 @@ class SwitchControllerState(EventState):
 		self._service_msg.strictness = 2
 		if self._trajectory:
 			self._service_msg.start_controllers = ['manipulator_arm_traj_controller', 'gripper_traj_controller']
-			self._service_msg.stop_controllers = ['arm_joystick_control']
+			self._service_msg.stop_controllers = ['arm_joystick_control', 'joy_tcp_controller']
 		else:
 			self._service_msg.stop_controllers = ['manipulator_arm_traj_controller', 'gripper_traj_controller']
-			self._service_msg.start_controllers = ['arm_joystick_control']
+			self._service_msg.start_controllers = ['arm_joystick_control', 'joy_tcp_controller']
 
 		try:
                         self._service_client.call(self._service_topic, self._service_msg)

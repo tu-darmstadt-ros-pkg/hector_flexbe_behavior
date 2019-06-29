@@ -113,7 +113,7 @@ class MovearmtoparkSM(Behavior):
 			# x:0 y:602
 			OperatableStateMachine.add('set_low_threshold',
 										ServiceCallerState(service_topic='/move_group/trajectory_execution/set_parameters'),
-										transitions={'success': 'activate_joystick', 'failed': 'failed'},
+										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'value': 'low_value'})
 
@@ -142,12 +142,6 @@ class MovearmtoparkSM(Behavior):
 			OperatableStateMachine.add('activate_trajectory',
 										SwitchControllerState(service_topic='/manipulator_arm_control/controller_manager/switch_controller', trajectory=True),
 										transitions={'success': 'set_high_threshold', 'failed': 'failed'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:34 y:511
-			OperatableStateMachine.add('activate_joystick',
-										SwitchControllerState(service_topic='/manipulator_arm_control/controller_manager/switch_controller', trajectory=False),
-										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
 
