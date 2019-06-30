@@ -15,9 +15,10 @@ from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 from hector_flexbe_states.switch_mapping import SwitchMapping
+from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
-
+from geometry_msgs.msg import PointStamped
 # [/MANUAL_IMPORT]
 
 
@@ -51,10 +52,11 @@ class WaypointmissionSM(Behavior):
 
 	def create(self):
 		# x:233 y:309, x:188 y:441
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed', 'reexplore_time'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed', 'reexplore_time', 'pose'])
 		_state_machine.userdata.speed = 0.2
 		_state_machine.userdata.reexplore_time = 5
 		_state_machine.userdata.counter = 0
+		_state_machine.userdata.pose = PointStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -116,11 +118,18 @@ class WaypointmissionSM(Behavior):
 										transitions={'succeeded': 'get_current_waypoint'},
 										autonomy={'succeeded': Autonomy.Off})
 
-			# x:187 y:69
+			# x:196 y:75
 			OperatableStateMachine.add('switch_mapping_on',
 										SwitchMapping(enable=True),
-										transitions={'succeeded': 'get_current_waypoint'},
+										transitions={'succeeded': 'add_waypoint'},
 										autonomy={'succeeded': Autonomy.Off})
+
+			# x:111 y:222
+			OperatableStateMachine.add('add_waypoint',
+										AddWaypointToArrayState(),
+										transitions={'succeeded': 'get_current_waypoint', 'failed': 'failed'},
+										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'pose', 'waypoints': 'remaining_waypoints'})
 
 
 		return _state_machine

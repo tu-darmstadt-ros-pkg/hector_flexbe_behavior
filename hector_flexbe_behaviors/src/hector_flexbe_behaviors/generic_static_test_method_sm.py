@@ -15,6 +15,7 @@ from hector_flexbe_states.mission_decision_state import MissionDecisionState
 from hector_flexbe_behaviors.linefollowing_sm import LineFollowingSM
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
+from flexbe_argos_states.get_robot_pose import GetRobotPose
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -82,7 +83,7 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:87 y:53
 			OperatableStateMachine.add('initalise_parameter',
 										MissionInitialisationState(waitTime=1),
-										transitions={'done': 'select_mission', 'failed': 'failed'},
+										transitions={'done': 'get_start_position', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'hazmatEnabled': 'hazmatEnabled', 'traversabilityMap': 'traversabilityMap', 'roughTerrain': 'roughTerrain', 'exploration': 'exploration'})
 
@@ -98,9 +99,9 @@ class GenericStaticTestMethodSM(Behavior):
 										self.use_behavior(WaypointmissionSM, 'Waypoint mission'),
 										transitions={'finished': 'Waypoint mission', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'speed': 'speed', 'reexplore_time': 'reexplore_time'})
+										remapping={'speed': 'speed', 'reexplore_time': 'reexplore_time', 'pose': 'pose'})
 
-			# x:305 y:90
+			# x:335 y:134
 			OperatableStateMachine.add('select_mission',
 										MissionDecisionState(),
 										transitions={'followMission': 'Waypoint mission', 'exploreMission': 'Explore Mission Robocup', 'combinedMission': 'select_mission', 'followLineMission': 'LineFollowing', 'failed': 'failed'},
@@ -124,6 +125,13 @@ class GenericStaticTestMethodSM(Behavior):
 										Write2dMapState(writer_topic='/syscommand'),
 										transitions={'success': 'Explore Mission Robocup', 'failed': 'Explore Mission Robocup'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:242 y:58
+			OperatableStateMachine.add('get_start_position',
+										GetRobotPose(),
+										transitions={'succeeded': 'select_mission'},
+										autonomy={'succeeded': Autonomy.Off},
+										remapping={'pose': 'pose'})
 
 
 		return _state_machine
