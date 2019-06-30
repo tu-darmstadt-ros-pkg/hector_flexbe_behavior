@@ -66,7 +66,7 @@ class SwitchControllerState(EventState):
 	def on_enter(self, userdata):
 		self._success = False
 		self._service_msg = SwitchControllerRequest()
-		self._service_msg.strictness = 2
+		self._service_msg.strictness = 1
 		if self._trajectory:
 			self._service_msg.start_controllers = ['manipulator_arm_traj_controller', 'gripper_traj_controller']
 			self._service_msg.stop_controllers = ['arm_joystick_control', 'joy_tcp_controller']

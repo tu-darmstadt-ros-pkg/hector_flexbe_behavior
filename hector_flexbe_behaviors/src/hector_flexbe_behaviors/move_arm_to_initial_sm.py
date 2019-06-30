@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from hector_flexbe_states.switch_controller_state import SwitchControllerState
 from hector_flexbe_states.service_caller_state import ServiceCallerState
 from hector_flexbe_states.direct_joint_control_state import DirectJointControlState
-from hector_flexbe_states.switch_controller_state import SwitchControllerState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
