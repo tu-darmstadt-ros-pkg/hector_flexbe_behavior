@@ -11,7 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from flexbe_argos_states.explore import Explore
 from flexbe_states.wait_state import WaitState
 from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
-from flexbe_argos_states.move_to_waypoint_state import MoveToWaypointState as flexbe_argos_states__MoveToWaypointState
+from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -74,16 +74,16 @@ class ExploreMissionRobocupSM(Behavior):
 			# x:271 y:234
 			OperatableStateMachine.add('get_recovery_point',
 										GetRecoveryInfoState(service_topic='/trajectory_recovery_info'),
-										transitions={'success': 'stuck_behavior', 'failed': 'Start Exploration'},
+										transitions={'success': 'move_to_recovery_point', 'failed': 'Start Exploration'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'waypoint'})
 
-			# x:548 y:243
-			OperatableStateMachine.add('stuck_behavior',
-										flexbe_argos_states__MoveToWaypointState(desired_speed=0.2, position_tolerance=0, angle_tolerance=3, rotate_to_goal=False, reverse_allowed=True),
-										transitions={'reached': 'Start Exploration', 'failed': 'Start Exploration'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'waypoint': 'waypoint'})
+			# x:572 y:161
+			OperatableStateMachine.add('move_to_recovery_point',
+										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=False),
+										transitions={'reached': 'Start Exploration', 'failed': 'Start Exploration', 'stuck': 'Start Exploration'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
+										remapping={'waypoint': 'waypoint', 'speed': 'speed'})
 
 
 		return _state_machine

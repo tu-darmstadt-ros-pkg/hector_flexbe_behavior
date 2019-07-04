@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Touch">
+
+	<executable package_path="hector_flexbe_behaviors.touch_sm" class="TouchSM" />
+	<tagstring>rc, manipulation, servoing</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Mon Jul 01 2019</date>
+	<description>
+		Performs the robocup touch startcheck
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

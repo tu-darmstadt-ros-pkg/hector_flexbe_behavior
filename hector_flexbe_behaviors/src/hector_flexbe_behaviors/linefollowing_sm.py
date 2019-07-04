@@ -16,9 +16,10 @@ from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as h
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
+from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
-
+from geometry_msgs.msg import PointStamped
 # [/MANUAL_IMPORT]
 
 
@@ -53,12 +54,13 @@ class LineFollowingSM(Behavior):
 
 	def create(self):
 		# x:1012 y:445, x:1229 y:485
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['pose'])
 		_state_machine.userdata.speed = self.speed
 		_state_machine.userdata.camera_topic = '/front_rgbd_cam/color/image_rect_color'
 		_state_machine.userdata.drive_backwards = False
 		_state_machine.userdata.nextWaypoint = ''
 		_state_machine.userdata.waypoints = []
+		_state_machine.userdata.pose = PointStamped()
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -154,7 +156,7 @@ class LineFollowingSM(Behavior):
 			# x:114 y:44
 			OperatableStateMachine.add('getWaypoints',
 										GetPathFromServiceState(service_topic='/path_to_follow'),
-										transitions={'succeeded': 'haveWaypoints?', 'failed': 'haveWaypoints?'},
+										transitions={'succeeded': 'add_waypoint', 'failed': 'haveWaypoints?'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints2': 'waypoints'})
 
@@ -211,6 +213,13 @@ class LineFollowingSM(Behavior):
 										transitions={'finished': 'write_3d_map', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'nextWaypoint': 'nextWaypoint', 'drive_backwards': 'drive_backwards', 'camera_topic': 'camera_topic', 'speed': 'speed'})
+
+			# x:209 y:180
+			OperatableStateMachine.add('add_waypoint',
+										AddWaypointToArrayState(),
+										transitions={'succeeded': 'haveWaypoints?', 'failed': 'haveWaypoints?'},
+										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'pose', 'waypoints': 'waypoints'})
 
 
 		return _state_machine
