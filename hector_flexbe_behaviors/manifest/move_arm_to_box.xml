@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move arm to box">
+
+	<executable package_path="hector_flexbe_behaviors.move_arm_to_box_sm" class="MovearmtoboxSM" />
+	<tagstring>rc,arm</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Tue Jun 19 2018</date>
+	<description>
+		Moves the arm to the initial startcheck position when already unfolded
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
