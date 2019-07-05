@@ -13,7 +13,7 @@ Created on 15.06.2015
 @author: Philipp Schillinger
 '''
 
-class MoveArmState(EventState):
+class StartTouchServoState(EventState):
 	'''
 	Lets the robot move its arm.
 
@@ -30,7 +30,7 @@ class MoveArmState(EventState):
 		'''
 		Constructor
 		'''
-		super(MoveArmState, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed'],
+		super(StartTouchServoState, self).__init__(outcomes=['planning_failed', 'control_failed'],
 											input_keys=['joint_config', 'group_name'])
 		
 		self._action_topic = '/move_group'
