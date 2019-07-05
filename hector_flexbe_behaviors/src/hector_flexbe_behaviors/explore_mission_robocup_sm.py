@@ -88,7 +88,7 @@ class ExploreMissionRobocupSM(Behavior):
 
 			# x:362 y:389
 			OperatableStateMachine.add('second_recovery',
-										MoveToRecoveryState(position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=1, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										MoveToRecoveryState(position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=2, reverse_allowed=True, reverse_forced=False, use_planning=True),
 										transitions={'reached': 'Start Exploration', 'failed': 'Start Exploration', 'stuck': 'Start Exploration'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'waypoint', 'speed': 'speed'})
