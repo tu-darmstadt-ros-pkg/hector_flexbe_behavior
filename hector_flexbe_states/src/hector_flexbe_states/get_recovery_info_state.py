@@ -62,7 +62,7 @@ class GetRecoveryInfoState(EventState):
 		self._success = False
 		self._service_msg = GetRecoveryInfoRequest()
 		self._service_msg.request_time = rospy.Time.now()
-		self._service_msg.request_radius = 0.3
+		self._service_msg.request_radius = 0.5
 
 
 		try:
