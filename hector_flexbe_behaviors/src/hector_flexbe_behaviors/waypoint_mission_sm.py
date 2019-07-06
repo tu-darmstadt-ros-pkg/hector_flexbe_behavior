@@ -16,6 +16,7 @@ from hector_flexbe_states.write_2d_map_state import Write2dMapState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 from hector_flexbe_states.switch_mapping import SwitchMapping
 from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
+from hector_flexbe_states.move_to_recovery_state import MoveToRecoveryState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PointStamped
@@ -89,7 +90,7 @@ class WaypointmissionSM(Behavior):
 			# x:903 y:153
 			OperatableStateMachine.add('move_to_recovery_point',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
-										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
+										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'second_recovery'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'recovery_point', 'speed': 'speed'})
 
@@ -130,6 +131,13 @@ class WaypointmissionSM(Behavior):
 										transitions={'succeeded': 'get_current_waypoint', 'failed': 'failed'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'waypoints': 'remaining_waypoints'})
+
+			# x:864 y:19
+			OperatableStateMachine.add('second_recovery',
+										MoveToRecoveryState(position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
+										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'move_to_next_waypoint'},
+										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
+										remapping={'waypoint': 'recovery_point', 'speed': 'speed'})
 
 
 		return _state_machine
