@@ -15,7 +15,7 @@ from hector_flexbe_states.mission_decision_state import MissionDecisionState
 from hector_flexbe_behaviors.linefollowing_sm import LineFollowingSM
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
-from flexbe_argos_states.get_robot_pose import GetRobotPose
+from hector_flexbe_states.get_robot_pose import GetRobotPose as hector_flexbe_states__GetRobotPose
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -83,7 +83,7 @@ class GenericStaticTestMethodSM(Behavior):
 			# x:87 y:53
 			OperatableStateMachine.add('initalise_parameter',
 										MissionInitialisationState(waitTime=1),
-										transitions={'done': 'get_start_position', 'failed': 'failed'},
+										transitions={'done': 'get_start_position_1', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'hazmatEnabled': 'hazmatEnabled', 'traversabilityMap': 'traversabilityMap', 'roughTerrain': 'roughTerrain', 'exploration': 'exploration'})
 
@@ -112,7 +112,8 @@ class GenericStaticTestMethodSM(Behavior):
 			OperatableStateMachine.add('LineFollowing',
 										self.use_behavior(LineFollowingSM, 'LineFollowing'),
 										transitions={'finished': 'LineFollowing', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										remapping={'pose': 'pose'})
 
 			# x:864 y:319
 			OperatableStateMachine.add('write_3d_map_3',
@@ -126,9 +127,9 @@ class GenericStaticTestMethodSM(Behavior):
 										transitions={'success': 'Explore Mission Robocup', 'failed': 'Explore Mission Robocup'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:242 y:58
-			OperatableStateMachine.add('get_start_position',
-										GetRobotPose(),
+			# x:238 y:59
+			OperatableStateMachine.add('get_start_position_1',
+										hector_flexbe_states__GetRobotPose(),
 										transitions={'succeeded': 'select_mission'},
 										autonomy={'succeeded': Autonomy.Off},
 										remapping={'pose': 'pose'})

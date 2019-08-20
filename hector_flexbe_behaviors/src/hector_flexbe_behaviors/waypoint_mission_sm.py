@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_argos_states.get_path_from_service_state import GetPathFromServiceState
 from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
@@ -17,6 +16,7 @@ from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromAr
 from hector_flexbe_states.switch_mapping import SwitchMapping
 from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
 from hector_flexbe_states.move_to_recovery_state import MoveToRecoveryState
+from hector_flexbe_states.get_path_from_service_state import GetPathFromServiceState as hector_flexbe_states__GetPathFromServiceState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PointStamped
@@ -66,19 +66,12 @@ class WaypointmissionSM(Behavior):
 
 
 		with _state_machine:
-			# x:30 y:40
-			OperatableStateMachine.add('get_path',
-										GetPathFromServiceState(service_topic='/path_to_follow'),
+			# x:31 y:39
+			OperatableStateMachine.add('get_path1',
+										hector_flexbe_states__GetPathFromServiceState(service_topic='/path_to_follow'),
 										transitions={'succeeded': 'switch_mapping_on', 'failed': 'failed'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints2': 'remaining_waypoints'})
-
-			# x:589 y:320
-			OperatableStateMachine.add('get_recovery_point',
-										GetRecoveryInfoState(service_topic='/trajectory_recovery_info'),
-										transitions={'success': 'move_to_recovery_point', 'failed': 'move_to_next_waypoint'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'waypoint': 'recovery_point'})
 
 			# x:580 y:152
 			OperatableStateMachine.add('move_to_next_waypoint',
@@ -138,6 +131,13 @@ class WaypointmissionSM(Behavior):
 										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'move_to_next_waypoint'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'recovery_point', 'speed': 'speed'})
+
+			# x:589 y:320
+			OperatableStateMachine.add('get_recovery_point',
+										GetRecoveryInfoState(service_topic='/trajectory_recovery_info'),
+										transitions={'success': 'move_to_recovery_point', 'failed': 'move_to_next_waypoint'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'waypoint': 'recovery_point'})
 
 
 		return _state_machine
