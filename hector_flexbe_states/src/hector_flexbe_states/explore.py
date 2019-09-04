@@ -27,7 +27,7 @@ class Explore(EventState):
 	'''
 
 	def __init__(self):
-		super(Explore, self).__init__(outcomes = ['succeeded', 'failed', 'stuck'], input_keys =['speed', 'reexplore_time'])
+		super(Explore, self).__init__(outcomes = ['succeeded', 'failed', 'stuck'], input_keys =['speed', 'reexplore_time', 'first_call'], output_keys = ['first_call'])
 		
 		self._action_topic = '/explore'
 		self._move_client = ProxyActionClient({self._action_topic: ExploreAction})
@@ -54,6 +54,7 @@ class Explore(EventState):
 		temp_time = rospy.get_rostime() - self._start_time;
  		if (temp_time.to_sec() > userdata.reexplore_time):
 			self._start_time = rospy.get_rostime()
+			self._action_goal.reset_stuck_history = False
 			self._move_client.send_goal(self._action_topic, self._action_goal)
 
 		
@@ -65,7 +66,13 @@ class Explore(EventState):
 		self._failed = False
 		self._start_time = rospy.get_rostime()
 		self._action_goal.desired_speed = userdata.speed
-		
+		if userdata.first_call == True:
+			self._action_goal.reset_stuck_history = True
+			userdata.first_call = False
+			Logger.loginfo('first call true')
+		else:
+			self._action_goal.reset_stuck_history = False
+			Logger.loginfo('first call false')
 		
 
 		try:
