@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
+from hector_flexbe_states.get_path_from_service_state import GetPathFromServiceState as hector_flexbe_states__GetPathFromServiceState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
@@ -16,7 +16,7 @@ from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromAr
 from hector_flexbe_states.switch_mapping import SwitchMapping
 from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
 from hector_flexbe_states.move_to_recovery_state import MoveToRecoveryState
-from hector_flexbe_states.get_path_from_service_state import GetPathFromServiceState as hector_flexbe_states__GetPathFromServiceState
+from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PointStamped
@@ -58,6 +58,7 @@ class WaypointmissionSM(Behavior):
 		_state_machine.userdata.reexplore_time = 5
 		_state_machine.userdata.counter = 0
 		_state_machine.userdata.pose = PointStamped()
+		_state_machine.userdata.first_call = True
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -67,7 +68,7 @@ class WaypointmissionSM(Behavior):
 
 		with _state_machine:
 			# x:31 y:39
-			OperatableStateMachine.add('get_path1',
+			OperatableStateMachine.add('get_path',
 										hector_flexbe_states__GetPathFromServiceState(service_topic='/path_to_follow'),
 										transitions={'succeeded': 'switch_mapping_on', 'failed': 'failed'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
@@ -78,14 +79,14 @@ class WaypointmissionSM(Behavior):
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=self.usePlanning),
 										transitions={'reached': 'write_3d_map', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'current_waypoint', 'speed': 'speed'})
+										remapping={'waypoint': 'current_waypoint', 'speed': 'speed', 'first_call': 'first_call'})
 
 			# x:903 y:153
 			OperatableStateMachine.add('move_to_recovery_point',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
 										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'second_recovery'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'recovery_point', 'speed': 'speed'})
+										remapping={'waypoint': 'recovery_point', 'speed': 'speed', 'first_call': 'first_call'})
 
 			# x:589 y:21
 			OperatableStateMachine.add('write_3d_map',

@@ -45,7 +45,7 @@ class MoveToWaypointState(EventState):
 		Constructor
 		'''
 		super(MoveToWaypointState, self).__init__(outcomes=['reached', 'failed', 'stuck'],
-											input_keys=['waypoint', 'speed'])
+											input_keys=['waypoint', 'speed', 'first_call'], output_keys= ['first_call'])
 		
 		self._action_topic = '/move_base'
 		self._client = ProxyActionClient({self._action_topic: MoveBaseAction})
@@ -92,6 +92,7 @@ class MoveToWaypointState(EventState):
 				return 'failed'
 		temp_time = rospy.get_rostime() - self._start_time
  		if (temp_time.to_sec() > self._reexplore_time):
+			self._action_goal.follow_path_options.reset_stuck_history = False
 			self._client.send_goal(self._action_topic, self._action_goal)
 			self._start_time = rospy.get_rostime()
 
@@ -113,6 +114,11 @@ class MoveToWaypointState(EventState):
                         self._action_goal.plan_path_options.planning_approach = 1
 		if self._action_goal.target_pose.header.frame_id == "":
 			self._action_goal.target_pose.header.frame_id = "world"
+		if userdata.first_call == True:
+			self._action_goal.follow_path_options.reset_stuck_history = True
+			userdata.first_call = False
+		else:
+			self._action_goal.follow_path_options.reset_stuck_history = False
 
 		try:
 			self._client.send_goal(self._action_topic, self._action_goal)
