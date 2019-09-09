@@ -57,7 +57,7 @@ class WaypointmissionSM(Behavior):
 		_state_machine.userdata.speed = 0.2
 		_state_machine.userdata.reexplore_time = 5
 		_state_machine.userdata.counter = 0
-		_state_machine.userdata.pose = PointStamped()
+		_state_machine.userdata.pose = None
 		_state_machine.userdata.first_call = True
 
 		# Additional creation code can be added inside the following tags
@@ -122,7 +122,7 @@ class WaypointmissionSM(Behavior):
 			# x:111 y:222
 			OperatableStateMachine.add('add_waypoint',
 										AddWaypointToArrayState(),
-										transitions={'succeeded': 'get_current_waypoint', 'failed': 'failed'},
+										transitions={'succeeded': 'get_current_waypoint', 'failed': 'get_current_waypoint'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'waypoints': 'remaining_waypoints'})
 

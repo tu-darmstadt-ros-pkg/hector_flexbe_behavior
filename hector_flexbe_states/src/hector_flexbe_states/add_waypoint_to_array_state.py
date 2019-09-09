@@ -54,8 +54,11 @@ class AddWaypointToArrayState(EventState):
 		self._succeeded = False
 		self._failed = False
 
-		userdata.waypoints.value.poses.append(userdata.waypoint.pose)
-		self._succeeded = True
+		if userdata.waypoint is None:
+			self._failed = True
+		else:
+			userdata.waypoints.value.poses.append(userdata.waypoint.pose)
+			self._succeeded = True
 			
 
 	def on_stop(self):
