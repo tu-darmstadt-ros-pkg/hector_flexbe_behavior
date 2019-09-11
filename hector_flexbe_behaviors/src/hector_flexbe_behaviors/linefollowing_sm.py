@@ -8,8 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_argos_states.get_path_from_service_state import GetPathFromServiceState as flexbe_argos_states__GetPathFromServiceState
-from hector_flexbe_states.switch_line_follower_direction import SwitchLineFollowerDirectionState
+from hector_flexbe_states.get_path_from_service_state import GetPathFromServiceState as hector_flexbe_states__GetPathFromServiceState
 from flexbe_states.decision_state import DecisionState
 from hector_flexbe_states.write_3d_map_state import Write3dMapState
 from hector_flexbe_states.write_2d_map_state import Write2dMapState
@@ -17,6 +16,7 @@ from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromAr
 from hector_flexbe_states.line_follower_state import LineFollowerState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
 from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
+from hector_flexbe_states.switch_line_follower_direction import SwitchLineFollowerDirectionState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PointStamped
@@ -128,19 +128,12 @@ class LineFollowingSM(Behavior):
 
 
 		with _state_machine:
-			# x:114 y:44
+			# x:92 y:55
 			OperatableStateMachine.add('getWaypoints',
-										flexbe_argos_states__GetPathFromServiceState(service_topic='/path_to_follow'),
+										hector_flexbe_states__GetPathFromServiceState(service_topic='/path_to_follow'),
 										transitions={'succeeded': 'add_waypoint', 'failed': 'haveWaypoints?'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoints2': 'waypoints'})
-
-			# x:1342 y:62
-			OperatableStateMachine.add('SwitchDirection',
-										SwitchLineFollowerDirectionState(camera_topic_forwards='/front_rgbd_cam/color/image_rect_color', camera_topic_backwards='/back_rgbd_cam/color/image_rect_color'),
-										transitions={'finished': 'reachedLower'},
-										autonomy={'finished': Autonomy.Off},
-										remapping={'reverse': 'drive_backwards', 'camera_topic': 'camera_topic'})
 
 			# x:369 y:58
 			OperatableStateMachine.add('haveWaypoints?',
@@ -188,6 +181,13 @@ class LineFollowingSM(Behavior):
 										transitions={'succeeded': 'haveWaypoints?', 'failed': 'haveWaypoints?'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'waypoints': 'waypoints'})
+
+			# x:1342 y:62
+			OperatableStateMachine.add('SwitchDirection',
+										SwitchLineFollowerDirectionState(camera_topic_forwards='/front_rgbd_cam/color/image_rect_color', camera_topic_backwards='/back_rgbd_cam/color/image_rect_color'),
+										transitions={'finished': 'reachedLower'},
+										autonomy={'finished': Autonomy.Off},
+										remapping={'reverse': 'drive_backwards', 'camera_topic': 'camera_topic'})
 
 
 		return _state_machine
