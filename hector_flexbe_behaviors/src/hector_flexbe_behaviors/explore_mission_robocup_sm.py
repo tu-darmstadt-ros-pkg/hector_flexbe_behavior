@@ -34,6 +34,7 @@ class ExploreMissionRobocupSM(Behavior):
 		self.name = 'Explore Mission Robocup'
 
 		# parameters of this behavior
+		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
 
@@ -49,7 +50,7 @@ class ExploreMissionRobocupSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['reexplore_time', 'speed'])
-		_state_machine.userdata.speed = 0.2
+		_state_machine.userdata.speed = self.speed
 		_state_machine.userdata.reexplore_time = 5
 		_state_machine.userdata.first_call = True
 
@@ -79,7 +80,7 @@ class ExploreMissionRobocupSM(Behavior):
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=False),
 										transitions={'reached': 'Start Exploration', 'failed': 'second_recovery', 'stuck': 'second_recovery'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'waypoint', 'speed': 'speed'})
+										remapping={'waypoint': 'waypoint', 'speed': 'speed', 'first_call': 'first_call'})
 
 			# x:362 y:389
 			OperatableStateMachine.add('second_recovery',

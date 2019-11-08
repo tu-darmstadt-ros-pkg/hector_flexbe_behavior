@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="WRS Prototype">
+
+	<executable package_path="hector_flexbe_behaviors.wrs_prototype_sm" class="WRSPrototypeSM" />
+	<tagstring>wrs</tagstring>
+	<author>Gabriel Huettenberger</author>
+	<date>Mon Sep 30 2019</date>
+	<description>
+		First prototype for WRS 2020
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

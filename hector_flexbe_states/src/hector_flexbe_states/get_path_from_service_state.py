@@ -26,6 +26,7 @@ class GetPathFromServiceState(EventState):
 		super(GetPathFromServiceState, self).__init__(outcomes = ['succeeded', 'failed'], output_keys = ['waypoints2'])
 		
 		self._serviceTopic = service_topic
+
 		self._posearraysub = ProxyServiceCaller({self._serviceTopic: GetPoseArrayService})
 		self._succeeded = False
 		self._failed = False
