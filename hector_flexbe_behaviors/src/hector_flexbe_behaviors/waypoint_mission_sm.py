@@ -39,6 +39,7 @@ class WaypointmissionSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('usePlanning', True)
+		self.add_parameter('speed', 0.2)
 
 		# references to used behaviors
 
@@ -54,7 +55,7 @@ class WaypointmissionSM(Behavior):
 	def create(self):
 		# x:233 y:309, x:188 y:441
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed', 'reexplore_time', 'pose'])
-		_state_machine.userdata.speed = 0.2
+		_state_machine.userdata.speed = self.speed
 		_state_machine.userdata.reexplore_time = 5
 		_state_machine.userdata.counter = 0
 		_state_machine.userdata.pose = None
