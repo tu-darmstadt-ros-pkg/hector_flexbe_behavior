@@ -40,6 +40,7 @@ class WaypointmissionSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('usePlanning', True)
 		self.add_parameter('speed', 0.2)
+		self.add_parameter('reexplore_time', 5)
 
 		# references to used behaviors
 
@@ -56,7 +57,7 @@ class WaypointmissionSM(Behavior):
 		# x:233 y:309, x:188 y:441
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['speed', 'reexplore_time', 'pose'])
 		_state_machine.userdata.speed = self.speed
-		_state_machine.userdata.reexplore_time = 5
+		_state_machine.userdata.reexplore_time = self.reexplore_time
 		_state_machine.userdata.counter = 0
 		_state_machine.userdata.pose = None
 		_state_machine.userdata.first_call = True
@@ -77,7 +78,7 @@ class WaypointmissionSM(Behavior):
 
 			# x:580 y:152
 			OperatableStateMachine.add('move_to_next_waypoint',
-										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=self.usePlanning),
+										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=self.reexplore_time, reverse_allowed=True, reverse_forced=False, use_planning=self.usePlanning),
 										transitions={'reached': 'write_3d_map', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'current_waypoint', 'speed': 'speed', 'first_call': 'first_call'})
