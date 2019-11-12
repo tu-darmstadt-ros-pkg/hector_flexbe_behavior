@@ -40,7 +40,7 @@ class WaypointmissionSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('usePlanning', True)
 		self.add_parameter('speed', 0.2)
-		self.add_parameter('reexplore_time', 5)
+		self.add_parameter('reexplore_time', 0)
 
 		# references to used behaviors
 
