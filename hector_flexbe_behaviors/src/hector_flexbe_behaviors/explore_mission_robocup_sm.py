@@ -35,6 +35,7 @@ class ExploreMissionRobocupSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.2)
+		self.add_parameter('reexplore_time', 0)
 
 		# references to used behaviors
 
@@ -51,7 +52,7 @@ class ExploreMissionRobocupSM(Behavior):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['reexplore_time', 'speed'])
 		_state_machine.userdata.speed = self.speed
-		_state_machine.userdata.reexplore_time = 5
+		_state_machine.userdata.reexplore_time = self.reexplore_time
 		_state_machine.userdata.first_call = True
 
 		# Additional creation code can be added inside the following tags

@@ -52,7 +52,7 @@ class Explore(EventState):
 				Logger.logwarn('Exploration failed!')
 				return 'failed'
 		temp_time = rospy.get_rostime() - self._start_time;
- 		if (temp_time.to_sec() > userdata.reexplore_time):
+ 		if (temp_time.to_sec() > userdata.reexplore_time) and userdata.reexplore_time > 0:
 			self._start_time = rospy.get_rostime()
 			self._action_goal.reset_stuck_history = False
 			self._move_client.send_goal(self._action_topic, self._action_goal)

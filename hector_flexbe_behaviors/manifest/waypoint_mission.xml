@@ -24,7 +24,7 @@
 		</param>
 
 		<param type="numeric" name="reexplore_time" default="5" label="reexplore_time" hint="Sets the reexplore_time">
-			<min value="1" />
+			<min value="0" />
 			<max value="99" />
 		</param>
 

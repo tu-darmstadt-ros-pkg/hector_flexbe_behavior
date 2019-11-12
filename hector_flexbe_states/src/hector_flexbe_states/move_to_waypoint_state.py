@@ -26,7 +26,7 @@ class MoveToWaypointState(EventState):
 
 	-- rotate_to_goal         bool                 Align to goal.
 
-	-- reexplore_time         int		       Frequency at which the path is replanned.
+	-- reexplore_time         int		       Period at which the path is replanned. Set 0 to disable.
 
 	-- reverse_allowed	  bool		       If the robot is allowed to drive backwards.
 
@@ -91,7 +91,7 @@ class MoveToWaypointState(EventState):
 				Logger.logwarn(result.result.val)
 				return 'failed'
 		temp_time = rospy.get_rostime() - self._start_time
- 		if (temp_time.to_sec() > self._reexplore_time):
+ 		if (temp_time.to_sec() > self._reexplore_time) and self._reexplore_time > 0:
 			self._action_goal.follow_path_options.reset_stuck_history = False
 			self._client.send_goal(self._action_topic, self._action_goal)
 			self._start_time = rospy.get_rostime()
