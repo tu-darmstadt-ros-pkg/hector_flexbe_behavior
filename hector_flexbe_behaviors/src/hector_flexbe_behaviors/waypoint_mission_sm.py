@@ -10,8 +10,6 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from hector_flexbe_states.get_path_from_service_state import GetPathFromServiceState as hector_flexbe_states__GetPathFromServiceState
 from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as hector_flexbe_states__MoveToWaypointState
-from hector_flexbe_states.write_3d_map_state import Write3dMapState
-from hector_flexbe_states.write_2d_map_state import Write2dMapState
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 from hector_flexbe_states.switch_mapping import SwitchMapping
 from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
@@ -79,7 +77,7 @@ class WaypointmissionSM(Behavior):
 			# x:580 y:152
 			OperatableStateMachine.add('move_to_next_waypoint',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=self.reexplore_time, reverse_allowed=True, reverse_forced=False, use_planning=self.usePlanning),
-										transitions={'reached': 'write_3d_map', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
+										transitions={'reached': 'get_current_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'current_waypoint', 'speed': 'speed', 'first_call': 'first_call'})
 
@@ -90,30 +88,12 @@ class WaypointmissionSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'recovery_point', 'speed': 'speed', 'first_call': 'first_call'})
 
-			# x:589 y:21
-			OperatableStateMachine.add('write_3d_map',
-										Write3dMapState(service_topic='/worldmodel_main/save_map', save_path='/octomaps/waypoints'),
-										transitions={'success': 'write_2d_map', 'failed': 'write_2d_map'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:322 y:20
-			OperatableStateMachine.add('write_2d_map',
-										Write2dMapState(writer_topic='/syscommand'),
-										transitions={'success': 'switch_mapping_off', 'failed': 'switch_mapping_off'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off})
-
 			# x:307 y:149
 			OperatableStateMachine.add('get_current_waypoint',
 										GetWaypointFromArrayState(position=0),
 										transitions={'succeeded': 'move_to_next_waypoint', 'empty': 'finished'},
 										autonomy={'succeeded': Autonomy.Off, 'empty': Autonomy.Off},
 										remapping={'waypoints': 'remaining_waypoints', 'waypoint': 'current_waypoint'})
-
-			# x:436 y:82
-			OperatableStateMachine.add('switch_mapping_off',
-										SwitchMapping(enable=False),
-										transitions={'succeeded': 'get_current_waypoint'},
-										autonomy={'succeeded': Autonomy.Off})
 
 			# x:196 y:75
 			OperatableStateMachine.add('switch_mapping_on',
