@@ -35,7 +35,7 @@ class ExploreMissionRobocupSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('speed', 0.2)
-		self.add_parameter('reexplore_time', 0)
+		self.add_parameter('reexplore_time', 5)
 
 		# references to used behaviors
 
