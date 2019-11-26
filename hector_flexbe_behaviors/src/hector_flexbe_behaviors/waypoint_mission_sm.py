@@ -13,8 +13,6 @@ from hector_flexbe_states.move_to_waypoint_state import MoveToWaypointState as h
 from hector_flexbe_states.get_waypoint_from_array_state import GetWaypointFromArrayState
 from hector_flexbe_states.switch_mapping import SwitchMapping
 from hector_flexbe_states.add_waypoint_to_array_state import AddWaypointToArrayState
-from hector_flexbe_states.move_to_recovery_state import MoveToRecoveryState
-from hector_flexbe_states.get_recovery_info_state import GetRecoveryInfoState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 from geometry_msgs.msg import PointStamped
@@ -77,16 +75,9 @@ class WaypointmissionSM(Behavior):
 			# x:580 y:152
 			OperatableStateMachine.add('move_to_next_waypoint',
 										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=self.reexplore_time, reverse_allowed=True, reverse_forced=False, use_planning=self.usePlanning),
-										transitions={'reached': 'get_current_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'get_recovery_point'},
+										transitions={'reached': 'get_current_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'move_to_next_waypoint'},
 										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
 										remapping={'waypoint': 'current_waypoint', 'speed': 'speed', 'first_call': 'first_call'})
-
-			# x:903 y:153
-			OperatableStateMachine.add('move_to_recovery_point',
-										hector_flexbe_states__MoveToWaypointState(position_tolerance=0.1, angle_tolerance=3, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
-										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'second_recovery'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'recovery_point', 'speed': 'speed', 'first_call': 'first_call'})
 
 			# x:307 y:149
 			OperatableStateMachine.add('get_current_waypoint',
@@ -107,20 +98,6 @@ class WaypointmissionSM(Behavior):
 										transitions={'succeeded': 'get_current_waypoint', 'failed': 'get_current_waypoint'},
 										autonomy={'succeeded': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'waypoint': 'pose', 'waypoints': 'remaining_waypoints'})
-
-			# x:864 y:19
-			OperatableStateMachine.add('second_recovery',
-										MoveToRecoveryState(position_tolerance=0, angle_tolerance=0, rotate_to_goal=0, reexplore_time=5, reverse_allowed=True, reverse_forced=False, use_planning=True),
-										transitions={'reached': 'move_to_next_waypoint', 'failed': 'move_to_next_waypoint', 'stuck': 'move_to_next_waypoint'},
-										autonomy={'reached': Autonomy.Off, 'failed': Autonomy.Off, 'stuck': Autonomy.Off},
-										remapping={'waypoint': 'recovery_point', 'speed': 'speed'})
-
-			# x:589 y:320
-			OperatableStateMachine.add('get_recovery_point',
-										GetRecoveryInfoState(service_topic='/trajectory_recovery_info'),
-										transitions={'success': 'move_to_recovery_point', 'failed': 'move_to_next_waypoint'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'waypoint': 'recovery_point'})
 
 
 		return _state_machine

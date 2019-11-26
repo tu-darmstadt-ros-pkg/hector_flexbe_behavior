@@ -82,19 +82,13 @@ class MoveToWaypointState(EventState):
 			result = self._client.get_result(self._action_topic)
 			if result.result.val == ErrorCodes.SUCCESS:
 				self._reached = True
-				return 'reached'
-			if result.result.val == ErrorCodes.STUCK_DETECTED:
-				self._stuck = True
-				return 'stuck'			
+				return 'reached'	
 			else:
 				self._failed = True
 				Logger.logwarn(result.result.val)
 				return 'failed'
 		temp_time = rospy.get_rostime() - self._start_time
- 		if (temp_time.to_sec() > self._reexplore_time) and self._reexplore_time > 0:
-			self._action_goal.follow_path_options.reset_stuck_history = False
-			self._client.send_goal(self._action_topic, self._action_goal)
-			self._start_time = rospy.get_rostime()
+
 
 			
 	def on_enter(self, userdata):
