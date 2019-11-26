@@ -13,6 +13,7 @@
   <run_depend>rospy</run_depend>
 
   <run_depend>flexbe_core</run_depend>
+  <run_depend>robot_onboard_logging</run_depend>
 
   <export>
     <flexbe_states />
